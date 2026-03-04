@@ -1,0 +1,680 @@
+[
+    {
+        "country": "Portugal",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND PORTUGAL",
+        "percentage": 0.1
+    },
+    {
+        "country": "Germany",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND GERMANY",
+        "percentage": 0.1
+    },
+    {
+        "country": "Korea",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND KOREA",
+        "percentage": 0.1
+    },
+    {
+        "country": "Czechia",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CZECH REPUBLIC",
+        "percentage": 0.1
+    },
+    {
+        "country": "Hungary",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND HUNGARY",
+        "percentage": 0.1
+    },
+    {
+        "country": "China",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CHINA",
+        "percentage": 0.1
+    },
+    {
+        "country": "Vietnam",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND VIETNAM",
+        "percentage": 0.1
+    },
+    {
+        "country": "Viet nam",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND VIETNAM",
+        "percentage": 0.1
+    },   
+    {
+        "country": "Singapore",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND SINGAPORE",
+        "percentage": 0.1
+    },
+    {
+        "country": "LUXEMBORG",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND LUXEMBORG",
+        "percentage": 0.1
+    },
+    {
+        "country": "Ireland",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND IRELAND",
+        "percentage": 0.1
+    },
+    {
+        "country": "USA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND USA",
+        "percentage": 0.15
+    },
+    {
+        "country": "UNITED STATES OF AMERICA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND USA",
+        "percentage": 0.15
+    },
+    {
+        "country": "UNITED STATES",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND USA",
+        "percentage": 0.15
+    },
+    {
+        "country": "Egypt",
+        "dtaa_applicable": "ARTICLE 23 OF DTAA BTWN INDIA AND EGYPT",
+        "percentage": "As per i.t act"
+    },
+    {
+        "country": "Poland",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND POLAND",
+        "percentage": 0.15
+    },
+    {
+        "country": "Australia",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND AUSTRALIA",
+        "percentage": 0.15
+    },
+    {
+        "country": "Israel",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND ISRAEL",
+        "percentage": 0.1
+    },
+    {
+        "country": "INDONESIA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND INDONESIA",
+        "percentage": 0.1
+    },
+    {
+        "country": "FRANCE",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND FRANCE",
+        "percentage": 0.1
+    },
+    {
+        "country": "MALAYSIA",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND MALAYSIA",
+        "percentage": 0.1
+    },
+    {
+        "country": "SPAIN",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND SPAIN",
+        "percentage": 0.1
+    },
+    {
+        "country": "SWITZERLAND",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND SWITZERLAND",
+        "percentage": 0.1
+    },
+    {
+        "country": "NETHERLAND",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND NETHERLAND",
+        "percentage": 0.1
+    },
+    {
+        "country": "AUSTRIA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND AUSTRIA",
+        "percentage": 0.1
+    },
+    {
+        "country": "THAILAND",
+        "dtaa_applicable": "ARTICLE 22(3) OF DTAA BTWN INDIA AND THAILAND",
+        "percentage": "As per i.t act"
+    },
+    {
+        "country": "France",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND FRANCE",
+        "percentage": 0.1
+    },
+    {
+        "country": "DENMARK",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND DENMARK",
+        "percentage": 0.2
+    },
+    {
+        "country": "ROMANIA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND ROMANIA",
+        "percentage": 0.1
+    },
+    {
+        "country": "TURKEY",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND TURKEY",
+        "percentage": 0.15
+    },
+    {
+        "country": "SOUTH AFRICA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA & SOUTH AFRICA",
+        "percentage": 0.1
+    },
+    {
+        "country": "BRAZIL",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA & BRAZIL",
+        "percentage": 0.15
+    },
+    {
+        "country": "JAPAN",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND JAPAN",
+        "percentage": 0.1
+    },
+    {
+        "country": "LATVIA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND LATVIA",
+        "percentage": 0.1
+    },
+    {
+        "country": "RUSSIA",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND RUSSIA",
+        "percentage": 0.1
+    },
+    {
+        "country": "FINLAND",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND FINLAND",
+        "percentage": 0.1
+    },
+    {
+        "country": "UK",
+        "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND UK",
+        "percentage": 0.15
+    },
+    {
+        "country": "ITALY",
+        "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND ITALY",
+        "percentage": 0.2
+    },
+    {
+    "country": "UK",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND UK",
+    "percentage": 0.15
+},
+{
+    "country": "UNITED KINGDOM",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND UK",
+    "percentage": 0.15
+},
+{
+    "country": "UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND UK",
+    "percentage": 0.15
+},
+{
+    "country": "GREAT BRITAIN",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND UK",
+    "percentage": 0.15
+},
+{
+    "country": "ENGLAND",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND UK",
+    "percentage": 0.15
+},
+
+
+  {
+    "country": "PORTUGAL",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND PORTUGAL",
+    "percentage": 0.1
+  },
+  {
+    "country": "PORTUGUESE REPUBLIC",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND PORTUGAL",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "GERMANY",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND GERMANY",
+    "percentage": 0.1
+  },
+  {
+    "country": "FEDERAL REPUBLIC OF GERMANY",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND GERMANY",
+    "percentage": 0.1
+  },
+  {
+    "country": "DEUTSCHLAND",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND GERMANY",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "KOREA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND KOREA",
+    "percentage": 0.1
+  },
+  {
+    "country": "SOUTH KOREA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND KOREA",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF KOREA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND KOREA",
+    "percentage": 0.1
+  },
+  {
+    "country": "KOREA (REPUBLIC OF)",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND KOREA",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "CZECHIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CZECH REPUBLIC",
+    "percentage": 0.1
+  },
+  {
+    "country": "CZECH REPUBLIC",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CZECH REPUBLIC",
+    "percentage": 0.1
+  },
+
+ 
+  {
+    "country": "HUNGARY",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND HUNGARY",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF HUNGARY",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND HUNGARY",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "CHINA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CHINA",
+    "percentage": 0.1
+  },
+  {
+    "country": "PEOPLE'S REPUBLIC OF CHINA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CHINA",
+    "percentage": 0.1
+  },
+  {
+    "country": "P.R. CHINA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CHINA",
+    "percentage": 0.1
+  },
+  {
+    "country": "CHINA (PRC)",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND CHINA",
+    "percentage": 0.1
+  },
+
+ 
+  {
+    "country": "VIET NAM",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND VIETNAM",
+    "percentage": 0.1
+  },
+  {
+    "country": "VIETNAM",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND VIETNAM",
+    "percentage": 0.1
+  },
+  {
+    "country": "SOCIALIST REPUBLIC OF VIET NAM",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND VIETNAM",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "SINGAPORE",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND SINGAPORE",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF SINGAPORE",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND SINGAPORE",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "LUXEMBOURG",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND LUXEMBORG",
+    "percentage": 0.1
+  },
+  {
+    "country": "GRAND DUCHY OF LUXEMBOURG",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND LUXEMBORG",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "IRELAND",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND IRELAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF IRELAND",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND IRELAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "EIRE",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND IRELAND",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "US",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND USA",
+    "percentage": 0.15
+  },
+  {
+    "country": "AMERICA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND USA",
+    "percentage": 0.15
+  },
+
+ 
+  {
+    "country": "EGYPT",
+    "dtaa_applicable": "ARTICLE 23 OF DTAA BTWN INDIA AND EGYPT",
+    "percentage": "As per i.t act"
+  },
+  {
+    "country": "ARAB REPUBLIC OF EGYPT",
+    "dtaa_applicable": "ARTICLE 23 OF DTAA BTWN INDIA AND EGYPT",
+    "percentage": "As per i.t act"
+  },
+
+  
+  {
+    "country": "POLAND",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND POLAND",
+    "percentage": 0.15
+  },
+  {
+    "country": "REPUBLIC OF POLAND",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND POLAND",
+    "percentage": 0.15
+  },
+
+  
+  {
+    "country": "AUSTRALIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND AUSTRALIA",
+    "percentage": 0.15
+  },
+  {
+    "country": "COMMONWEALTH OF AUSTRALIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND AUSTRALIA",
+    "percentage": 0.15
+  },
+
+  
+  {
+    "country": "ISRAEL",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND ISRAEL",
+    "percentage": 0.1
+  },
+  {
+    "country": "STATE OF ISRAEL",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND ISRAEL",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "INDONESIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND INDONESIA",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF INDONESIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND INDONESIA",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "FRANCE",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND FRANCE",
+    "percentage": 0.1
+  },
+  {
+    "country": "FRENCH REPUBLIC",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND FRANCE",
+    "percentage": 0.1
+  },
+
+ 
+  {
+    "country": "MALAYSIA",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND MALAYSIA",
+    "percentage": 0.1
+  },
+
+ 
+  {
+    "country": "SPAIN",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND SPAIN",
+    "percentage": 0.1
+  },
+  {
+    "country": "KINGDOM OF SPAIN",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND SPAIN",
+    "percentage": 0.1
+  },
+
+  
+  {
+    "country": "SWITZERLAND",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND SWITZERLAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "SWISS CONFEDERATION",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND SWITZERLAND",
+    "percentage": 0.1
+  },
+
+  {
+    "country": "NETHERLANDS",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND NETHERLAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "THE NETHERLANDS",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND NETHERLAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "KINGDOM OF THE NETHERLANDS",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND NETHERLAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "HOLLAND",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND NETHERLAND",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "AUSTRIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND AUSTRIA",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF AUSTRIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND AUSTRIA",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "THAILAND",
+    "dtaa_applicable": "ARTICLE 22(3) OF DTAA BTWN INDIA AND THAILAND",
+    "percentage": "As per i.t act"
+  },
+  {
+    "country": "KINGDOM OF THAILAND",
+    "dtaa_applicable": "ARTICLE 22(3) OF DTAA BTWN INDIA AND THAILAND",
+    "percentage": "As per i.t act"
+  },
+
+
+  {
+    "country": "DENMARK",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND DENMARK",
+    "percentage": 0.2
+  },
+  {
+    "country": "KINGDOM OF DENMARK",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND DENMARK",
+    "percentage": 0.2
+  },
+
+
+  {
+    "country": "ROMANIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND ROMANIA",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "TURKEY",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND TURKEY",
+    "percentage": 0.15
+  },
+  {
+    "country": "TÜRKIYE",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND TURKEY",
+    "percentage": 0.15
+  },
+  {
+    "country": "TURKIYE",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND TURKEY",
+    "percentage": 0.15
+  },
+  {
+    "country": "REPUBLIC OF TURKEY",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND TURKEY",
+    "percentage": 0.15
+  },
+
+
+  {
+    "country": "SOUTH AFRICA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA & SOUTH AFRICA",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF SOUTH AFRICA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA & SOUTH AFRICA",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "BRAZIL",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA & BRAZIL",
+    "percentage": 0.15
+  },
+  {
+    "country": "FEDERATIVE REPUBLIC OF BRAZIL",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA & BRAZIL",
+    "percentage": 0.15
+  },
+
+
+  {
+    "country": "JAPAN",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND JAPAN",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "LATVIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND LATVIA",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF LATVIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND LATVIA",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "RUSSIA",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND RUSSIA",
+    "percentage": 0.1
+  },
+  {
+    "country": "RUSSIAN FEDERATION",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND RUSSIA",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "FINLAND",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND FINLAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "REPUBLIC OF FINLAND",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND FINLAND",
+    "percentage": 0.1
+  },
+
+
+  {
+    "country": "ITALY",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND ITALY",
+    "percentage": 0.2
+  },
+  {
+    "country": "ITALIAN REPUBLIC",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND ITALY",
+    "percentage": 0.2
+  },
+  
+  {
+    "country": "KOREA (REPUBLIC OF)",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND KOREA",
+    "percentage": 0.1
+  },
+  {
+    "country": "RUSSIAN FEDERATION",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND RUSSIA",
+    "percentage": 0.1
+  },
+  {
+    "country": "NETHERLANDS",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND NETHERLAND",
+    "percentage": 0.1
+  },
+  {
+    "country": "LUXEMBOURG",
+    "dtaa_applicable": "ARTICLE 12 OF DTAA BTWN INDIA AND LUXEMBORG",
+    "percentage": 0.1
+  },
+  {
+    "country": "VIET NAM",
+    "dtaa_applicable": "ARTICLE 13 OF DTAA BTWN INDIA AND VIETNAM",
+    "percentage": 0.1
+  }
+
+
+]

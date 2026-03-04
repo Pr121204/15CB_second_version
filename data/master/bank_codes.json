@@ -1,0 +1,1330 @@
+[
+  {
+    "code": "-1",
+    "bank": "Select"
+  },
+  {
+    "code": "1",
+    "bank": "Abhyudaya Cooperative Bank"
+  },
+  {
+    "code": "2",
+    "bank": "Abu Dhabi Commercial Bank"
+  },
+  {
+    "code": "3",
+    "bank": "Ahmedabad Mercantile Cooperative Bank"
+  },
+  {
+    "code": "4",
+    "bank": "Akola Janata Commercial Cooperative Bank"
+  },
+  {
+    "code": "5",
+    "bank": "Allahabad Bank"
+  },
+  {
+    "code": "6",
+    "bank": "Almora Urban Co-Operative Bank ltd"
+  },
+  {
+    "code": "6",
+    "bank": "Almora Urban Co-Operative Bank LIMITED."
+  },
+  {
+    "code": "6",
+    "bank": "Almora Urban Co-Operative Bank LIMITED"
+  },
+  {
+    "code": "7",
+    "bank": "Andhra Bank"
+  },
+  {
+    "code": "8",
+    "bank": "Andhra Pragathi Grameena Bank"
+  },
+  {
+    "code": "9",
+    "bank": "Apna Sahakari Bank Ltd"
+  },
+  {
+    "code": "9",
+    "bank": "Apna Sahakari Bank LIMITED."
+  },
+  {
+    "code": "9",
+    "bank": "Apna Sahakari Bank LIMITED"
+  },
+  {
+    "code": "10",
+    "bank": "Australia and New Zealand Banking Group Ltd"
+  },
+  {
+    "code": "10",
+    "bank": "Australia and New Zealand Banking Group LIMITED."
+  },
+  {
+    "code": "10",
+    "bank": "Australia and New Zealand Banking Group LIMITED"
+  },
+  {
+    "code": "11",
+    "bank": "Axis Bank"
+  },
+  {
+    "code": "12",
+    "bank": "Bank Internasional Indonesia"
+  },
+  {
+    "code": "13",
+    "bank": "Bank of America"
+  },
+  {
+    "code": "14",
+    "bank": "Bank of Bahrein and Kuwait"
+  },
+  {
+    "code": "15",
+    "bank": "Bank of Baroda"
+  },
+  {
+    "code": "16",
+    "bank": "Bank of Ceylon"
+  },
+  {
+    "code": "17",
+    "bank": "Bank of India"
+  },
+  {
+    "code": "18",
+    "bank": "Bank of Maharashtra"
+  },
+  {
+    "code": "19",
+    "bank": "MUFG Bank Ltd"
+  },
+  {
+    "code": "19",
+    "bank": "MUFG Bank LIMITED."
+  },
+  {
+    "code": "19",
+    "bank": "MUFG Bank LIMITED"
+  },
+  {
+    "code": "20",
+    "bank": "Barclays Bank"
+  },
+  {
+    "code": "21",
+    "bank": "Bassein Catholic Co-Op Bank Ltd"
+  },
+  {
+    "code": "21",
+    "bank": "Bassein Catholic Co-Op Bank LIMITED."
+  },
+  {
+    "code": "21",
+    "bank": "Bassein Catholic Co-Op Bank LIMITED"
+  },
+  {
+    "code": "22",
+    "bank": "Bharat Cooperative Bank Mumbai Ltd"
+  },
+  {
+    "code": "22",
+    "bank": "Bharat Cooperative Bank Mumbai LIMITED."
+  },
+  {
+    "code": "22",
+    "bank": "Bharat Cooperative Bank Mumbai LIMITED"
+  },
+  {
+    "code": "23",
+    "bank": "Bharatiya Mahila Bank Ltd"
+  },
+  {
+    "code": "23",
+    "bank": "Bharatiya Mahila Bank LIMITED."
+  },
+  {
+    "code": "23",
+    "bank": "Bharatiya Mahila Bank LIMITED"
+  },
+  {
+    "code": "24",
+    "bank": "BNP Paribas Bank"
+  },
+  {
+    "code": "25",
+    "bank": "Canara Bank"
+  },
+  {
+    "code": "26",
+    "bank": "Capital Local Area Bank Ltd"
+  },
+  {
+    "code": "26",
+    "bank": "Capital Local Area Bank LIMITED."
+  },
+  {
+    "code": "26",
+    "bank": "Capital Local Area Bank LIMITED"
+  },
+  {
+    "code": "27",
+    "bank": "Catholic Syrian Bank"
+  },
+  {
+    "code": "28",
+    "bank": "Central Bank of India"
+  },
+  {
+    "code": "29",
+    "bank": "Chinatrust Commercial Bank"
+  },
+  {
+    "code": "30",
+    "bank": "CITI Bank"
+  },
+  {
+    "code": "31",
+    "bank": "Citizen Credit Cooperative Bank"
+  },
+  {
+    "code": "32",
+    "bank": "City Union Bank Ltd"
+  },
+  {
+    "code": "32",
+    "bank": "City Union Bank LIMITED."
+  },
+  {
+    "code": "32",
+    "bank": "City Union Bank LIMITED"
+  },
+  {
+    "code": "33",
+    "bank": "Commonwealth Bank of Australia"
+  },
+  {
+    "code": "34",
+    "bank": "Corporation Bank"
+  },
+  {
+    "code": "35",
+    "bank": "Credit Agricole Corporate and Investment Bank"
+  },
+  {
+    "code": "36",
+    "bank": "Credit Suisse AG"
+  },
+  {
+    "code": "37",
+    "bank": "DBS Bank Ltd"
+  },
+  {
+    "code": "37",
+    "bank": "DBS Bank LIMITED."
+  },
+  {
+    "code": "37",
+    "bank": "DBS Bank LIMITED"
+  },
+  {
+    "code": "38",
+    "bank": "DCB Bank Ltd"
+  },
+  {
+    "code": "38",
+    "bank": "DCB Bank LIMITED."
+  },
+  {
+    "code": "38",
+    "bank": "DCB Bank LIMITED"
+  },
+  {
+    "code": "39",
+    "bank": "Dena Bank"
+  },
+  {
+    "code": "40",
+    "bank": "Deposit Insurance and Credit Guarantee Corporation"
+  },
+  {
+    "code": "41",
+    "bank": "Deutsche Bank"
+  },
+  {
+    "code": "42",
+    "bank": "Dhanlaxmi Bank Ltd"
+  },
+  {
+    "code": "42",
+    "bank": "Dhanlaxmi Bank LIMITED."
+  },
+  {
+    "code": "42",
+    "bank": "Dhanlaxmi Bank LIMITED"
+  },
+  {
+    "code": "43",
+    "bank": "DICGC"
+  },
+  {
+    "code": "44",
+    "bank": "Doha Bank QSC"
+  },
+  {
+    "code": "45",
+    "bank": "Dombivli Nagari Sahakari Bank Ltd"
+  },
+  {
+    "code": "45",
+    "bank": "Dombivli Nagari Sahakari Bank LIMITED."
+  },
+  {
+    "code": "45",
+    "bank": "Dombivli Nagari Sahakari Bank LIMITED"
+  },
+  {
+    "code": "46",
+    "bank": "Export Import Bank of India"
+  },
+  {
+    "code": "47",
+    "bank": "Federal Bank Ltd"
+  },
+  {
+    "code": "47",
+    "bank": "Federal Bank LIMITED."
+  },
+  {
+    "code": "47",
+    "bank": "Federal Bank LIMITED"
+  },
+  {
+    "code": "48",
+    "bank": "Firstrand Bank Ltd"
+  },
+  {
+    "code": "48",
+    "bank": "Firstrand Bank LIMITED."
+  },
+  {
+    "code": "48",
+    "bank": "Firstrand Bank LIMITED"
+  },
+  {
+    "code": "49",
+    "bank": "G P Parsik Bank"
+  },
+  {
+    "code": "50",
+    "bank": "Gurgaon Gramin Bank Ltd"
+  },
+  {
+    "code": "50",
+    "bank": "Gurgaon Gramin Bank LIMITED."
+  },
+  {
+    "code": "50",
+    "bank": "Gurgaon Gramin Bank LIMITED"
+  },
+  {
+    "code": "51",
+    "bank": "HDFC Bank Ltd"
+  },
+  {
+    "code": "51",
+    "bank": "HDFC Bank LIMITED."
+  },
+  {
+    "code": "51",
+    "bank": "HDFC Bank LIMITED"
+  },
+  {
+    "code": "52",
+    "bank": "HSBC"
+  },
+  {
+    "code": "53",
+    "bank": "HSBC Bank Oman Saog"
+  },
+  {
+    "code": "54",
+    "bank": "ICICI Bank Ltd"
+  },
+  {
+    "code": "54",
+    "bank": "ICICI Bank LIMITED."
+  },
+  {
+    "code": "54",
+    "bank": "ICICI Bank LIMITED"
+  },
+  {
+    "code": "55",
+    "bank": "IDBI Ltd"
+  },
+  {
+    "code": "55",
+    "bank": "IDBI LIMITED."
+  },
+  {
+    "code": "55",
+    "bank": "IDBI LIMITED"
+  },
+  {
+    "code": "56",
+    "bank": "Indian Bank"
+  },
+  {
+    "code": "57",
+    "bank": "Indian Overseas Bank"
+  },
+  {
+    "code": "58",
+    "bank": "Indusind Bank Ltd"
+  },
+  {
+    "code": "58",
+    "bank": "Indusind Bank LIMITED."
+  },
+  {
+    "code": "58",
+    "bank": "Indusind Bank LIMITED"
+  },
+  {
+    "code": "59",
+    "bank": "Industrial and Commercial Bank of China Ltd"
+  },
+  {
+    "code": "59",
+    "bank": "Industrial and Commercial Bank of China LIMITED."
+  },
+  {
+    "code": "59",
+    "bank": "Industrial and Commercial Bank of China LIMITED"
+  },
+  {
+    "code": "60",
+    "bank": "ING Vysya Bank Ltd"
+  },
+  {
+    "code": "60",
+    "bank": "ING Vysya Bank LIMITED."
+  },
+  {
+    "code": "60",
+    "bank": "ING Vysya Bank LIMITED"
+  },
+  {
+    "code": "61",
+    "bank": "Jalgaon Janata Sahkari Bank Ltd"
+  },
+  {
+    "code": "61",
+    "bank": "Jalgaon Janata Sahkari Bank LIMITED."
+  },
+  {
+    "code": "61",
+    "bank": "Jalgaon Janata Sahkari Bank LIMITED"
+  },
+  {
+    "code": "62",
+    "bank": "Janakalyan Sahakari Bank Ltd"
+  },
+  {
+    "code": "62",
+    "bank": "Janakalyan Sahakari Bank LIMITED."
+  },
+  {
+    "code": "62",
+    "bank": "Janakalyan Sahakari Bank LIMITED"
+  },
+  {
+    "code": "63",
+    "bank": "Janaseva Sahakari Bank (Borivli) Ltd"
+  },
+  {
+    "code": "63",
+    "bank": "Janaseva Sahakari Bank (Borivli) LIMITED."
+  },
+  {
+    "code": "63",
+    "bank": "Janaseva Sahakari Bank (Borivli) LIMITED"
+  },
+  {
+    "code": "64",
+    "bank": "Janaseva Sahakari Bank Ltd"
+  },
+  {
+    "code": "64",
+    "bank": "Janaseva Sahakari Bank LIMITED."
+  },
+  {
+    "code": "64",
+    "bank": "Janaseva Sahakari Bank LIMITED"
+  },
+  {
+    "code": "65",
+    "bank": "Janata Sahakari Bank Ltd (Pune)"
+  },
+  {
+    "code": "66",
+    "bank": "Jankalyan Sahakari Bank Ltd"
+  },
+  {
+    "code": "66",
+    "bank": "Jankalyan Sahakari Bank LIMITED."
+  },
+  {
+    "code": "66",
+    "bank": "Jankalyan Sahakari Bank LIMITED"
+  },
+  {
+    "code": "67",
+    "bank": "JP Morgan Chase Bank NA"
+  },
+  {
+    "code": "68",
+    "bank": "Kallappanna Awade Ichalkaranji Janata Sahakari Bank Ltd"
+  },
+  {
+    "code": "68",
+    "bank": "Kallappanna Awade Ichalkaranji Janata Sahakari Bank LIMITED."
+  },
+  {
+    "code": "68",
+    "bank": "Kallappanna Awade Ichalkaranji Janata Sahakari Bank LIMITED"
+  },
+  {
+    "code": "69",
+    "bank": "Kalupur Commercial Cooperative Bank"
+  },
+  {
+    "code": "70",
+    "bank": "Kapol Cooperative Bank"
+  },
+  {
+    "code": "71",
+    "bank": "Karnataka Bank Ltd"
+  },
+  {
+    "code": "71",
+    "bank": "Karnataka Bank LIMITED."
+  },
+  {
+    "code": "71",
+    "bank": "Karnataka Bank LIMITED"
+  },
+  {
+    "code": "72",
+    "bank": "Karnataka Vikas Grameena Bank"
+  },
+  {
+    "code": "73",
+    "bank": "Karur Vysya Bank"
+  },
+  {
+    "code": "74",
+    "bank": "Kerala Gramin Bank"
+  },
+  {
+    "code": "75",
+    "bank": "Kotak Mahindra Bank"
+  },
+  {
+    "code": "76",
+    "bank": "Laxmi Vilas Bank"
+  },
+  {
+    "code": "77",
+    "bank": "Mahanagar Cooperative Bank Ltd"
+  },
+  {
+    "code": "77",
+    "bank": "Mahanagar Cooperative Bank LIMITED."
+  },
+  {
+    "code": "77",
+    "bank": "Mahanagar Cooperative Bank LIMITED"
+  },
+  {
+    "code": "78",
+    "bank": "Maharastra State Cooperative Bank"
+  },
+  {
+    "code": "79",
+    "bank": "Mashreq Bank"
+  },
+  {
+    "code": "80",
+    "bank": "Mizuho Corporate Bank Ltd"
+  },
+  {
+    "code": "80",
+    "bank": "Mizuho Corporate Bank LIMITED."
+  },
+  {
+    "code": "80",
+    "bank": "Mizuho Corporate Bank LIMITED"
+  },
+  {
+    "code": "81",
+    "bank": "Nagar Urban Co-Operative Bank"
+  },
+  {
+    "code": "82",
+    "bank": "Nagpur Nagrik Sahakari Bank Ltd"
+  },
+  {
+    "code": "82",
+    "bank": "Nagpur Nagrik Sahakari Bank LIMITED."
+  },
+  {
+    "code": "82",
+    "bank": "Nagpur Nagrik Sahakari Bank LIMITED"
+  },
+  {
+    "code": "83",
+    "bank": "National Australia Bank"
+  },
+  {
+    "code": "84",
+    "bank": "New India Cooperative Ban Ltd"
+  },
+  {
+    "code": "84",
+    "bank": "New India Cooperative Ban LIMITED."
+  },
+  {
+    "code": "84",
+    "bank": "New India Cooperative Ban LIMITED"
+  },
+  {
+    "code": "85",
+    "bank": "NKGSB Cooperative Bank Ltd"
+  },
+  {
+    "code": "85",
+    "bank": "NKGSB Cooperative Bank LIMITED."
+  },
+  {
+    "code": "85",
+    "bank": "NKGSB Cooperative Bank LIMITED"
+  },
+  {
+    "code": "86",
+    "bank": "North Malabar Gramin Bank"
+  },
+  {
+    "code": "87",
+    "bank": "Nutan Nagarik Sahakari Bank Ltd"
+  },
+  {
+    "code": "87",
+    "bank": "Nutan Nagarik Sahakari Bank LIMITED."
+  },
+  {
+    "code": "87",
+    "bank": "Nutan Nagarik Sahakari Bank LIMITED"
+  },
+  {
+    "code": "88",
+    "bank": "Oman International Bank"
+  },
+  {
+    "code": "89",
+    "bank": "Oriental Bank of Commerce"
+  },
+  {
+    "code": "90",
+    "bank": "Pragathi Krishna Gramin Bank"
+  },
+  {
+    "code": "91",
+    "bank": "Prathama Bank"
+  },
+  {
+    "code": "92",
+    "bank": "Prime Co-Operative Bank Ltd"
+  },
+  {
+    "code": "92",
+    "bank": "Prime Co-Operative Bank LIMITED."
+  },
+  {
+    "code": "92",
+    "bank": "Prime Co-Operative Bank LIMITED"
+  },
+  {
+    "code": "93",
+    "bank": "Punjab and Maharashtra Cooperative Bank Ltd"
+  },
+  {
+    "code": "93",
+    "bank": "Punjab and Maharashtra Cooperative Bank LIMITED."
+  },
+  {
+    "code": "93",
+    "bank": "Punjab and Maharashtra Cooperative Bank LIMITED"
+  },
+  {
+    "code": "94",
+    "bank": "Punjab and Sind Bank"
+  },
+  {
+    "code": "95",
+    "bank": "Punjab National Bank"
+  },
+  {
+    "code": "96",
+    "bank": "Rabobank International"
+  },
+  {
+    "code": "97",
+    "bank": "Rajgurunagar Sahakari Bank Ltd"
+  },
+  {
+    "code": "97",
+    "bank": "Rajgurunagar Sahakari Bank LIMITED."
+  },
+  {
+    "code": "97",
+    "bank": "Rajgurunagar Sahakari Bank LIMITED"
+  },
+  {
+    "code": "98",
+    "bank": "Rajkot Nagarik Sahakari Bank Ltd"
+  },
+  {
+    "code": "98",
+    "bank": "Rajkot Nagarik Sahakari Bank LIMITED."
+  },
+  {
+    "code": "98",
+    "bank": "Rajkot Nagarik Sahakari Bank LIMITED"
+  },
+  {
+    "code": "99",
+    "bank": "Ratnakar Bank Ltd"
+  },
+  {
+    "code": "99",
+    "bank": "Ratnakar Bank LIMITED."
+  },
+  {
+    "code": "99",
+    "bank": "Ratnakar Bank LIMITED"
+  },
+  {
+    "code": "100",
+    "bank": "Reserve Bank of India"
+  },
+  {
+    "code": "101",
+    "bank": "Sahebrao Deshmukh Co-Op. Bank Ltd"
+  },
+  {
+    "code": "101",
+    "bank": "Sahebrao Deshmukh Co-Op. Bank LIMITED."
+  },
+  {
+    "code": "101",
+    "bank": "Sahebrao Deshmukh Co-Op. Bank LIMITED"
+  },
+  {
+    "code": "102",
+    "bank": "SBER Bank"
+  },
+  {
+    "code": "103",
+    "bank": "Shikshak Sahakari Bank Ltd"
+  },
+  {
+    "code": "103",
+    "bank": "Shikshak Sahakari Bank LIMITED."
+  },
+  {
+    "code": "103",
+    "bank": "Shikshak Sahakari Bank LIMITED"
+  },
+  {
+    "code": "104",
+    "bank": "Shinhan Bank"
+  },
+  {
+    "code": "105",
+    "bank": "Shri Chhatrapati Rajarshi Shahu Urban Co-Op Bank Ltd"
+  },
+  {
+    "code": "105",
+    "bank": "Shri Chhatrapati Rajarshi Shahu Urban Co-Op Bank LIMITED."
+  },
+  {
+    "code": "105",
+    "bank": "Shri Chhatrapati Rajarshi Shahu Urban Co-Op Bank LIMITED"
+  },
+  {
+    "code": "106",
+    "bank": "Societe Generale"
+  },
+  {
+    "code": "107",
+    "bank": "Solapur Janata Sahkari Bank Ltd"
+  },
+  {
+    "code": "107",
+    "bank": "Solapur Janata Sahkari Bank LIMITED."
+  },
+  {
+    "code": "107",
+    "bank": "Solapur Janata Sahkari Bank LIMITED"
+  },
+  {
+    "code": "108",
+    "bank": "South Indian Bank"
+  },
+  {
+    "code": "109",
+    "bank": "Standard Chartered Bank"
+  },
+  {
+    "code": "110",
+    "bank": "State Bank of Bikaner and Jaipur"
+  },
+  {
+    "code": "111",
+    "bank": "State Bank of Hyderabad"
+  },
+  {
+    "code": "112",
+    "bank": "State Bank of India"
+  },
+  {
+    "code": "113",
+    "bank": "SBM Bank (India) Limited"
+  },
+  {
+    "code": "114",
+    "bank": "State Bank of Mysore"
+  },
+  {
+    "code": "115",
+    "bank": "State Bank of Patiala"
+  },
+  {
+    "code": "116",
+    "bank": "State Bank of Travancore"
+  },
+  {
+    "code": "117",
+    "bank": "Sumitomo Mitsui Banking Corporation"
+  },
+  {
+    "code": "118",
+    "bank": "Sutex Cooperative Bank Ltd"
+  },
+  {
+    "code": "118",
+    "bank": "Sutex Cooperative Bank LIMITED."
+  },
+  {
+    "code": "118",
+    "bank": "Sutex Cooperative Bank LIMITED"
+  },
+  {
+    "code": "119",
+    "bank": "Syndicate Bank"
+  },
+  {
+    "code": "120",
+    "bank": "Tamil Nadu Mercantile Bank"
+  },
+  {
+    "code": "121",
+    "bank": "The A.P. Mahesh Co-Op Urban Bank Ltd"
+  },
+  {
+    "code": "121",
+    "bank": "The A.P. Mahesh Co-Op Urban Bank LIMITED."
+  },
+  {
+    "code": "121",
+    "bank": "The A.P. Mahesh Co-Op Urban Bank LIMITED"
+  },
+  {
+    "code": "122",
+    "bank": "The Akola District Central Co-Operative Bank"
+  },
+  {
+    "code": "123",
+    "bank": "The Andhra Pradesh State Coop Bank Ltd"
+  },
+  {
+    "code": "123",
+    "bank": "The Andhra Pradesh State Coop Bank LIMITED."
+  },
+  {
+    "code": "123",
+    "bank": "The Andhra Pradesh State Coop Bank LIMITED"
+  },
+  {
+    "code": "124",
+    "bank": "The Bank of Nova Scotia"
+  },
+  {
+    "code": "125",
+    "bank": "The Cosmos Cooperative Bank Ltd"
+  },
+  {
+    "code": "125",
+    "bank": "The Cosmos Cooperative Bank LIMITED."
+  },
+  {
+    "code": "125",
+    "bank": "The Cosmos Cooperative Bank LIMITED"
+  },
+  {
+    "code": "126",
+    "bank": "The Delhi State Cooperative Bank Ltd"
+  },
+  {
+    "code": "126",
+    "bank": "The Delhi State Cooperative Bank LIMITED."
+  },
+  {
+    "code": "126",
+    "bank": "The Delhi State Cooperative Bank LIMITED"
+  },
+  {
+    "code": "127",
+    "bank": "The Gadchiroli District Central Cooperative Bank Ltd"
+  },
+  {
+    "code": "127",
+    "bank": "The Gadchiroli District Central Cooperative Bank LIMITED."
+  },
+  {
+    "code": "127",
+    "bank": "The Gadchiroli District Central Cooperative Bank LIMITED"
+  },
+  {
+    "code": "128",
+    "bank": "The Greater Bombay Co-operative Bank Ltd"
+  },
+  {
+    "code": "128",
+    "bank": "The Greater Bombay Co-operative Bank LIMITED."
+  },
+  {
+    "code": "128",
+    "bank": "The Greater Bombay Co-operative Bank LIMITED"
+  },
+  {
+    "code": "129",
+    "bank": "The Gujarat State Co-Operative Bank Ltd"
+  },
+  {
+    "code": "129",
+    "bank": "The Gujarat State Co-Operative Bank LIMITED."
+  },
+  {
+    "code": "129",
+    "bank": "The Gujarat State Co-Operative Bank LIMITED"
+  },
+  {
+    "code": "130",
+    "bank": "The Jalgaon Peoples Co-Op Bank"
+  },
+  {
+    "code": "131",
+    "bank": "The Jammu and Kashmir Bank"
+  },
+  {
+    "code": "132",
+    "bank": "The Kalyan Janata Sahakari Bank Ltd"
+  },
+  {
+    "code": "132",
+    "bank": "The Kalyan Janata Sahakari Bank LIMITED."
+  },
+  {
+    "code": "132",
+    "bank": "The Kalyan Janata Sahakari Bank LIMITED"
+  },
+  {
+    "code": "133",
+    "bank": "The Kangra Central Cooperative Bank Ltd"
+  },
+  {
+    "code": "133",
+    "bank": "The Kangra Central Cooperative Bank LIMITED."
+  },
+  {
+    "code": "133",
+    "bank": "The Kangra Central Cooperative Bank LIMITED"
+  },
+  {
+    "code": "134",
+    "bank": "The Kangra Cooperative Bank Ltd"
+  },
+  {
+    "code": "134",
+    "bank": "The Kangra Cooperative Bank LIMITED."
+  },
+  {
+    "code": "134",
+    "bank": "The Kangra Cooperative Bank LIMITED"
+  },
+  {
+    "code": "135",
+    "bank": "The Karad Urban Co-op Bank Ltd"
+  },
+  {
+    "code": "135",
+    "bank": "The Karad Urban Co-op Bank LIMITED."
+  },
+  {
+    "code": "135",
+    "bank": "The Karad Urban Co-op Bank LIMITED"
+  },
+  {
+    "code": "136",
+    "bank": "The Karnataka State Apex Cooperative Bank Ltd"
+  },
+  {
+    "code": "136",
+    "bank": "The Karnataka State Apex Cooperative Bank LIMITED."
+  },
+  {
+    "code": "136",
+    "bank": "The Karnataka State Apex Cooperative Bank LIMITED"
+  },
+  {
+    "code": "137",
+    "bank": "The Kurmanchal Nagar Sahkari Bank Ltd"
+  },
+  {
+    "code": "137",
+    "bank": "The Kurmanchal Nagar Sahkari Bank LIMITED."
+  },
+  {
+    "code": "137",
+    "bank": "The Kurmanchal Nagar Sahkari Bank LIMITED"
+  },
+  {
+    "code": "138",
+    "bank": "The Mehsana Urban Cooperative Bank Ltd"
+  },
+  {
+    "code": "138",
+    "bank": "The Mehsana Urban Cooperative Bank LIMITED."
+  },
+  {
+    "code": "138",
+    "bank": "The Mehsana Urban Cooperative Bank LIMITED"
+  },
+  {
+    "code": "139",
+    "bank": "The Mumbai District Central Co-Op Bank Ltd"
+  },
+  {
+    "code": "139",
+    "bank": "The Mumbai District Central Co-Op Bank LIMITED."
+  },
+  {
+    "code": "139",
+    "bank": "The Mumbai District Central Co-Op Bank LIMITED"
+  },
+  {
+    "code": "140",
+    "bank": "The Municipal Co Operative Bank Ltd, Mumbai"
+  },
+  {
+    "code": "141",
+    "bank": "The Nainital Bank Ltd"
+  },
+  {
+    "code": "141",
+    "bank": "The Nainital Bank LIMITED."
+  },
+  {
+    "code": "141",
+    "bank": "The Nainital Bank LIMITED"
+  },
+  {
+    "code": "142",
+    "bank": "The Nasik Merchants Co-Op Bank Ltd"
+  },
+  {
+    "code": "142",
+    "bank": "The Nasik Merchants Co-Op Bank LIMITED."
+  },
+  {
+    "code": "142",
+    "bank": "The Nasik Merchants Co-Op Bank LIMITED"
+  },
+  {
+    "code": "143",
+    "bank": "The Rajasthan State Cooperative Bank Ltd"
+  },
+  {
+    "code": "143",
+    "bank": "The Rajasthan State Cooperative Bank LIMITED."
+  },
+  {
+    "code": "143",
+    "bank": "The Rajasthan State Cooperative Bank LIMITED"
+  },
+  {
+    "code": "144",
+    "bank": "The Royal Bank of Scotland N.V."
+  },
+  {
+    "code": "145",
+    "bank": "The Saraswat Cooperative Bank Ltd"
+  },
+  {
+    "code": "145",
+    "bank": "The Saraswat Cooperative Bank LIMITED."
+  },
+  {
+    "code": "145",
+    "bank": "The Saraswat Cooperative Bank LIMITED"
+  },
+  {
+    "code": "146",
+    "bank": "The Seva Vikas Co-Operative Bank Ltd"
+  },
+  {
+    "code": "146",
+    "bank": "The Seva Vikas Co-Operative Bank LIMITED."
+  },
+  {
+    "code": "146",
+    "bank": "The Seva Vikas Co-Operative Bank LIMITED"
+  },
+  {
+    "code": "147",
+    "bank": "The Shamrao Vithal Cooperative Bank Ltd"
+  },
+  {
+    "code": "147",
+    "bank": "The Shamrao Vithal Cooperative Bank LIMITED."
+  },
+  {
+    "code": "147",
+    "bank": "The Shamrao Vithal Cooperative Bank LIMITED"
+  },
+  {
+    "code": "148",
+    "bank": "The Surat District Co Operative Bank Ltd"
+  },
+  {
+    "code": "148",
+    "bank": "The Surat District Co Operative Bank LIMITED."
+  },
+  {
+    "code": "148",
+    "bank": "The Surat District Co Operative Bank LIMITED"
+  },
+  {
+    "code": "149",
+    "bank": "The Surat Peoples Co-Op Bank Ltd"
+  },
+  {
+    "code": "149",
+    "bank": "The Surat Peoples Co-Op Bank LIMITED."
+  },
+  {
+    "code": "149",
+    "bank": "The Surat Peoples Co-Op Bank LIMITED"
+  },
+  {
+    "code": "150",
+    "bank": "The Tamilnadu State Apex Cooperative Bank"
+  },
+  {
+    "code": "151",
+    "bank": "The Thane Bharat Sahakari Bank Ltd"
+  },
+  {
+    "code": "151",
+    "bank": "The Thane Bharat Sahakari Bank LIMITED."
+  },
+  {
+    "code": "151",
+    "bank": "The Thane Bharat Sahakari Bank LIMITED"
+  },
+  {
+    "code": "152",
+    "bank": "The Thane District Central Co-Op Bank Ltd"
+  },
+  {
+    "code": "152",
+    "bank": "The Thane District Central Co-Op Bank LIMITED."
+  },
+  {
+    "code": "152",
+    "bank": "The Thane District Central Co-Op Bank LIMITED"
+  },
+  {
+    "code": "153",
+    "bank": "The Varachha Co-Op. Bank Ltd"
+  },
+  {
+    "code": "153",
+    "bank": "The Varachha Co-Op. Bank LIMITED."
+  },
+  {
+    "code": "153",
+    "bank": "The Varachha Co-Op. Bank LIMITED"
+  },
+  {
+    "code": "154",
+    "bank": "The Vishweshwar Sahakari Bank Ltd"
+  },
+  {
+    "code": "154",
+    "bank": "The Vishweshwar Sahakari Bank LIMITED."
+  },
+  {
+    "code": "154",
+    "bank": "The Vishweshwar Sahakari Bank LIMITED"
+  },
+  {
+    "code": "155",
+    "bank": "The West Bengal State Cooperative Bank Ltd"
+  },
+  {
+    "code": "155",
+    "bank": "The West Bengal State Cooperative Bank LIMITED."
+  },
+  {
+    "code": "155",
+    "bank": "The West Bengal State Cooperative Bank LIMITED"
+  },
+  {
+    "code": "156",
+    "bank": "The Zoroastrian Cooperative Bank Limited"
+  },
+  {
+    "code": "157",
+    "bank": "TJSB Sahakari Bank Ltd"
+  },
+  {
+    "code": "157",
+    "bank": "TJSB Sahakari Bank LIMITED."
+  },
+  {
+    "code": "157",
+    "bank": "TJSB Sahakari Bank LIMITED"
+  },
+  {
+    "code": "158",
+    "bank": "Tumkur Grain Merchants Cooperative Bank Ltd"
+  },
+  {
+    "code": "158",
+    "bank": "Tumkur Grain Merchants Cooperative Bank LIMITED."
+  },
+  {
+    "code": "158",
+    "bank": "Tumkur Grain Merchants Cooperative Bank LIMITED"
+  },
+  {
+    "code": "159",
+    "bank": "UCO Bank"
+  },
+  {
+    "code": "160",
+    "bank": "Union Bank of India"
+  },
+  {
+    "code": "161",
+    "bank": "United Bank of India"
+  },
+  {
+    "code": "162",
+    "bank": "United Overseas Bank"
+  },
+  {
+    "code": "163",
+    "bank": "Vasai Vikas Sahakari Bank Ltd"
+  },
+  {
+    "code": "163",
+    "bank": "Vasai Vikas Sahakari Bank LIMITED."
+  },
+  {
+    "code": "163",
+    "bank": "Vasai Vikas Sahakari Bank LIMITED"
+  },
+  {
+    "code": "164",
+    "bank": "Vijaya Bank"
+  },
+  {
+    "code": "165",
+    "bank": "Westpac Banking Corporation"
+  },
+  {
+    "code": "166",
+    "bank": "Woori Bank"
+  },
+  {
+    "code": "167",
+    "bank": "Yes Bank Ltd"
+  },
+  {
+    "code": "167",
+    "bank": "Yes Bank LIMITED."
+  },
+  {
+    "code": "167",
+    "bank": "Yes Bank LIMITED"
+  },
+  {
+    "code": "168",
+    "bank": "Zila Sahkari Bank Ltd Ghaziabad"
+  },
+  {
+    "code": "169",
+    "bank": "The HASTI Co-Operative Bank Ltd"
+  },
+  {
+    "code": "169",
+    "bank": "The HASTI Co-Operative Bank LIMITED."
+  },
+  {
+    "code": "169",
+    "bank": "The HASTI Co-Operative Bank LIMITED"
+  },
+  {
+    "code": "170",
+    "bank": "Bandhan Bank Limited"
+  },
+  {
+    "code": "171",
+    "bank": "IDFC Bank Limited"
+  },
+  {
+    "code": "172",
+    "bank": "Industrial Bank of Korea"
+  },
+  {
+    "code": "173",
+    "bank": "National Bank of Abu Dhabi PJSC"
+  },
+  {
+    "code": "174",
+    "bank": "Surat National Cooperative Bank Limited"
+  },
+  {
+    "code": "999",
+    "bank": "Other Bank"
+  }
+]

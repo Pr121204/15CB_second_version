@@ -1,0 +1,132 @@
+{
+  "fts": {
+    "agreement_nature": "FTS",
+    "service_category": "other business services",
+    "purpose_code": "S1099 - Other services not included elsewhere"
+  },
+  "testing charges": {
+    "agreement_nature": "Testing charges",
+    "service_category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere"
+  },
+  "r&d charges": {
+    "agreement_nature": "R&D Charges",
+    "service_category": "Other Business Services",
+    "purpose_code": "S1008 - Research & Development services"
+  },
+  "licensing fee": {
+    "agreement_nature": "Licensing Fee",
+    "service_category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing"
+  },
+  "subscription fees": {
+    "agreement_nature": "Subscription Fees",
+    "service_category": "other business services",
+    "purpose_code": "S1099 - Other services not included elsewhere"
+  },
+  "interest payment": {
+    "agreement_nature": "Interest Payment",
+    "service_category": "Short term Loans",
+    "purpose_code": "S0013 - Repayment of short term loans with original"
+  },
+  "reimbursement of expenses": {
+    "agreement_nature": "Reimbursement Of Expenses",
+    "service_category": "other business services",
+    "purpose_code": ""
+  },
+  "other income / other (not in the nature of income) relates to material cost": {
+    "agreement_nature": "Other Income / Other (Not In The Nature Of Income) RELATES TO MATERIAL COST",
+    "service_category": "Other Business Services",
+    "purpose_code": "S1099- other services not included elsewhere"
+  },
+  "other income / other (not in the nature of income)": {
+    "agreement_nature": "OTHER INCOME / OTHER (NOT IN THE NATURE OF INCOME)",
+    "service_category": "Other Business Services",
+    "purpose_code": "S1099- other services not included elsewhere"
+  },
+  "freight charges": {
+    "agreement_nature": "Freight Charges",
+    "service_category": "Transport",
+    "purpose_code": "S0203 - Freight on imports \u2013 Shipping companies"
+  },
+  "royalty": {
+    "agreement_nature": "Royalty",
+    "service_category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced originals or prototypes (such as manuscripts and flms), patents, copyrights, trademarks and industrial processes etc."
+  },
+  "engineering services": {
+    "agreement_nature": "Engineering Services",
+    "service_category": "Other Business Services",
+    "purpose_code": "S1014 - Engineering Services"
+  },
+  "software license": {
+    "agreement_nature": "Software License",
+    "service_category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced"
+  },
+  "advertisement fee": {
+    "agreement_nature": "ADVERTISEMENT FEE",
+    "service_category": "Other Business Services",
+    "purpose_code": "S1007 - Advertising, trade fair service"
+  },
+  "other income / other (not in the nature of income) business profits": {
+    "agreement_nature": "Other Income / Other (Not In The Nature Of Income) BUSINESS PROFITS",
+    "service_category": "other business services",
+    "purpose_code": "S1006- Business and management consultancy"
+  },
+  "training": {
+    "agreement_nature": "Training",
+    "service_category": "Telecommunication, Computer & Information Services",
+    "purpose_code": "S0802 - Software consultancy / implementation"
+  },
+  "consulting services": {
+    "agreement_nature": "CONSULTING SERVICES",
+    "service_category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere"
+  },
+  "professional services": {
+    "agreement_nature": "Professional Services",
+    "service_category": "other business services",
+    "purpose_code": "S1005 - Accounting, auditing, book-keeping services"
+  },
+  "commission": {
+    "agreement_nature": "commission",
+    "service_category": "other business services",
+    "purpose_code": "S1002-Trade related service"
+  },
+  "other income / other (not in the nature of income) refund of excess payment": {
+    "agreement_nature": "Other Income / Other (Not In The Nature Of Income) REFUND OF EXCESS PAYMENT",
+    "service_category": "OTHERS",
+    "purpose_code": "S1502 - Reversal of wrong entries, refunds of amount remitted for non-Exports"
+  },
+  "liesense fees": {
+    "agreement_nature": "Liesense fees",
+    "service_category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing"
+  },
+  "software licences": {
+    "agreement_nature": "Software Licences",
+    "service_category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use,"
+  },
+  "business ssl rsa": {
+    "agreement_nature": "Business SSL RSA",
+    "service_category": "other business services",
+    "purpose_code": ""
+  },
+  "other income": {
+    "agreement_nature": "other income",
+    "service_category": "other business services",
+    "purpose_code": "S1099 - Other services not included elsewhere"
+  },
+  "fts/ fis": {
+    "agreement_nature": "FTS/ FIS",
+    "service_category": "other business services",
+    "purpose_code": "IT act applicable"
+  },
+  "software licenses": {
+    "agreement_nature": "software licenses",
+    "service_category": "",
+    "purpose_code": ""
+  }
+}

@@ -1,0 +1,3689 @@
+{
+  "indian_companies": [
+    {
+      "name": "Bosch Limited",
+      "pan": "AAACM9840P",
+      "password": "aaacm9840p12111951",
+      "address": "HOSUR ROAD POST BOX NO.3000 BANGALORE-560030. PB NO 6887 ELECTRONIC CITY PO, BANGALURU-560100. NO. 42, 2ND PHASE,SECTOR-2, BIDADI-562109. PLOT 263 BOMMASANDRA-JIGANI LINK RO, JIGANI HOBLI, ANEKAL, BANGALORE-562106. BUILDING NO. 2,INDOSPACE SKCL PARK PANRUTI B VILLAGE, KANCHEEPURAM, TAMILNADU-631604."
+    },
+    {
+      "name": "RBEI",
+      "pan": "AAACR7108R",
+      "password": "aaacr7108r17121997",
+      "address": "123, INDUSTRIAL LAYOUT, HOSUR ROAD, KORMANGALA, BANGALORE-560095. CHIL SEZ UNIT KEERANATHAM VILLAGE,COIMBATORE-641035. Unit no.L7 06,7th Floor,SLN,133 Gachibowli,Serilingampally Mandal,Hyderabad-500032. CYBER PARK 76-77, 5TH FLOOR, ELECTRONIC CITY, PHASE-1 BANGALURU-560100. 208/2 global tech park,kalapatti main road,coimbatore-641048."
+    },
+    {
+      "name": "RBAI",
+      "pan": "AADCB4330L",
+      "password": "aadcb4330l09042008",
+      "address": "NAGANATHAPURA, ELECTRONIC CITY POST BANGALORE-560100"
+    },
+    {
+      "name": "BOSCH CHASSIS",
+      "pan": "AAACK7312E",
+      "password": "aaack7312e25051982",
+      "address": "GAT N.306 NANEKARWAADI, CHAKAN-410501."
+    },
+    {
+      "name": "DCIN- Rexroth",
+      "pan": "AAACM9898F",
+      "password": "aaacm9898f18021974",
+      "address": "206/2,207,214/P, SANAND VIRAMGAM HIGHWAY, MOUJE IYAVA, SANAND TALUK, AHMEDABAD 382170."
+    },
+    {
+      "name": "RBDI",
+      "pan": "AADCB4239N",
+      "password": "aadcb4239n25042008",
+      "address": "PLOT A-20/2, SIPCOT INDUSTRIAL GROW KANCHIPURAM 602105."
+    },
+    {
+      "name": "ETAS",
+      "pan": "AABCE7260L",
+      "password": "AABCE7260L",
+      "address": "12TH FLOOR, GOLD HILL SQUARE SOFTWARE PARK NO 690 HOSUR RD, BOMMANAHALLI BANGALORE-560045. NO. 690, HOSUR ROAD GOLD HILL SQUARE SOFTWARE PARK BENGALURU 560068 HOSUR ROAD, ADUGODI B519 POST BOX NO. 3000 BENGALURU-560030."
+    },
+    {
+      "name": "TATA HITACHI",
+      "pan": "AAACT9077B",
+      "password": "aaact9077b30121998",
+      "address": "JUBILEE BUILDING, 45 MUSEUM ROAD, BANGALORE 560025"
+    },
+    {
+      "name": "FK Internet",
+      "pan": "AACCF0683K",
+      "password": "aaccf0683k01102012",
+      "address": "ALYSSA,BEGONIA&CLOVER,EMBASSY TECH VILLAGE,DEVARABEESANAHALLI VILLAGE,BANGALORE-560103."
+    },
+    {
+      "name": "FX Mart Pvt. Ltd.",
+      "pan": "AACCF1132H",
+      "password": "aaccf1132h18122012",
+      "address": "No 80/1, 81/1, 81/2, Salarpuria Softzone, 4th, 5th and 6th Floor, Bellandur Village, Bangalore-560037"
+    },
+    {
+      "name": "(PHONEPE)",
+      "pan": null,
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "MiViN",
+      "pan": "AADCM2694Q",
+      "password": "aadcm2694q20112002",
+      "address": ""
+    },
+    {
+      "name": "Terpl",
+      "pan": "AABCT9674P",
+      "password": "aabct9674p17102003",
+      "address": ""
+    },
+    {
+      "name": "WSR",
+      "pan": "AAACW8725F",
+      "password": "aaacw8725f15062009",
+      "address": ""
+    },
+    {
+      "name": "Starter Motors",
+      "pan": "AAHCR6993H",
+      "password": "aahcr6993h19022016",
+      "address": ""
+    },
+    {
+      "name": "Novarris",
+      "pan": "AAFCN2761B",
+      "password": "aafcn2761b29062016",
+      "address": ""
+    },
+    {
+      "name": "Jade eServices",
+      "pan": "AACCJ6683M",
+      "password": "aaccj6683m28022011",
+      "address": ""
+    },
+    {
+      "name": "Myntra",
+      "pan": "AAECM9636P",
+      "password": "aaecm9636p16022007",
+      "address": "Buildings Alyssa, Begonia & Clover, Embassy Tech Village, Outer Ring Road, Devarabeesanahalli Village Bengaluru Bangalore KA 560103 IN"
+    },
+    {
+      "name": "Mintkart",
+      "pan": "AABCB2307H",
+      "password": "aabcb2307h14012000",
+      "address": "No.1261, 6th floor, # 12, Solitaire Corporate Park No.167, Guru Hargovindji Marg, Andheri (East) Mumbai Mumbai City MH 400093 IN"
+    },
+    {
+      "name": "Flipkart Logistics",
+      "pan": "AABCF8595R",
+      "password": "aabcf8595r13122011",
+      "address": "Brigade Manae Court, First Floor No.111, Industrial Layout, Kormangala Bangalore KA 560095 IN"
+    },
+    {
+      "name": "AdIQuity",
+      "pan": "AACCT4054A",
+      "password": "aacct4054a20012006",
+      "address": "Brigade Manae Court, First Floor No.111, Industrial Layout, Kormangala Bangalore KA 560095 IN"
+    },
+    {
+      "name": "Jeeves Consumer Services",
+      "pan": "AABCJ9421C",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "IP infusion",
+      "pan": "AACCI5170N",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "Syntegon",
+      "pan": "AAJCR6955M",
+      "password": null,
+      "address": "N4A, Phase IV, Verna Industrial Estate,Verna, Goa-403722"
+    },
+    {
+      "name": "PHONEPE INSURANCE BS PVT LTD.",
+      "pan": "AALCP0641E",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "CLEAR TRIP",
+      "pan": "AACCC6016B",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "WEALTH TECHNOLOGY AND SERVICES PVT. LTD",
+      "pan": "AABCW8384K",
+      "password": null,
+      "address": "RUSTOMJEE CENTRAL PARK, A 305, ANDHERI K MUMBAI MH-400059."
+    },
+    {
+      "name": "TATA COFFEE LIMITED.",
+      "pan": "AABCC0241R",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "EXPLORIUM INNOVATIVE TECHNOLOGIES PRIVATE LTD",
+      "pan": "AAECE4207C",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "CHILDRENITE PVT LTD",
+      "pan": "AAJCC4778P",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "MJPL",
+      "pan": "AAACQ3774A",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "INSTAKART",
+      "pan": "AADCI8374D",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "ALIVENOW",
+      "pan": "AHJPA3477B",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "AUTOMOBILITY S&S PVT LTD",
+      "pan": "AAOCA2522L",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "PHONEPE WEALTH BROKING PRIVATE LIMITED.",
+      "pan": "AALCP9647E",
+      "password": null,
+      "address": ""
+    },
+    {
+      "name": "PhonePe Insurance Broking Services Private Limited",
+      "pan": "AAECE4207C",
+      "password": null,
+      "address": ""
+    }
+  ],
+  "address_master": [
+    {
+      "cin_llpin": "U67190DL2012PTC303812",
+      "company_name": "PHONEPE PRIVATE LIMITED",
+      "state": "Delhi",
+      "incorporation_date": "2012-12-18",
+      "status": "Allocated",
+      "address": "A 25 Mohan Cooperative Industrial Area New Delhi South Delhi DL 110044 IN",
+      "new_address": "No 80/1, 81/1, 81/2, Salarpuria Softzone, 4th, 5th and 6th Floor, Bellandur Village, Bangalore-560037"
+    },
+    {
+      "cin_llpin": "U51109KA2012PTC066107",
+      "company_name": "FLIPKART INTERNET PRIVATE LIMITED",
+      "state": "Karnataka",
+      "incorporation_date": "2012-10-01",
+      "status": "Allocated",
+      "address": "Vaishnavi Summit, Ground Floor, 7th Main, 80 Feet Road, 3rd Block, Koramangala Industrial Layout, Bangalore KA 560034 IN",
+      "new_address": "Alyssa, Begonia & Clover, Embassy Tech Village,Outer Ring Road, Devarabeesanahalli Village, Bengaluru, Karnataka - 560103"
+    },
+    {
+      "cin_llpin": "U51909KA2011PTC060489",
+      "company_name": "FLIPKART INDIA PRIVATE LIMITED",
+      "state": "Karnataka",
+      "incorporation_date": "2011-09-19",
+      "status": "Allocated",
+      "address": "Vaishnavi Summit, Ground Floor, 7th Main, 80 Feet Road, 3rd Block, Koramangala Industrial Layout, Bangalore KA 560034 IN",
+      "new_address": "Alyssa, Begonia & Clover, Embassy Tech Village,Outer Ring Road, Devarabeesanahalli Village, Bengaluru, Karnataka - 560103"
+    },
+    {
+      "cin_llpin": "U74900KA2015PTC080778",
+      "company_name": "INSTAKART SERVICES PRIVATE LIMITED",
+      "state": "Karnataka",
+      "incorporation_date": "08/06/2015",
+      "status": "Allocated",
+      "address": "Brigade Manae Court, First Floor, No.111, Industrial Layout, Kormangala, Bangalore Bangalore KA 560095 IN",
+      "new_address": "Alyssa, Begonia & Clover, Embassy Tech Village,Outer Ring Road, Devarabeesanahalli Village, Bengaluru, Karnataka - 560103"
+    },
+    {
+      "cin_llpin": "U72200MH2000PTC123649",
+      "company_name": "MINTKART INDIA PRIVATE LIMITED",
+      "state": "Karnataka",
+      "incorporation_date": "14/01/2000",
+      "status": "Allocated",
+      "address": "No.1261, 6th floor, # 12, Solitaire Corporate Park No.167, Guru Hargovindji Marg, Andheri (East) Mumbai Mumbai City MH 400093 IN",
+      "new_address": null
+    },
+    {
+      "cin_llpin": "U74900KA2011PTC061609",
+      "company_name": "FLIPKART LOGISTICS PRIVATE LIMITED",
+      "state": "Karnataka",
+      "incorporation_date": "13/12/2011",
+      "status": "Allocated",
+      "address": "Brigade Manae Court, First Floor No.111, Industrial Layout, Kormangala Bangalore KA 560095 IN",
+      "new_address": null
+    },
+    {
+      "cin_llpin": "Provided by Flipkart",
+      "company_name": "AdIQuity Technologies Private Limited",
+      "state": null,
+      "incorporation_date": null,
+      "status": null,
+      "address": "Brigade Manae Court, First Floor No.111, Industrial Layout, Kormangala Bangalore KA 560095 IN",
+      "new_address": null
+    },
+    {
+      "cin_llpin": null,
+      "company_name": "MYNTRA DESIGNS PVT LTD.",
+      "state": null,
+      "incorporation_date": null,
+      "status": null,
+      "address": "AKR TECH PARK, BLOCK-C, 7TH MILE , KRISHNA REDDY INDUSTRIAL AREA, KUDLU GATE, BANGALORE 560068.",
+      "new_address": "Buildings Alyssa, Begonia & Clover, Embassy Tech Village, Outer Ring Road, Devarabeesanahalli Village Bengaluru Bangalore KA 560103 IN"
+    },
+    {
+      "cin_llpin": null,
+      "company_name": "MYNTRA JABONG INDIA PVT LTD,",
+      "state": null,
+      "incorporation_date": null,
+      "status": null,
+      "address": "6/B, VAISHNAVI SUMMIT, 7TH MAIN, 80 FT ROAD, 3RD BLOCK, KORAMANGALA INDUSTRIAL AREA, BLR-560034",
+      "new_address": "Alyssa, Begonia & Clover, Embassy Tech Village,Outer Ring Road, Devarabeesanahalli Village, Bengaluru, Karnataka - 560103"
+    }
+  ],
+  "foreign_companies": [
+    {
+      "sl_no": 1,
+      "name": "Robert Bosch Engineering & Business, Vietnam / BGSW",
+      "pan": "AAFCR3362N",
+      "address": "so 364, duong cong hoa,phuong 13,quan tan binh,thanh pho ho chi minh 14 tang,capital place,so 29,pho lieu giai,phuong ngoc khanh,quan ba dinh,thanh pho ha noi",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 2,
+      "name": "Bosch Automotive Diesel Systems Co Ltd, China( BOSCH POWERTRAIN SYSTEMS CO. LTD)",
+      "pan": "AAECB8957A",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 3,
+      "name": "Bosch Automotive Products (Changsha) Co, China",
+      "pan": "AAECB2503N",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 4,
+      "name": "Bosch Automotive Products Suzhou, China",
+      "pan": "AAECB1265H",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 5,
+      "name": "Bosch China (Investment), China",
+      "pan": "AAFCB0577M",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 6,
+      "name": "Bosch Diesel s.r.o Czech Republic",
+      "pan": "AAECB0532D",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 7,
+      "name": "Bosch Corporation, Japan",
+      "pan": "AAECB0343A",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 8,
+      "name": "Bosch Electrical Drives, South Korea",
+      "pan": "AAECB0882C",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 9,
+      "name": "Bosch Engineering GmbH, Germany",
+      "pan": "AAECB1245P",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 10,
+      "name": "BOSCH PACKAGING SERVICES AG, Switzerland",
+      "pan": "AAECB1742P",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 11,
+      "name": "Bosch Power Tools, China",
+      "pan": "AAECB3416G",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 12,
+      "name": "Bosch Sanayi Turkey",
+      "pan": "AAECB1408N",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 13,
+      "name": "Bosch Sistemas De Frenando S.L.U., Spain",
+      "pan": "AAECB1246Q",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 14,
+      "name": "Centro Studi Componenti, Italy",
+      "pan": "AAECC1032D",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 15,
+      "name": "Moehwald GmbH, Germany",
+      "pan": "AAGCM6733P",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 16,
+      "name": "Robert Bosch AG, Austria",
+      "pan": "AAFCR2609Q",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 17,
+      "name": "Robert Bosch Australia Pty Ltd, Australia",
+      "pan": "AAFCR0207G",
+      "address": "1555 Centre Rd,Clayton,Australia 3169",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 18,
+      "name": "Robert Bosch Co Ltd, hong Kong",
+      "pan": "AAFCR5954E",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 19,
+      "name": "Robert Bosch LLC, USA",
+      "pan": "AAECR2538M",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 20,
+      "name": "Robert Bosch (France) SAS, France",
+      "pan": "AAECR9343N",
+      "address": "32 avenue Michelet,93404,St Ouen Cedex",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 21,
+      "name": "Robert Boch Ltda, Brazil",
+      "pan": "AAECR7006G",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 22,
+      "name": "Robert Bosch Packaging Technology B.V., Netherlands",
+      "pan": "AAECR7154H",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 23,
+      "name": "Robert Bosch spol sro, Czech Republic",
+      "pan": "AAECR7579J",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 24,
+      "name": "Technologie Diesel E Sistemi, Italy",
+      "pan": "AADCT5704E",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 25,
+      "name": "Robert Bosch Energy & Body Systems Kft, Hungary",
+      "pan": "AAFCR7087Q",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 26,
+      "name": "Robert Bosch Technical (RBTB) Germany",
+      "pan": "AAECR8967J",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 27,
+      "name": "Robert Bosch Espana Fabrica madrid S.A, Spain",
+      "pan": "AAGCR3222E",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 28,
+      "name": "Bosch Packaging Technology INC, USA",
+      "pan": "AAECB4214E",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 29,
+      "name": "ROBERT BOSCH KOREA LIMITED COMPANY formerly known as Robert Bosch Korea Diesel Ltd, Korea",
+      "pan": "AAFCR0147M",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 30,
+      "name": "Robert Bosch AB, Sweden",
+      "pan": "AAFCR7638K",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 31,
+      "name": "Bosch Rexroth AG Germany",
+      "pan": "AACCB9507E",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 32,
+      "name": "ETAS GmbH, Germany",
+      "pan": "AACCE3818M",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 33,
+      "name": "RB Elektronik GmbH, Germany",
+      "pan": "AAECR7773G",
+      "address": "John-F.-Kennedy-Str,43 - 53,DE-38228,Salzgitter",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 34,
+      "name": "Robert Bosch (SEA) - Singapore",
+      "pan": "AAECR8129E",
+      "address": "11,Bishan steert 21 573943",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 35,
+      "name": "Robert Bosch Automotive Steering GmbH, Germany",
+      "pan": "AAACZ4747L",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 36,
+      "name": "Robert Bosch Espana Fabrica Castellet, Spain",
+      "pan": "AAECR9815P",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 37,
+      "name": "Robert Bosch Ltd, United Kingdom",
+      "pan": "AAECR8502P",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 38,
+      "name": "Robert Bosch Kft, Hungary",
+      "pan": "AAFCR4164E",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 39,
+      "name": "Robert Bosch Fahrzeugelektrik Eisenach GmbH, Germany",
+      "pan": "AAFCR0027E",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 40,
+      "name": "Bosch Sicherheitssysteme GmbH, Germany",
+      "pan": "AAFCB9755R",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 41,
+      "name": "Bosch Technology Licensing Administration GmbH, Germany",
+      "pan": "AAFCB9408B",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 42,
+      "name": "Robert Bosch Mexico S.A. DE C.V., Mexico",
+      "pan": "AAHCR0800M",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 43,
+      "name": "Syntegon/Bosch Packaging Systems AG, Switzerland",
+      "pan": "AAECB9587A",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 44,
+      "name": "Robert Bosch GmbH, Germany",
+      "pan": "AADCR1702Q",
+      "address": "Robert-Bosch-Platz 1,DE-70839,Gerlingen-Schillerhoehe",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 45,
+      "name": "Robert Bosch manufacturing Solutions GmbH, Germany",
+      "pan": "AAICR2804G",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 46,
+      "name": "Bosch Automotive Service Solutions Ltd, UK",
+      "pan": "AAGCB6490C",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 47,
+      "name": "Robert Bosch (Bangladesh) Limited",
+      "pan": "AAICR6692J",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 48,
+      "name": "Robert Bosch Car Multimedia GmbH, Germany",
+      "pan": "AAICR2455B",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 49,
+      "name": "Bosch Service Solutions GMBH, Germany",
+      "pan": "AAICB3108P",
+      "address": "Lahnstrasse 193 60326 Frankfurt am Main",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 50,
+      "name": "BOSCH SOFTWARE INNOVATIONS GMBH(bosch IO)",
+      "pan": "AAGCB2164B",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 51,
+      "name": "BOSCH TERMOTECNOLOGIA S.A.",
+      "pan": "AAHCB4382Q",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 52,
+      "name": "Robert Bosch Packaging Technology GmbH",
+      "pan": "AAICR2454A",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 53,
+      "name": "Hitachi Construction Machinary Asia & Pacific PTE Ltd. Singapore",
+      "pan": "AACCH4100R",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 54,
+      "name": "Bosch Management Support GmbH, Germany",
+      "pan": "AAECB0534F",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 55,
+      "name": "Bosch Rexroth DSI, France",
+      "pan": "AAECB3158M",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 56,
+      "name": "Robert Bosch S.P.A, Italy",
+      "pan": "AAFCR5531F",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 57,
+      "name": "Robert Bosch Asset Managing CV formerly known as Robert Bosch Licensing Administration C.V, The Netherland",
+      "pan": "AAGCR2635F",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 58,
+      "name": "Beissbarth GmbH, Germany",
+      "pan": "AAFCB5926J",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 59,
+      "name": "Bosch Automotive - Thailand",
+      "pan": "AAECB2902R",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 60,
+      "name": "Shanghai Bosch Rexroth, China",
+      "pan": "AARCS8613F",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 61,
+      "name": "OOO Robert Bosch, Russia",
+      "pan": "AAGCR8806G",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 62,
+      "name": "BOSCH SOLARTHERMIE GMBH",
+      "pan": "AAFCB1418B",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 63,
+      "name": "Robert Bosch A/S, Denmark",
+      "pan": "AAGCR3610Q",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 64,
+      "name": "Robert Bosch AS, Norway",
+      "pan": "AAGCR8829P",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 65,
+      "name": "Robert Bosch Investment Nederland BV",
+      "pan": "AAECR2370P",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 66,
+      "name": "Bosch Security Systems B.V.",
+      "pan": "AAJCB2548L",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 67,
+      "name": "BOSCH REXROTH B.V.",
+      "pan": "AADCB2866M",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 68,
+      "name": "Viscom Machine Vision Pte Ltd, Singapore",
+      "pan": "AAECV6960D",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 69,
+      "name": "BSH Bosch Und Siemens Hausgerate GmbH, Germany",
+      "pan": "AAECB1783C",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 70,
+      "name": "Robert Bosch Korea LTD, Korea",
+      "pan": "AAFCR0146L",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 71,
+      "name": "Robert Bosch Internationale Beteiligungen AG",
+      "pan": "AAKCR6635D",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 72,
+      "name": "Bosch Softec Gmbh, Germany",
+      "pan": "AAJCB3795K",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 73,
+      "name": "ROBERT BOSCH POWER TOOLS GMBH",
+      "pan": "AAJCR9736L",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 74,
+      "name": "VHIT S.P.A.",
+      "pan": "AAFCV0942A",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 75,
+      "name": "BOSCH SYSTEMS ENGINEERING GMBH",
+      "pan": "AACCE4267C",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 76,
+      "name": "Synopsys International Limited",
+      "pan": "AAKCS2663N",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 77,
+      "name": "STARBUCKS CORPORATION",
+      "pan": "AASCS8376G",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 78,
+      "name": "HITACHI CONSTURUCTION MACHINERY CO., LTD.",
+      "pan": "AACCH3614G",
+      "address": "16-1,HIGASHIUENO 2 -CHOME,TAITO-KU TOKYO-110-0015.",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 79,
+      "name": "SYNTEGON TECHNOLOGY SINGAPORE PTE LTD",
+      "pan": "AAFCB8582Q)",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 80,
+      "name": null,
+      "pan": "AACCU5784A",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 81,
+      "name": "SMART IIN OVATIION GmbH..",
+      "pan": "AASCS8660H",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 82,
+      "name": "UNIVERSAL STUDIOS LICENSING LLC",
+      "pan": "AACFU9193Q",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 83,
+      "name": "VOLKSWAGEN AG",
+      "pan": "AADCV0554C",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 84,
+      "name": "DEGREED, INC",
+      "pan": "AAFCD6423L",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 85,
+      "name": "Gopalam Embedded Systems Pte Ltd",
+      "pan": "AAECG0088K",
+      "address": "",
+      "group": "bosch_companies"
+    },
+    {
+      "sl_no": 1,
+      "name": "DIFFERENTIAL ASIA OCEANIA PTE LTD.",
+      "pan": "AAGCD7410C",
+      "address": "04-113 German Center,, 25 International Business Park,, SINGAPORE 609916,",
+      "group": "others"
+    },
+    {
+      "sl_no": 2,
+      "name": "MICROSOFT REGIONAL SALES PTE LTD",
+      "pan": "AADCM1638A",
+      "address": "13-01, 182 Cecil Street,Frasers Tower, Singapore,069547,",
+      "group": "others"
+    },
+    {
+      "sl_no": 3,
+      "name": "BRANCH METRICS INC",
+      "pan": "AAJCB2132J",
+      "address": "195 Page Mill Rd, CA 94306,Palo Alto,",
+      "group": "others"
+    },
+    {
+      "sl_no": 4,
+      "name": "LNRS DATA SERVICES LIMITED",
+      "pan": "AAKCR4632G",
+      "address": "QUADRANT HOUSE,, THE QUADRANT, SUTTON, SM2 5AS,UK,",
+      "group": "others"
+    },
+    {
+      "sl_no": 5,
+      "name": "FLIPKART SHENZHEN INTERNATIONAL TRADING CO.,",
+      "pan": "AADCF4938J",
+      "address": "Room 806, Block 2,Aerospace Building, Hightech nan jiu avenue, no. 53,Nanshan District, Shenzhen,Guangdong Province,",
+      "group": "others"
+    },
+    {
+      "sl_no": 6,
+      "name": "CYBERSOURCE INTERNATIONAL, INC.",
+      "pan": "AAECC7716Q",
+      "address": "900 metro , Center Blvd,Foster City, CA 94044,",
+      "group": "others"
+    },
+    {
+      "sl_no": 7,
+      "name": "FRESHWORKS INC.",
+      "pan": "AACCF5990M",
+      "address": "2950 South Delaware St, Suite 201, San Mateo, CA 94403,",
+      "group": "others"
+    },
+    {
+      "sl_no": 8,
+      "name": "Forrester Research Limited",
+      "pan": "AACCF8265H",
+      "address": "265 Strand, WC2R 1BH,London,",
+      "group": "others"
+    },
+    {
+      "sl_no": 9,
+      "name": "Figma INC.",
+      "pan": "AAECF5624Q",
+      "address": "Floor 10, 760 Market Street,San Francisco, California ,94102,",
+      "group": "others"
+    },
+    {
+      "sl_no": 10,
+      "name": "WALMART INC",
+      "pan": "AAACW6643A",
+      "address": "702 S.W. 8TH STREET,BENTONVILLE, AR 72716,",
+      "group": "others"
+    },
+    {
+      "sl_no": 11,
+      "name": "DO LOGISTICS CONSULTING GMBH",
+      "pan": "AADCD5166C",
+      "address": "Baurat-Marx-Allee 22, 44141,DORTMUND,",
+      "group": "others"
+    },
+    {
+      "sl_no": 12,
+      "name": "ADOBE SYSTEMS SOFTWARE IRELAND LTD",
+      "pan": "AAHCA7203M",
+      "address": "4-6 RIVERWALK, CITY WEST BUSINESS CAMPUS,SAGGART, DUBLIN 24, Ireland,",
+      "group": "others"
+    },
+    {
+      "sl_no": 13,
+      "name": "PRICE WATERHOUSECOOPERS GMBH",
+      "pan": "AAFCP5329P",
+      "address": "",
+      "group": "others"
+    },
+    {
+      "sl_no": 14,
+      "name": "NOKIA TECHNOLOGIES OY",
+      "pan": "AAGCN7006E",
+      "address": "02610, Karakaari 7,, Espoo,,",
+      "group": "others"
+    },
+    {
+      "sl_no": 15,
+      "name": "VISCOM MACHINE VISION PTE LTD",
+      "pan": "AAECV6960D",
+      "address": "NO. 01-02,, 150 Kampong Ampat,, KA Centre,, Singapore,368324,",
+      "group": "others"
+    },
+    {
+      "sl_no": 16,
+      "name": "Twitter international company",
+      "pan": "AAFCT2389B",
+      "address": "One Cumberland Place,Fenian Street,, Ireland,",
+      "group": "others"
+    },
+    {
+      "sl_no": 17,
+      "name": "Punto",
+      "pan": "AAFCP9194A",
+      "address": "Mercaders, 9-11, Pol. Ind Riera de Caldes, Palau-Solita I,Plegamans, 08184,",
+      "group": "others"
+    },
+    {
+      "sl_no": 18,
+      "name": "TRACE TRONIC GMBH",
+      "pan": "AAECT5279M",
+      "address": "",
+      "group": "others"
+    },
+    {
+      "sl_no": 19,
+      "name": "HORIBA EUROPE GMBH",
+      "pan": "AADCH4527N)",
+      "address": "",
+      "group": "others"
+    },
+    {
+      "sl_no": 20,
+      "name": "Flipkart Private Limited",
+      "pan": "AACCF5780D",
+      "address": "02-00, 80 ROBINSON ROAD,Singapore-068898,",
+      "group": "others"
+    },
+    {
+      "sl_no": 21,
+      "name": "GITHUB INC",
+      "pan": "AAICG5855A",
+      "address": "88 Colin P, Kelly Jr. St, San,Francisco,, CA 94107,",
+      "group": "others"
+    },
+    {
+      "sl_no": 22,
+      "name": "ATLASSIAN PTY LTD",
+      "pan": "AAPCA7076E",
+      "address": "Level 6, 341 George Street, Sydney, NSW 2000, Australia",
+      "group": "others"
+    },
+    {
+      "sl_no": 23,
+      "name": "Harman International Industries, Inc.",
+      "pan": "AADCH2009J",
+      "address": "400 Atlantic Street 15th Floor,Stamford, CT, 06901,",
+      "group": "others"
+    },
+    {
+      "sl_no": 24,
+      "name": "INTERTEK TESTING SERVICES SHENZHEN LTD.",
+      "pan": "AACCI3126J",
+      "address": "BUILDING 3, YUANZHENG,SCIENCE AND TECHNOLOGY,INDUSTRIAL PARK, NO. 4012,WUHE AVE. NORTH, BANTIAN,STREET, LONGGANG,DISTRIC,, SHENZHEN,",
+      "group": "others"
+    },
+    {
+      "sl_no": 25,
+      "name": "TRU KIDS, INC.",
+      "pan": "AAJCC4778P",
+      "address": "530 Fifth Avenue,25th Fl,New York,NY 10036,",
+      "group": "others"
+    },
+    {
+      "sl_no": 26,
+      "name": "HUBSPOT ASIA PTE LTD",
+      "pan": "AADCH9352E",
+      "address": "Mapletree Anson,60 Anson Road,Tower 2, Level 30, Singapore,",
+      "group": "others"
+    },
+    {
+      "sl_no": 27,
+      "name": "Linkedin",
+      "pan": "AADCL0508Q",
+      "address": "10 Marina Boulevard, Marina,Bay Financial Centre, Tower 2,Level 30, 018983,",
+      "group": "others"
+    },
+    {
+      "sl_no": 28,
+      "name": "Prerender.Io",
+      "pan": null,
+      "address": "SaaS.group LLC,304 South Jones Boulevard, #1205,Las Vegas, Nevada 89107,United States",
+      "group": "others"
+    },
+    {
+      "sl_no": 29,
+      "name": "Bubble Group, Inc.",
+      "pan": null,
+      "address": "22 W 21 Street,3rd Floor,New York, NY 10010,United States of America",
+      "group": "others"
+    },
+    {
+      "sl_no": 30,
+      "name": "Hotjar Ltd",
+      "pan": null,
+      "address": "Dragonara Business Centre,5th Floor, Dragonara Road,Paceville St,Julian's STJ 3141,MALTA (EU),VAT Number: MT21846014",
+      "group": "others"
+    },
+    {
+      "sl_no": 31,
+      "name": "Semrush Inc.",
+      "pan": null,
+      "address": "800 Boylston Street, Suite 2475,Boston, MA 02199, USA",
+      "group": "others"
+    },
+    {
+      "sl_no": 32,
+      "name": "Standuply",
+      "pan": null,
+      "address": "340 S. Lemon Ave. #1448,Walnut, California 91789,United States +1 205-839-2692",
+      "group": "others"
+    },
+    {
+      "sl_no": 33,
+      "name": "Bitly, Inc",
+      "pan": null,
+      "address": "DPT 5006, 601 W 26th St,3rd Floor, Suite 357,New York, NY 10001-1101",
+      "group": "others"
+    },
+    {
+      "sl_no": 34,
+      "name": "Adobe",
+      "pan": null,
+      "address": "4-6 Riverwalk Citywest Business Park Dublin 24 Ireland",
+      "group": "others"
+    },
+    {
+      "sl_no": 35,
+      "name": "Freshworks Inc.",
+      "pan": null,
+      "address": "2950 S. Delaware St,Suite 201, San Mateo, CA 94403,U.S.A.Phone: +1 (866) 832 3090",
+      "group": "others"
+    },
+    {
+      "sl_no": 36,
+      "name": "Slack Technologies Limited",
+      "pan": null,
+      "address": "One Park Place, 4th Floor,Hatch Street Dublin 2,Dublin,Ireland",
+      "group": "others"
+    },
+    {
+      "sl_no": 37,
+      "name": "Browerstack",
+      "pan": null,
+      "address": "4512 Legacy Drive, Suite 100, Plano, TX 75024, U.S.A. GST IN: 9921USA29002OSQ",
+      "group": "others"
+    },
+    {
+      "sl_no": 38,
+      "name": "AEROSPIKE INC.",
+      "pan": "AARCA8475H",
+      "address": "2525E, Charleston Road,SUITE 201, Mountain View,CA 94043,",
+      "group": "others"
+    },
+    {
+      "sl_no": 39,
+      "name": "PINGCAP PTE. LTD.",
+      "pan": "AAMCP5219K",
+      "address": "1 One North Crescent,Level7,Razer SEA HQ,138538.",
+      "group": "others"
+    },
+    {
+      "sl_no": 40,
+      "name": "FLIPKART ISRAEL LTD.",
+      "pan": null,
+      "address": "29 ARNYA OSVALDO, TEL AVIV, ISRAEL 6120601,",
+      "group": "others"
+    },
+    {
+      "sl_no": 41,
+      "name": "CASTLE GLOBAL, INC",
+      "pan": null,
+      "address": "575 Market Street, 15th Floor,San Francisco, CA 94105,",
+      "group": "others"
+    },
+    {
+      "sl_no": 42,
+      "name": "NEW RELIC, INC.",
+      "pan": "AAHCN1426H",
+      "address": "Suite 1200, 188 Spear St, CA 94105, San Francisco,",
+      "group": "others"
+    },
+    {
+      "sl_no": 43,
+      "name": "BMC SOFTWARE ASIA",
+      "pan": null,
+      "address": "21 Collyer Quay, #11-01,HSBC Bldg, Singapore,049320,",
+      "group": "others"
+    },
+    {
+      "sl_no": 44,
+      "name": "HACKERONE INC.",
+      "pan": null,
+      "address": "548 Market St.PMB 24734,San Francisco, CA-94104.",
+      "group": "others"
+    },
+    {
+      "sl_no": 45,
+      "name": "DQS GMBH",
+      "pan": null,
+      "address": "august-schanz-str,21,frankfurt am main,60433.",
+      "group": "others"
+    },
+    {
+      "sl_no": 46,
+      "name": "Harvard Business School Publishing Corporation",
+      "pan": "AACCH4125Q",
+      "address": "",
+      "group": "others"
+    },
+    {
+      "sl_no": 47,
+      "name": "TransforMe Learning and Leadership Solutions Pty Ltd",
+      "pan": null,
+      "address": "429, The Parade, Kensington Gardens 5068, South Australia",
+      "group": "others"
+    },
+    {
+      "sl_no": 48,
+      "name": "M/s. QUALTRICS LLC",
+      "pan": "AAACQ3470H)",
+      "address": "",
+      "group": "others"
+    },
+    {
+      "sl_no": 49,
+      "name": "ARIBA INC",
+      "pan": "AAFCA0120K",
+      "address": "",
+      "group": "others"
+    },
+    {
+      "sl_no": 50,
+      "name": "ORACLE AMERICA,",
+      "pan": "AABCO8080C",
+      "address": "",
+      "group": "others"
+    },
+    {
+      "sl_no": 51,
+      "name": "SALESFORCE.COM SINGAPORE PTE LTD",
+      "pan": "AAOCS2588L",
+      "address": "",
+      "group": "others"
+    }
+  ],
+  "banks_by_party": {
+    "Tata Hitachi": [
+      {
+        "bank_name": "STANDARD CHARTERED BANK",
+        "branch": "BANGALORE",
+        "bsr_code": "6470038",
+        "type": "HCMMEC & SCB ECB Interest Certificate & SIPRADI - Customer Meet Expenses"
+      },
+      {
+        "bank_name": "Bank of Tokyo Mitsubishi Ltd",
+        "branch": "BANGALORE BRANCH",
+        "bsr_code": "6440006",
+        "type": "BOTM"
+      },
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "BANGALORE",
+        "bsr_code": "6550003",
+        "type": "Buyers Credit Interest Repayment -Deutsche Bank"
+      },
+      {
+        "bank_name": "State Bank of India",
+        "branch": "IFB BRANCH, BANGALORE",
+        "bsr_code": "0009077",
+        "type": "HCM & Hitachi Kenki Logistics & Marubeni Certificate & KOBELCO & Fee for Sales Promotion & Trave Stand Japan & sitting fee to directors"
+      },
+      {
+        "bank_name": "ICICI Bank Ltd",
+        "branch": "M G ROAD, BANGALORE",
+        "bsr_code": "6390004",
+        "type": null
+      }
+    ],
+    "RBEI": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "M G ROAD, BANGALORE",
+        "bsr_code": "6550003",
+        "type": "For Every Certificate"
+      }
+    ],
+    "Bosch Limited": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6550003",
+        "type": "For Every Certificate"
+      },
+      {
+        "bank_name": "CITI Bank",
+        "branch": "BANGALORE",
+        "bsr_code": "6480001",
+        "type": null
+      }
+    ],
+    "RBDI": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "NUNGAMBAKKAM, CHENNAI",
+        "bsr_code": "6550006",
+        "type": "For Every Certificate"
+      }
+    ],
+    "RBAI": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "M G ROAD, BANGALORE",
+        "bsr_code": "6550003",
+        "type": "For Every Certificate"
+      },
+      {
+        "bank_name": "HDFC Bank Ltd",
+        "branch": "RICHMOND ROAD",
+        "bsr_code": "8400009",
+        "type": "If specifically mentioned in mail"
+      }
+    ],
+    "BOSCH CHASSIS": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "MAIN ITI ROAD, AUNDH PUNE",
+        "bsr_code": "6550014",
+        "type": "For Every Certificate"
+      }
+    ],
+    "FLIPKART": [
+      {
+        "bank_name": "Kotak Mahindra Bank",
+        "branch": "KORMANGALA, BANGALORE",
+        "bsr_code": "180099",
+        "type": "For Every Certificate"
+      }
+    ],
+    "DCIN (REXROTH)": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "HAZARIMAL SOMANI MARG",
+        "bsr_code": "6550001",
+        "type": "For Every Certificate"
+      }
+    ],
+    "ETAS": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6550003",
+        "type": "For Every Certificate"
+      }
+    ],
+    "MIVIN": [
+      {
+        "bank_name": "Deutsche Bank",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6550003",
+        "type": "For Every Certificate"
+      }
+    ],
+    "FK INDIA": [
+      {
+        "bank_name": "HSBC",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6500120",
+        "type": "For Every Certificate"
+      }
+    ],
+    "FK INTERNET": [
+      {
+        "bank_name": "HSBC",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6500120",
+        "type": "For Every Certificate"
+      }
+    ],
+    "INSTAKART": [
+      {
+        "bank_name": "HSBC",
+        "branch": "M G ROAD, BANGALORE",
+        "bsr_code": "6550003",
+        "type": "For Every Certificate"
+      }
+    ],
+    "JADE": [
+      {
+        "bank_name": "ICICI Bank Ltd",
+        "branch": "SEC-18, GURGAON",
+        "bsr_code": "6392526",
+        "type": "For Every Certificate"
+      }
+    ],
+    "MINTKART": [
+      {
+        "bank_name": "Bank of America",
+        "branch": "MUMBAI BRANCH",
+        "bsr_code": "6430002",
+        "type": "For Every Certificate"
+      }
+    ],
+    "MJIPL": [
+      {
+        "bank_name": "HSBC",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6500120",
+        "type": "For Every Certificate"
+      }
+    ],
+    "MDPL": [
+      {
+        "bank_name": "HSBC",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6500120",
+        "type": "For Every Certificate"
+      }
+    ],
+    "NOVARRIS": [
+      {
+        "bank_name": "ICICI Bank Ltd",
+        "branch": "SEC-18, GURGAON",
+        "bsr_code": "6392526",
+        "type": "For Every Certificate"
+      }
+    ],
+    "EXPLORIUM INNOVATIVE TECHNOLOGIES PRIVATE LTD.": [
+      {
+        "bank_name": "SBM (India) Ltd",
+        "branch": "Mumbai",
+        "bsr_code": "6700001",
+        "type": "Credit payment"
+      }
+    ],
+    "PHONEPE -NEW": [
+      {
+        "bank_name": "HSBC",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6500120",
+        "type": "For Every Certificate"
+      }
+    ],
+    "IP INFUSION": [
+      {
+        "bank_name": "CITI BANK",
+        "branch": "MG ROAD, BANGALORE",
+        "bsr_code": "6480001",
+        "type": null
+      }
+    ],
+    "Syntegon Technology India Private Limited": [
+      {
+        "bank_name": "ICICI Bank Ltd",
+        "branch": "VERNA BRANCH, GOA",
+        "bsr_code": "6390016",
+        "type": null
+      }
+    ],
+    "TATA COFFEE": [
+      {
+        "bank_name": "HDFC Bank Ltd",
+        "branch": "RICHMOND ROAD",
+        "bsr_code": "510501",
+        "type": null
+      }
+    ],
+    "OSLABS TECHNOLOGY": [
+      {
+        "bank_name": "Kotak Mahindra Bank",
+        "branch": "ANDHERI WEST",
+        "bsr_code": "1351",
+        "type": null
+      }
+    ]
+  },
+  "nature_map": [
+    {
+      "sl_no": 1,
+      "invoice_nature": "CI Charges",
+      "agreement_nature": "FTS",
+      "service_category": "Telecommunication, computer & Info. Services",
+      "purpose_code": "S0808-Telecommunication…",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 2,
+      "invoice_nature": "Service / Service support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 3,
+      "invoice_nature": "Lead Plant cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 4,
+      "invoice_nature": "Any Testing",
+      "agreement_nature": "Testing charges",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 5,
+      "invoice_nature": "Charging of R&D Services",
+      "agreement_nature": "R&D charges",
+      "service_category": "other business services",
+      "purpose_code": "S1008- Research & development",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 6,
+      "invoice_nature": "Hardware services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 7,
+      "invoice_nature": "MCR software services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 8,
+      "invoice_nature": "Fire monitoring system",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 9,
+      "invoice_nature": "IP Expansion license instrusion panel expansion",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 10,
+      "invoice_nature": "IP Expansion License Camera/decoder expansion",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 11,
+      "invoice_nature": "System server software License",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 12,
+      "invoice_nature": "software maintainance SMA license",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 13,
+      "invoice_nature": "Subscription",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 14,
+      "invoice_nature": "Interest Payment (TATA Hitachi)",
+      "agreement_nature": "Interest Payment",
+      "service_category": "Short term Loans",
+      "purpose_code": "S0013 - Repayment of short term loans with original",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 15,
+      "invoice_nature": "Social Securitry",
+      "agreement_nature": "Reimbursement Of Expenses",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": "REMITTANCE TOWARDS SOCIAL SECURITY CHARGES IS TREATED AS REIMBURSEMENT BY NR, HENCE NO TDS",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 16,
+      "invoice_nature": "Free Audio Duration",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 17,
+      "invoice_nature": "Audio Duration",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 18,
+      "invoice_nature": "Video HD Duration",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 19,
+      "invoice_nature": "Project/Service/ Support related cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 20,
+      "invoice_nature": "FlexRouter II, customized Options",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 21,
+      "invoice_nature": "MES and installation with basic training",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 22,
+      "invoice_nature": "Charge for sourcing services and other allied services for the month",
+      "agreement_nature": null,
+      "service_category": null,
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 23,
+      "invoice_nature": "startup charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 24,
+      "invoice_nature": "COST COMPENSATION - RI DIRECT SALES",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 25,
+      "invoice_nature": "DIEN",
+      "agreement_nature": "R&D charges",
+      "service_category": "other business services",
+      "purpose_code": "S1008- Research & development",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 26,
+      "invoice_nature": "DHS-Cleanalyzer software",
+      "agreement_nature": "Other Income / Other (Not In The Nature Of Income) RELATES TO MATERIAL COST",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "Remittance is towards DHS Particle analyser system is represents material cost, it is not taxable. Hence no TDS.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 27,
+      "invoice_nature": "Emission reduction certificates at a portfolio",
+      "agreement_nature": "OTHER INCOME / OTHER (NOT IN THE NATURE OF INCOME)",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "Remittance towards Certification Fees represents Business Profits of NR. Hence, no TDS.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 28,
+      "invoice_nature": "C/TEP service",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 29,
+      "invoice_nature": "Volume Pricing",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "flipkart",
+      "notes": null
+    },
+    {
+      "sl_no": 30,
+      "invoice_nature": "Twrds app tracking charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "flipkart",
+      "notes": null
+    },
+    {
+      "sl_no": 31,
+      "invoice_nature": "Twrds Decision Management",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "CYBERSOURCE INTERNATIONAL, INC.",
+      "notes": null
+    },
+    {
+      "sl_no": 32,
+      "invoice_nature": "Twrds inspection charges",
+      "agreement_nature": null,
+      "service_category": null,
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "INTERTEK TESTING SERVICES SHENZHEN LIMITED",
+      "notes": null
+    },
+    {
+      "sl_no": 33,
+      "invoice_nature": "Special Service Shipper's Reference:",
+      "agreement_nature": "Freight Charges",
+      "service_category": "Transport",
+      "purpose_code": "S0203 - Freight on imports – Shipping companies",
+      "no_tds": "Remittance towards Freight charges is claimed as reimbursement by NR. Hence, no TDS.",
+      "typical_nature": "Time matters asia pacific pte ltd",
+      "notes": null
+    },
+    {
+      "sl_no": 34,
+      "invoice_nature": "TRC - Quovadis",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 35,
+      "invoice_nature": "Entrance Fees",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "Myntra Jabong",
+      "notes": null
+    },
+    {
+      "sl_no": 36,
+      "invoice_nature": "Foreign Tax Withholding",
+      "agreement_nature": "Royalty",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": "Syntegon",
+      "notes": null
+    },
+    {
+      "sl_no": 37,
+      "invoice_nature": "Project Management Service",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 38,
+      "invoice_nature": "Software Development Services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 39,
+      "invoice_nature": "SAP FICO and ABAP Services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 40,
+      "invoice_nature": "Licence Fee / VM Session/ Fastlane Fee",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 41,
+      "invoice_nature": null,
+      "agreement_nature": "Engineering Services",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1014 - Engineering Services",
+      "no_tds": null,
+      "typical_nature": "BOSCH AUTOMOTIVE SERVICE SOLUTIONS SAS",
+      "notes": null
+    },
+    {
+      "sl_no": 42,
+      "invoice_nature": "Engineering Services",
+      "agreement_nature": "Engineering Services",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1014 - Engineering Services",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 43,
+      "invoice_nature": "Sales-Support Sub-sahara Africa",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1006 - Business and management consultancy and public relations",
+      "no_tds": null,
+      "typical_nature": "Syntegon Africa",
+      "notes": null
+    },
+    {
+      "sl_no": 44,
+      "invoice_nature": "AMC charges",
+      "agreement_nature": "OTHER INCOME / OTHER (NOT IN THE NATURE OF INCOME)",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "No TDS",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 45,
+      "invoice_nature": "Machine-named license for INCA",
+      "agreement_nature": "Software License",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 46,
+      "invoice_nature": "Facebook Platform + Support Ad Accounts or any advertisement",
+      "agreement_nature": "ADVERTISEMENT FEE",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1007 - Advertising, trade fair service",
+      "no_tds": "It is for advt. fee & exempted u/s 10(50) r/w sec. 164(i) of chapter VIII of Finance Act 2016 & Equilisation Levy paid.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 47,
+      "invoice_nature": "SW Effort",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 48,
+      "invoice_nature": "Twrds affiliate commission",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "flipkart",
+      "notes": null
+    },
+    {
+      "sl_no": 49,
+      "invoice_nature": "Twrds E mailer service",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "flipkart",
+      "notes": null
+    },
+    {
+      "sl_no": 50,
+      "invoice_nature": "Twds Service fee cross charge",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "flipkart",
+      "notes": null
+    },
+    {
+      "sl_no": 51,
+      "invoice_nature": "Twrds DNS Charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "ETAS",
+      "notes": null
+    },
+    {
+      "sl_no": 52,
+      "invoice_nature": "Integration & Maintenance Services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 53,
+      "invoice_nature": "GS Charging",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 54,
+      "invoice_nature": "Accounting Services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 55,
+      "invoice_nature": "Leadplant charge",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 56,
+      "invoice_nature": "Service Bill:Certificate of climate protection",
+      "agreement_nature": "Other Income / Other (Not In The Nature Of Income) BUSINESS PROFITS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 57,
+      "invoice_nature": "AP function charge",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 58,
+      "invoice_nature": "AP function cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 59,
+      "invoice_nature": "Twds All Access Pro-User charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "CREATIVE SPARKS INC.",
+      "notes": null
+    },
+    {
+      "sl_no": 60,
+      "invoice_nature": "Seminar services fee",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 61,
+      "invoice_nature": "Software Licence",
+      "agreement_nature": "Software License",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": "REMITTANCE REPRESENTS PURCHASE OF OFF THE SHELF SOFTWARE. HENCE NO TDS.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 62,
+      "invoice_nature": "Training",
+      "agreement_nature": "Training",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 63,
+      "invoice_nature": "INSP.CERTIFICATE",
+      "agreement_nature": "Other Income / Other (Not In The Nature Of Income) BUSINESS PROFITS",
+      "service_category": "other business services",
+      "purpose_code": "S1006- Business and management consultancy",
+      "no_tds": "REMITTANCE TOWARDS CERTIFICATION fees REPRESENTS BUSINESS PROFITS OF NR ARISING OUTSIDE INDIA. HENCE NO TDS",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 64,
+      "invoice_nature": "CONSULTING SERVICES",
+      "agreement_nature": "CONSULTING SERVICES",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 65,
+      "invoice_nature": "Year, 750 Downloads per Month Plus",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "SHUTTERSTOCK, INC.",
+      "notes": null
+    },
+    {
+      "sl_no": 66,
+      "invoice_nature": "Dynamic DNS, Domains,QPS, Resource Records",
+      "agreement_nature": "Royalty",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced originals or prototypes (such as manuscripts and flms), patents, copyrights, trademarks and industrial processes etc.",
+      "no_tds": null,
+      "typical_nature": "ORACLE",
+      "notes": null
+    },
+    {
+      "sl_no": 67,
+      "invoice_nature": "Job Wrapping, Jobs Dashboard Manager, Career Pages, Recruitment Ads, Job Slots, Recruiter Seats, Recruiter - Corporate",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 68,
+      "invoice_nature": "Material Cost/ Handling cost",
+      "agreement_nature": "Other Income / Other (Not In The Nature Of Income) RELATES TO MATERIAL COST",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "Remittance is towards DHS Particle analyser system is represents material cost, it is not taxable. Hence no TDS.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 69,
+      "invoice_nature": "Quarterly Service Fee",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "PRICE POINT BUYING INC",
+      "notes": null
+    },
+    {
+      "sl_no": 70,
+      "invoice_nature": "Software Intercom",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 71,
+      "invoice_nature": "Cost Charge Forwarding",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 72,
+      "invoice_nature": "MCR Product Development",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 73,
+      "invoice_nature": "software license / product key BCI",
+      "agreement_nature": "Software License",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": "ROBERT BOSCH MANUFACTURING SOLUTIONS GMBH",
+      "notes": null
+    },
+    {
+      "sl_no": 74,
+      "invoice_nature": "MES Distribution Update",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 75,
+      "invoice_nature": "SrS PCB and Distribution Update",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 76,
+      "invoice_nature": "Nexeed MES for ASM SMT",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 77,
+      "invoice_nature": "Digiforce training online",
+      "agreement_nature": "Training",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 78,
+      "invoice_nature": "Disassembly / Assembly of RSS / ESS TB",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 79,
+      "invoice_nature": "Calibration of Injection Analyser",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 80,
+      "invoice_nature": "ATMO Service Cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 81,
+      "invoice_nature": "Service Cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 82,
+      "invoice_nature": "Support CIT activites",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 83,
+      "invoice_nature": "Prorated Figma design seats",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "Figma",
+      "notes": null
+    },
+    {
+      "sl_no": 84,
+      "invoice_nature": "Syntegon carveout project, Migration, SAP Upgrade, Syntegon Sprint Development",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "RBEI",
+      "notes": null
+    },
+    {
+      "sl_no": 85,
+      "invoice_nature": "EVV Tooling Support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 86,
+      "invoice_nature": "PMO ENC ESF",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 87,
+      "invoice_nature": "Professional Service",
+      "agreement_nature": "Professional Services",
+      "service_category": "other business services",
+      "purpose_code": "S1005 - Accounting, auditing, book-keeping services",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 88,
+      "invoice_nature": "SAP Services, APM Development & rollout",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 89,
+      "invoice_nature": "Space Management Project",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 90,
+      "invoice_nature": "RBVH Support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 91,
+      "invoice_nature": "Functional Support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 92,
+      "invoice_nature": "Functional Support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 93,
+      "invoice_nature": "RG Charging",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 94,
+      "invoice_nature": "Assignment Cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 95,
+      "invoice_nature": "Digital commerce Service",
+      "agreement_nature": "Software License",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 96,
+      "invoice_nature": "At Actual",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "RBEI GMBH",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 97,
+      "invoice_nature": "Enterprise Site License",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 98,
+      "invoice_nature": "Pro Annual subscription",
+      "agreement_nature": "SUBSCRIPTION FEES",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 99,
+      "invoice_nature": "Annual period GMR",
+      "agreement_nature": "Royalty",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced originals or prototypes (such as manuscripts and flms), patents, copyrights, trademarks and industrial processes etc.",
+      "no_tds": "BB BRAND HOLDINGS LLC.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 100,
+      "invoice_nature": "Synthetic",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": "SpeedCurve",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 101,
+      "invoice_nature": "Automation Support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 102,
+      "invoice_nature": "DIEN S20200 ONM (Other Non Mobility)",
+      "agreement_nature": "Reimbursement Of Expenses",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "Remittance towards Corporate tax is treated as reimbursement by NR. Hence, no TDS.",
+      "typical_nature": "Robert Bosch Korea LTD, Korea",
+      "notes": null
+    },
+    {
+      "sl_no": 103,
+      "invoice_nature": "Service engineer/technician, supervisor, electro engineer",
+      "agreement_nature": "Engineering Services",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1014 - Engineering Services",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 104,
+      "invoice_nature": "NhP (AE) MES Silver Service",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 105,
+      "invoice_nature": "Infeed Chains commission",
+      "agreement_nature": "commission",
+      "service_category": "other business services",
+      "purpose_code": "S1002-Trade related service",
+      "no_tds": "Remittance is towards Commission on Sales represent Business Profits of NR. Hence, no TDS.",
+      "typical_nature": "syntegon",
+      "notes": null
+    },
+    {
+      "sl_no": 106,
+      "invoice_nature": "Software Token",
+      "agreement_nature": "Software License",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+      "no_tds": "BOSCH SERVICE SOLUTIONS GMBH",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 107,
+      "invoice_nature": "Develops Suppport for AI Shield",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 108,
+      "invoice_nature": "Twrds expat charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "Walmart INC.",
+      "notes": null
+    },
+    {
+      "sl_no": 109,
+      "invoice_nature": "Allocation PAIV",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "syntegon",
+      "notes": null
+    },
+    {
+      "sl_no": 110,
+      "invoice_nature": "sales support service charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "BUSINESS PROFITS OR OTHER INCOME____ PAYMENT EITHER BUSINESS PROFITS OR OTHER INCOME OF NR WHICH IS NOT TAXABLE AS PER DTAA WITH INDIA AND UAE. HENCE, NO TDS.",
+      "typical_nature": "ROBERT BOSCH MIDDLE EAST FZE",
+      "notes": null
+    },
+    {
+      "sl_no": 111,
+      "invoice_nature": "Personnel Cost",
+      "agreement_nature": "REIMBURSEMENT OF EXPENSES",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "REMITTANCE TOWARDS EMPLOYEE EXPENSES IS CLAIMED AS REIMBURSEMENT BY NR, HENCE NO TDS.",
+      "typical_nature": "ROBERT BOSCH GMBH CHASSIS SYSTEMS CONTROL",
+      "notes": null
+    },
+    {
+      "sl_no": 112,
+      "invoice_nature": "Infrastructure Service for Devops support Shield",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 113,
+      "invoice_nature": "Offshore Support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 114,
+      "invoice_nature": "Support Beg Project",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 115,
+      "invoice_nature": "Ramup Support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 116,
+      "invoice_nature": "Billing for Sap Services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 117,
+      "invoice_nature": "Label",
+      "agreement_nature": "FTS",
+      "service_category": null,
+      "purpose_code": "PURCHASE OF SOFTWARE",
+      "no_tds": "REMITTER OPINES PAYMENT TO PERIMETER X, INC IS NOT TAXABLE IN INDIA PURSUANT TO TREATY BTWN INDIA & USA. HENCE NO TDS.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 118,
+      "invoice_nature": "Repair",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 119,
+      "invoice_nature": "TC - QuoVadis Business SSL RSA",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 120,
+      "invoice_nature": "TRC - QuoVadis SSL RSA",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 121,
+      "invoice_nature": "SSL WILDCARD",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 122,
+      "invoice_nature": "Dien (korea ltd co.) Sales Support charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 123,
+      "invoice_nature": "TECH Outsourced Services E-Auction Project Charges",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": "Walmart",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 124,
+      "invoice_nature": "Investigation",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 125,
+      "invoice_nature": "PROFUSION IS-MP7000 MANGOO (MUSICAL RENTING) / Audio Video System",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 126,
+      "invoice_nature": "FTP files Downloading",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 127,
+      "invoice_nature": "Expenses for Export",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099- other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 128,
+      "invoice_nature": "Pension Control",
+      "agreement_nature": "REIMBURSEMENT OF EXPENSES",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": "REMITTANCE TOWARDS EMPLOYEE EXPENSES IS CLAIMED AS REIMBURSEMENT BY NR. HENCE, NO TDS.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 129,
+      "invoice_nature": "Domain Renewals",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": "Go Daddy",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 130,
+      "invoice_nature": "Digital APPLICATION",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 131,
+      "invoice_nature": "Application work",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 132,
+      "invoice_nature": "REFUND OF EXCESS PAYMENt",
+      "agreement_nature": "Other Income / Other (Not In The Nature Of Income) REFUND OF EXCESS PAYMENT",
+      "service_category": "OTHERS",
+      "purpose_code": "S1502 - Reversal of wrong entries, refunds of amount remitted for non-Exports",
+      "no_tds": "Payer states that the proposed remittance is towards refund of excess payment by NR. Hence payer opines no TDS.",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 133,
+      "invoice_nature": "MOVING/ WAREHOUSE, INSURANCE AND HANDLING CHARGES",
+      "agreement_nature": "REIMBURSEMENT OF EXPENSES",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": "REMITTANCE TOWARDS MOVING, WAREHOUSE, INSURANCE AND HANDLING CHARGES IS CLAIMED AS REIMBURSEMENT BY NR. HENCE, NO TDS",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 134,
+      "invoice_nature": "Enaterprise service-cloudfare",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 135,
+      "invoice_nature": "injector",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 136,
+      "invoice_nature": "Product & Services",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 137,
+      "invoice_nature": "BBM Com Fees",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "S1023 meghana",
+      "notes": null
+    },
+    {
+      "sl_no": 138,
+      "invoice_nature": "Transfer price charging",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "S1023 meghana",
+      "notes": null
+    },
+    {
+      "sl_no": 139,
+      "invoice_nature": "TrainM Charging",
+      "agreement_nature": "Training",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "S1023 meghana",
+      "notes": null
+    },
+    {
+      "sl_no": 140,
+      "invoice_nature": "BM",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "S802 upendra",
+      "notes": null
+    },
+    {
+      "sl_no": 141,
+      "invoice_nature": "Daimler CSS C-sample strain",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 142,
+      "invoice_nature": "Cost Charge Forwarding",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "S802 upendra",
+      "notes": null
+    },
+    {
+      "sl_no": 143,
+      "invoice_nature": "Twitter data",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "twitter international company",
+      "notes": null
+    },
+    {
+      "sl_no": 144,
+      "invoice_nature": "integration consultancy engagement",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "Other Business Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 145,
+      "invoice_nature": "CAD and ADM support",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "S802 Upendra",
+      "notes": "Meenakshi-1023"
+    },
+    {
+      "sl_no": 146,
+      "invoice_nature": "Service charge for iop teating",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "S802 Upendra",
+      "notes": null
+    },
+    {
+      "sl_no": 147,
+      "invoice_nature": "Service charge for infrastructure",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "S802 Upendra",
+      "notes": null
+    },
+    {
+      "sl_no": 148,
+      "invoice_nature": "OSS project",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "S802 Upendra",
+      "notes": null
+    },
+    {
+      "sl_no": 149,
+      "invoice_nature": "Descision mgt",
+      "agreement_nature": "FTS",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "Cyber source int. inc",
+      "notes": null
+    },
+    {
+      "sl_no": 150,
+      "invoice_nature": "Aerospike enterprises",
+      "agreement_nature": "Liesense fees",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing",
+      "no_tds": null,
+      "typical_nature": "AEROSPIKE",
+      "notes": null
+    },
+    {
+      "sl_no": 151,
+      "invoice_nature": "DATA MIGRATION",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "GREENHOUSE INC.",
+      "notes": null
+    },
+    {
+      "sl_no": 152,
+      "invoice_nature": "GREENHOUSE RECRUITING",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "GREENHOUSE INC.",
+      "notes": null
+    },
+    {
+      "sl_no": 153,
+      "invoice_nature": "Virtual Data Room - Pages",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "INTRALINKS",
+      "notes": null
+    },
+    {
+      "sl_no": 154,
+      "invoice_nature": "Redesign of Sun Mobility DIU",
+      "agreement_nature": "Reimbursement Of Expenses",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "Meenakshi -23 purpose code",
+      "notes": null
+    },
+    {
+      "sl_no": 155,
+      "invoice_nature": "Mechanical engineering serices",
+      "agreement_nature": "Engineering Services",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1014 - Engineering Services",
+      "no_tds": null,
+      "typical_nature": "Upendra S0802",
+      "notes": null
+    },
+    {
+      "sl_no": 156,
+      "invoice_nature": "MCAD",
+      "agreement_nature": "FTS",
+      "service_category": "Telecommunication, computer & Info. Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 157,
+      "invoice_nature": "CP tooling cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi -23 purpose code",
+      "notes": null
+    },
+    {
+      "sl_no": 158,
+      "invoice_nature": "Renoclean",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Manjunath 23",
+      "notes": null
+    },
+    {
+      "sl_no": 159,
+      "invoice_nature": "Access contribution",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi -23 purpose code",
+      "notes": null
+    },
+    {
+      "sl_no": 160,
+      "invoice_nature": "software service support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi -23 purpose code",
+      "notes": null
+    },
+    {
+      "sl_no": 161,
+      "invoice_nature": "Fatigue software industrial support",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi -23 purpose code",
+      "notes": null
+    },
+    {
+      "sl_no": 162,
+      "invoice_nature": "Fatigue license fees",
+      "agreement_nature": "Licensing Fee",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use, through licensing",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 163,
+      "invoice_nature": "Compliance Management IRM Operator",
+      "agreement_nature": "Subscription Fees",
+      "service_category": "other business services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 164,
+      "invoice_nature": "Expat charges",
+      "agreement_nature": "Reimbursement Of Expenses",
+      "service_category": "other business services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": "No TDS",
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 165,
+      "invoice_nature": "Cost center charge",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 166,
+      "invoice_nature": "DIEN MATERIAL",
+      "agreement_nature": "Reimbursement Of Expenses",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi -23 purpose code",
+      "notes": null
+    },
+    {
+      "sl_no": 167,
+      "invoice_nature": "Data center charge",
+      "agreement_nature": "FTS",
+      "service_category": "Telecommunication, computer & Info. Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Upendra 802",
+      "notes": null
+    },
+    {
+      "sl_no": 168,
+      "invoice_nature": "IT service",
+      "agreement_nature": "FTS",
+      "service_category": "Telecommunication, computer & Info. Services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Upendra 802",
+      "notes": null
+    },
+    {
+      "sl_no": 169,
+      "invoice_nature": "Training costs",
+      "agreement_nature": "Training",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 170,
+      "invoice_nature": "Storefront service",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 171,
+      "invoice_nature": "Sprinkk Analytics & lnsights Seruices - Soc;al Reporting Service",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "MYNTRA DESIGNS",
+      "notes": null
+    },
+    {
+      "sl_no": 172,
+      "invoice_nature": "Overhead cost /Packaging cost",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi 1023",
+      "notes": null
+    },
+    {
+      "sl_no": 173,
+      "invoice_nature": "Shared service",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi 1023",
+      "notes": null
+    },
+    {
+      "sl_no": 174,
+      "invoice_nature": "additional efforts",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi 1023",
+      "notes": null
+    },
+    {
+      "sl_no": 175,
+      "invoice_nature": "Development services",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi 1023",
+      "notes": null
+    },
+    {
+      "sl_no": 176,
+      "invoice_nature": "SingleKey ID / Bosch ID - small",
+      "agreement_nature": "FTS",
+      "service_category": "other business services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": "Meenakshi 1023",
+      "notes": null
+    },
+    {
+      "sl_no": 177,
+      "invoice_nature": "Trust Center - Software Token",
+      "agreement_nature": "Software Licences",
+      "service_category": "Charges for the use of intellectual property n.i.e",
+      "purpose_code": "S0902 - Payment for use,",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 178,
+      "invoice_nature": "TRC - QuoVadis",
+      "agreement_nature": "Business SSL RSA",
+      "service_category": "other business services",
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": "Meenakshi 1023",
+      "notes": null
+    },
+    {
+      "sl_no": 179,
+      "invoice_nature": "Development services",
+      "agreement_nature": "R&D Charges",
+      "service_category": "Other Business Services",
+      "purpose_code": "S1008 - Research & Development services",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 180,
+      "invoice_nature": "Participant fee: BEG-COM-PTGW12",
+      "agreement_nature": "Training",
+      "service_category": "Telecommunication, Computer & Information Services",
+      "purpose_code": "S0802 - Software consultancy / implementation",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 181,
+      "invoice_nature": "linear module",
+      "agreement_nature": "other income",
+      "service_category": "other business services",
+      "purpose_code": "S1099 - Other services not included elsewhere",
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    },
+    {
+      "sl_no": 182,
+      "invoice_nature": "background screening services",
+      "agreement_nature": "FTS/ FIS",
+      "service_category": "other business services",
+      "purpose_code": "IT act applicable",
+      "no_tds": null,
+      "typical_nature": "Meenakshi -23 purpose code",
+      "notes": null
+    },
+    {
+      "sl_no": 183,
+      "invoice_nature": "PartnerEdge Program fee",
+      "agreement_nature": "software licenses",
+      "service_category": null,
+      "purpose_code": null,
+      "no_tds": null,
+      "typical_nature": null,
+      "notes": null
+    }
+  ],
+  "dtaa_rates": [
+    {
+      "country": "Portugal",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND PORTUGAL",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "Germany",
+      "article": "ATICLE 12 OF DTAA BETWEEN INDIA AND GERMANY",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "Korea",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND KOREA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "Czechia",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND CZECH REPUBLIC",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "Hungary",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND HUNGARY",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "China",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND CHINA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "Vietnam",
+      "article": "ARTICLE 13 OF DTAA BETWEEN INDIA AND VIETNAM",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "Singapore",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND SINGAPORE",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "LUXEMBORG",
+      "article": "ARTICLE 12 OF DTAA BTWN INDIA AND LUXEMBORG",
+      "rate": null,
+      "rate_note": null
+    },
+    {
+      "country": "Ireland",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND IRELAND",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "USA",
+      "article": "ARTICLE 12 OF DTAA BTWN INDIA AND USA",
+      "rate": 0.15,
+      "rate_note": null
+    },
+    {
+      "country": "Thailand",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND THAILAND",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "Egypt",
+      "article": "ARTICLE 23 OF DTAA BETWEEN INDIA AND EGYPT",
+      "rate": null,
+      "rate_note": "As per i.t act"
+    },
+    {
+      "country": "Poland",
+      "article": "ARTICLE 13 OF DTAA BETWEEN INDIA AND POLAND",
+      "rate": 0.15,
+      "rate_note": null
+    },
+    {
+      "country": "Australia",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND AUSTRALIA",
+      "rate": 0.15,
+      "rate_note": null
+    },
+    {
+      "country": "Israel",
+      "article": "ARTICLE 13 OF DTAA BETWEEN INDIA AND ISRAEL.",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "INDONESIA",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND INDONESIA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "FRANCE",
+      "article": "ARTICLE 13 OF DTAA BETWEEN INDIA AND FRANCE",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "MALAYSIA",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND MALAYSIA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "SPAIN",
+      "article": "ARTICLE 13 OF DTAA BETWEEN INDIA AND SPAIN",
+      "rate": 0.2,
+      "rate_note": null
+    },
+    {
+      "country": "SWITZERLAND",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND SWITZERLAND",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "NETHERLAND",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND NETHERLAND",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "AUSTRIA",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND AUSTRIA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "THAILAND",
+      "article": "ARTICLE 22(3) OF DTAA BETWEEN INDIA AND THAILAND",
+      "rate": null,
+      "rate_note": null
+    },
+    {
+      "country": "France",
+      "article": "ARTICLE 13 OF DTAA BETWEEN INDIA AND FRANCE",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "DENMARK",
+      "article": "ARTICLE 13 OF DTAA BTWN INDIA AND DENMARK",
+      "rate": 0.2,
+      "rate_note": null
+    },
+    {
+      "country": "ROMANIA",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND ROMANIA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "TURKEY",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND TURKEY",
+      "rate": 0.15,
+      "rate_note": null
+    },
+    {
+      "country": "SOUTH AFRICA",
+      "article": "ARTICLE 12 OF DTAA BTWN INDIA & SOUTH AFRICA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "BRAZIL",
+      "article": "ARTICLE 12 OF DTAA BTWN INDIA & BRAZIL",
+      "rate": 0.15,
+      "rate_note": null
+    },
+    {
+      "country": "JAPAN",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND JAPAN",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "LATVIA",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND LATVIA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "RUSSIA",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND RUSSIA",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "FINLAND",
+      "article": "ARTICLE 12 OF DTAA BETWEEN INDIA AND FINLAND",
+      "rate": 0.1,
+      "rate_note": null
+    },
+    {
+      "country": "UK",
+      "article": "ARTICLE 13 OF DTAA BETWEEN INDIA AND UK",
+      "rate": 0.15,
+      "rate_note": null
+    }
+  ],
+  "reasons": [
+    "software licences- payments towards software licences not taxable as per supreme court decision.",
+    "Business profits- represents business profits of non resident arising outside india, hence not taxable.",
+    "the remitter states that the payment represents business profits of vendor from USA arising outside india, the remitter as not deducted tax at source.",
+    "REMITTANCE TOWARDS CERTIFICATE CHARGES REPRESENTS BUSINESS PROFITS OF NR ARISING OUTSIDE INDIA. HENCE, NO TDS",
+    "FTS for UAE - The remitter states that the payment is towards participation at future factory show payable to resident of UAE. Hence, not taxable.",
+    "TRC-PAYER HAS CONFIRMED THAT VENDOR (NR) HAS APPLIED FOR 2024 TRC AND THAT NR DOES NOT HAVE PE IN INDIA",
+    "On payment to cetaq gmbh towards mapping & measurement system analysis according to ipc -9850 standard on cam controller including writing of the report, TDS needs to be done. Hence please do TDS at 10% and send revised TDS entry.",
+    "SWL-PAYER REPRESENTS NO COPY RIGHTS ARE GRANTED HENCE PAYER SUBMITS THAT PAYMENT IS NOT TAXABLE IN INDIA"
+  ],
+  "efiling_login_details": [
+    {
+      "title": "Login details of Anantha",
+      "fields": {
+        "User ID": "arca018830",
+        "Password": "anantha@123",
+        "DOB": "1952-12-30",
+        "PAN": "AAIPA9734B",
+        "Additional Date": "2009-06-15"
+      }
+    },
+    {
+      "title": "Login details of Sreenivasa",
+      "fields": {
+        "User ID": "arca023944",
+        "Password": "sreenivasa@123",
+        "DOB": "1956-12-12",
+        "PAN": "ABHPS4307E"
+      }
+    },
+    {
+      "title": "Login details of Anand",
+      "fields": {
+        "User ID": "ARCA216066",
+        "Password": "Anand@123",
+        "DOB": "02/10/1982",
+        "PAN": "AETPA6011N"
+      }
+    },
+    {
+      "title": "Login details of DCIN for 15CA",
+      "fields": {
+        "User ID": "AAACM9898F",
+        "Password": "bosch18021974$",
+        "DOI": "1974-02-18",
+        "Sutapa's PAN": "ALIPB2896E"
+      }
+    },
+    {
+      "title": "Login details of SNAM for 15CA",
+      "fields": {
+        "User ID": "AACCS7473G",
+        "Password": "snamalloys",
+        "DOI": "1985-11-05",
+        "PAN": "ANGPS9776C"
+      }
+    },
+    {
+      "title": "Login details of Sutapa for 15CA",
+      "fields": {
+        "User ID": "ALIPB2896E",
+        "Password": "S&&1972f",
+        "DOI": "1972-01-07",
+        "Sutapa's PAN": "ALIPB2896E"
+      }
+    },
+    {
+      "title": "Login details of Posiflex for 15CA",
+      "fields": {
+        "User ID": "AAACQ4305K",
+        "Password": "Quinta@123",
+        "DOI": "06-13-2016",
+        "PAN": null
+      }
+    }
+  ],
+  "it_login_details": [
+    {
+      "company": "Company",
+      "pan": "PAN",
+      "password": "Password"
+    },
+    {
+      "company": "RBEI",
+      "pan": "AAACR7108R",
+      "password": "LEGALFORM1"
+    },
+    {
+      "company": "RBAI",
+      "pan": "AADCB4330L",
+      "password": "Rbai1234"
+    },
+    {
+      "company": "RBIC(Chassis)",
+      "pan": "AAACK7312E",
+      "password": "Efiling@123456"
+    },
+    {
+      "company": "Bosch Limited",
+      "pan": "AAACM9840P",
+      "password": "Taxbosch1!"
+    },
+    {
+      "company": "DCIN(Rexroth)",
+      "pan": "AAACM9898F",
+      "password": "Bosch18021974$"
+    },
+    {
+      "company": "ETAS",
+      "pan": "AABCE7260L",
+      "password": "AABCE7260L"
+    }
+  ],
+  "udin": [
+    {
+      "title": "ANANTHA (UDIN)",
+      "fields": {
+        "login": "18830",
+        "Password": "952921efe42b"
+      }
+    },
+    {
+      "title": "ANAND (UDIN)",
+      "fields": {
+        "login": "216066",
+        "Password": "55736e11aa49"
+      }
+    },
+    {
+      "title": "Anand - ICAI Login",
+      "fields": {
+        "User id": "216066@icai.org",
+        "Password": "anand@123"
+      }
+    },
+    {
+      "title": "Firm Details",
+      "fields": {
+        "Anand S & Associates": "015440S",
+        "S Anantha & Co": "000141S"
+      }
+    },
+    {
+      "title": "Mail IDs",
+      "fields": {
+        "Consultax_email": "Consultax@sonduras.com",
+        "Consultax_password": "Consond072018#1",
+        "indiatax_email": "indiatax@sonduras.com",
+        "indiatax_password": "AnanSond072018#!"
+      }
+    },
+    {
+      "title": "Wi-fi",
+      "fields": {
+        "Password": "Sasssa11"
+      }
+    }
+  ]
+}

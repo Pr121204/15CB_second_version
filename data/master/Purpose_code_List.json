@@ -1,0 +1,963 @@
+{
+  "purpose_codes": [
+    {
+      "gr_no": "00",
+      "group_name": "Capital Account",
+      "sub_group": null,
+      "purpose_code": "S0017",
+      "description": "Acquisition of non-produced non-financial assets (Purchase of intangible assets like patents, copyrights, trademarks etc., land acquired by government, use of natural resources) - Government"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Capital Account",
+      "sub_group": null,
+      "purpose_code": "S0019",
+      "description": "Acquisition of non-produced non-financial assets (Purchase of intangible assets like patents, copyrights, trademarks etc., use of natural resources) - Non-Government"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Capital Account",
+      "sub_group": null,
+      "purpose_code": "S0026",
+      "description": "Capital transfers (Guarantees payments, Investment Grand given by the government / international organisation, exceptionally large Non-life insurance claims) - Government"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Capital Account",
+      "sub_group": null,
+      "purpose_code": "S0027",
+      "description": "Capital transfers (Guarantees payments, Investment Grand given by the Non-government, exceptionally large Non-life insurance claims) - Non-Government"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Capital Account",
+      "sub_group": null,
+      "purpose_code": "S0099",
+      "description": "Other capital payments not included elsewhere"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Direct Investments",
+      "sub_group": null,
+      "purpose_code": "S0003",
+      "description": "Indian Direct investment abroad (in branches & wholly owned subsidiaries) in equity Shares"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Direct Investments",
+      "sub_group": null,
+      "purpose_code": "S0004",
+      "description": "Indian Direct investment abroad (in subsidiaries and associates) in debt instruments"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Direct Investments",
+      "sub_group": null,
+      "purpose_code": "S0005",
+      "description": "Indian investment abroad - in real estate"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Direct Investments",
+      "sub_group": null,
+      "purpose_code": "S0006",
+      "description": "Repatriation of Foreign Direct Investment made by overseas Investors in India - in equity shares"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Direct Investments",
+      "sub_group": null,
+      "purpose_code": "S0007",
+      "description": "Repatriation of Foreign Direct Investment in made by overseas Investors India - in debt instruments"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Direct Investments",
+      "sub_group": null,
+      "purpose_code": "S0008",
+      "description": "Repatriation of Foreign Direct Investment made by overseas Investors in India - in real estate"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Portfolio Investments",
+      "sub_group": null,
+      "purpose_code": "S0001",
+      "description": "Indian Portfolio investment abroad - in equity shares"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Portfolio Investments",
+      "sub_group": null,
+      "purpose_code": "S0002",
+      "description": "Indian Portfolio investment abroad - in debt instruments"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Portfolio Investments",
+      "sub_group": null,
+      "purpose_code": "S0009",
+      "description": "Repatriation of Foreign Portfolio Investment made by overseas Investors in India - in equity shares"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Foreign Portfolio Investments",
+      "sub_group": null,
+      "purpose_code": "S0010",
+      "description": "Repatriation of Foreign Portfolio Investment made by overseas Investors in India - in debt instruments"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "External Commercial Borrowings",
+      "sub_group": null,
+      "purpose_code": "S0011",
+      "description": "Loans extended to Non-Residents"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "External Commercial Borrowings",
+      "sub_group": null,
+      "purpose_code": "S0012",
+      "description": "Repayment of long & medium term loans with original maturity above one year received from Non-Residents"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Short term Loans",
+      "sub_group": null,
+      "purpose_code": "S0013",
+      "description": "Repayment of short term loans with original maturity up to one year received from Non-Residents"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Banking Capital",
+      "sub_group": null,
+      "purpose_code": "S0014",
+      "description": "Repatriation of Non-Resident Deposits (FCNR(B) / NR(E)RA etc)"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Banking Capital",
+      "sub_group": null,
+      "purpose_code": "S0015",
+      "description": "Repayment of loans & overdrafts taken by ADs on their own account."
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Banking Capital",
+      "sub_group": null,
+      "purpose_code": "S0016",
+      "description": "Sale of a foreign currency against another foreign currency"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Financial Derivatives and Others",
+      "sub_group": null,
+      "purpose_code": "S0020",
+      "description": "Payments made on account of margin payments, premium payment and settlement amount etc. under Financial derivative transactions."
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Financial Derivatives and Others",
+      "sub_group": null,
+      "purpose_code": "S0021",
+      "description": "Payments made on account of sale of share under Employee stock option"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Financial Derivatives and Others",
+      "sub_group": null,
+      "purpose_code": "S0022",
+      "description": "Investment in Indian Depositories Receipts (IDRs)"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "Financial Derivatives and Others",
+      "sub_group": null,
+      "purpose_code": "S0023",
+      "description": "Remittances made under Liberalised Remittance Scheme (LRS) for Individuals"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "External Assistance",
+      "sub_group": null,
+      "purpose_code": "S0024",
+      "description": "External Assistance extended by India. e.g. Loans and advances extended by India to Foreign governments under various agreements"
+    },
+    {
+      "gr_no": "00",
+      "group_name": "External Assistance",
+      "sub_group": null,
+      "purpose_code": "S0025",
+      "description": "Repayments made on account of External Assistance received by India."
+    },
+    {
+      "gr_no": "01",
+      "group_name": "Imports",
+      "sub_group": null,
+      "purpose_code": "S0101",
+      "description": "Advance payment against imports made to countries other than Nepal and Bhutan"
+    },
+    {
+      "gr_no": "01",
+      "group_name": "Imports",
+      "sub_group": null,
+      "purpose_code": "S0102",
+      "description": "Payment towards imports settlement of invoice other than Nepal and Bhutan"
+    },
+    {
+      "gr_no": "01",
+      "group_name": "Imports",
+      "sub_group": null,
+      "purpose_code": "S0103",
+      "description": "Imports by diplomatic missions other than Nepal and Bhutan"
+    },
+    {
+      "gr_no": "01",
+      "group_name": "Imports",
+      "sub_group": null,
+      "purpose_code": "S0104",
+      "description": "Intermediary trade / transit trade, i.e., third country export passing through India"
+    },
+    {
+      "gr_no": "01",
+      "group_name": "Imports",
+      "sub_group": null,
+      "purpose_code": "S0108",
+      "description": "Goods acquired under merchanting / Payment against import leg of merchanting trade*"
+    },
+    {
+      "gr_no": "01",
+      "group_name": "Imports",
+      "sub_group": null,
+      "purpose_code": "S0109",
+      "description": "Payments made for Imports from Nepal and Bhutan, if any"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0201",
+      "description": "Payments for surplus freight / passenger fare by foreign shipping companies operating in India"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0202",
+      "description": "Payment for operating expenses of Indian shipping companies operating abroad"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0203",
+      "description": "Freight on imports - Shipping companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0204",
+      "description": "Freight on exports - Shipping companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0205",
+      "description": "Operational leasing / Rental of Vessels (with crew) - Shipping companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0206",
+      "description": "Booking of passages abroad - Shipping companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0207",
+      "description": "Payments for surplus freight / passenger fare by foreign Airlines companies operating in India"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0208",
+      "description": "Operating expenses of Indian Airlines companies operating abroad"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0209",
+      "description": "Freight on imports - Airlines companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0210",
+      "description": "Freight on exports - Airlines companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0211",
+      "description": "Operational leasing / Rental of Vessels (with crew) - Airline companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0212",
+      "description": "Booking of passages abroad - Airlines companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0214",
+      "description": "Payments on account of stevedoring, demurrage, port handling charges etc. (Shipping companies)"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0215",
+      "description": "Payments on account of stevedoring, demurrage, port handling charges, etc. (Airlines companies)"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0216",
+      "description": "Payments for Passenger - Shipping companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0217",
+      "description": "Other payments by Shipping companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0218",
+      "description": "Payments for Passenger - Airlines companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0219",
+      "description": "Other Payments by Airlines companies"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0220",
+      "description": "Payments on account of freight under other modes of transport (Internal Waterways, Roadways, Railways, Pipeline transports and others)"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0221",
+      "description": "Payments on account of passenger fare under other modes of transport (Internal Waterways, Roadways, Railways, Pipeline transports and others)"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0222",
+      "description": "Postal & Courier services by Air"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0223",
+      "description": "Postal & Courier services by Sea"
+    },
+    {
+      "gr_no": "02",
+      "group_name": "Transport",
+      "sub_group": null,
+      "purpose_code": "S0224",
+      "description": "Postal & Courier services by others"
+    },
+    {
+      "gr_no": "03",
+      "group_name": "Travel",
+      "sub_group": null,
+      "purpose_code": "S0301",
+      "description": "Business travel."
+    },
+    {
+      "gr_no": "03",
+      "group_name": "Travel",
+      "sub_group": null,
+      "purpose_code": "S0303",
+      "description": "Travel for pilgrimage"
+    },
+    {
+      "gr_no": "03",
+      "group_name": "Travel",
+      "sub_group": null,
+      "purpose_code": "S0304",
+      "description": "Travel for medical treatment"
+    },
+    {
+      "gr_no": "03",
+      "group_name": "Travel",
+      "sub_group": null,
+      "purpose_code": "S0305",
+      "description": "Travel for education (including fees, hostel expenses etc.)"
+    },
+    {
+      "gr_no": "03",
+      "group_name": "Travel",
+      "sub_group": null,
+      "purpose_code": "S0306",
+      "description": "Other travel (including holiday trips and payments for settling international credit cards transactions)"
+    },
+    {
+      "gr_no": "05",
+      "group_name": "Construction Services",
+      "sub_group": null,
+      "purpose_code": "S0501",
+      "description": "Construction of projects abroad by Indian companies including import of goods at project site abroad"
+    },
+    {
+      "gr_no": "05",
+      "group_name": "Construction Services",
+      "sub_group": null,
+      "purpose_code": "S0502",
+      "description": "cost of construction etc. of projects executed by foreign companies in India."
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0601",
+      "description": "Life Insurance premium except term insurance"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0602",
+      "description": "Freight insurance - relating to import & export of goods"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0603",
+      "description": "Other general insurance premium including reinsurance premium; and term life insurance premium"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0605",
+      "description": "Auxiliary services including commission on insurance"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0607",
+      "description": "Insurance claim Settlement of non-life insurance; and life insurance (only term insurance)"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0608",
+      "description": "Life Insurance Claim Settlements"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0609",
+      "description": "Standardised guarantee services"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0610",
+      "description": "Premium for pension funds"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0611",
+      "description": "Periodic pension entitlements e.g. monthly quarterly or yearly payments of pension amounts by Indian Pension Fund Company"
+    },
+    {
+      "gr_no": "06",
+      "group_name": "Insurance and Pension Services",
+      "sub_group": null,
+      "purpose_code": "S0612",
+      "description": "Invoking of standardised guarantees"
+    },
+    {
+      "gr_no": "07",
+      "group_name": "Financial Services",
+      "sub_group": null,
+      "purpose_code": "S0701",
+      "description": "Financial intermediation, except investment banking - Bank charges, collection charges, LC charges etc."
+    },
+    {
+      "gr_no": "07",
+      "group_name": "Financial Services",
+      "sub_group": null,
+      "purpose_code": "S0702",
+      "description": "Investment banking - brokerage, under writing commission etc."
+    },
+    {
+      "gr_no": "07",
+      "group_name": "Financial Services",
+      "sub_group": null,
+      "purpose_code": "S0703",
+      "description": "Auxiliary services - charges on operation & regulatory fees, custodial services, depository services etc."
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0801",
+      "description": "Hardware consultancy / implementation"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0802",
+      "description": "Software consultancy / implementation"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0803",
+      "description": "Data base, data processing charges"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0804",
+      "description": "Repair and maintenance of computer and software"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0805",
+      "description": "News agency services"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0806",
+      "description": "Other information services - Subscription to newspapers, periodicals"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0807",
+      "description": "Off-site software imports"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0808",
+      "description": "Telecommunication services including electronic mail services and voice mail services"
+    },
+    {
+      "gr_no": "08",
+      "group_name": "Telecommunication, Computer & Information Services",
+      "sub_group": null,
+      "purpose_code": "S0809",
+      "description": "Satellite services including space shuttle and rockets etc."
+    },
+    {
+      "gr_no": "09",
+      "group_name": "Charges for the use of intellectual property n.i.e",
+      "sub_group": null,
+      "purpose_code": "S0901",
+      "description": "Franchises services"
+    },
+    {
+      "gr_no": "09",
+      "group_name": "Charges for the use of intellectual property n.i.e",
+      "sub_group": null,
+      "purpose_code": "S0902",
+      "description": "Payment for use, through licensing arrangements, of produced originals or prototypes (such as manuscripts and films), patents, copyrights, trademarks and industrial processes etc."
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1002",
+      "description": "Trade related services - commission on exports / imports"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1003",
+      "description": "Operational leasing services (other than financial leasing) without operating crew, including charter hire- Airlines companies"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1004",
+      "description": "Legal services"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1005",
+      "description": "Accounting, auditing, book-keeping services"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1006",
+      "description": "Business and management consultancy and public relations services"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1007",
+      "description": "Advertising, trade fair service"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1008",
+      "description": "Research & Development services"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1009",
+      "description": "Architectural services"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1010",
+      "description": "Agricultural services like protection against insects & disease, increasing of harvest yields, forestry services."
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1011",
+      "description": "Payments for maintenance of offices abroad"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1013",
+      "description": "Environmental Services"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1014",
+      "description": "Engineering Services"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1021",
+      "description": "Wholesale and retailing trade services."
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1022",
+      "description": "Operational leasing services (other than financial leasing) without operating crew, including charter hire- Shipping companies"
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1023",
+      "description": "Other Technical Services including scientific / space services."
+    },
+    {
+      "gr_no": "10",
+      "group_name": "Other Business Services",
+      "sub_group": null,
+      "purpose_code": "S1099",
+      "description": "Other services not included elsewhere"
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1101",
+      "description": "Audio-visual and related services like Motion picture and video tape production, distribution and projection services."
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1103",
+      "description": "Radio and television production, distribution and transmission services"
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1104",
+      "description": "Entertainment services"
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1105",
+      "description": "Museums, library and archival services"
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1106",
+      "description": "Recreation and sporting activities services"
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1107",
+      "description": "Education (e.g. fees for correspondence courses abroad)"
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1108",
+      "description": "Health Service (payment towards services received from hospitals, doctors, nurses, paramedical and similar services etc. rendered remotely or on-site)"
+    },
+    {
+      "gr_no": "11",
+      "group_name": "Personal, Cultural & Recreational Services",
+      "sub_group": null,
+      "purpose_code": "S1109",
+      "description": "Other Personal, Cultural & Recreational services"
+    },
+    {
+      "gr_no": "12",
+      "group_name": "Govt. not included elsewhere (G.n.i.e.)",
+      "sub_group": null,
+      "purpose_code": "S1201",
+      "description": "Maintenance of Indian embassies abroad"
+    },
+    {
+      "gr_no": "12",
+      "group_name": "Govt. not included elsewhere (G.n.i.e.)",
+      "sub_group": null,
+      "purpose_code": "S1202",
+      "description": "Remittances by foreign embassies in India"
+    },
+    {
+      "gr_no": "13",
+      "group_name": "Secondary Income",
+      "sub_group": null,
+      "purpose_code": "S1301",
+      "description": "Remittance for family maintenance and savings"
+    },
+    {
+      "gr_no": "13",
+      "group_name": "Secondary Income",
+      "sub_group": null,
+      "purpose_code": "S1302",
+      "description": "Remittance towards personal gifts and donations"
+    },
+    {
+      "gr_no": "13",
+      "group_name": "Secondary Income",
+      "sub_group": null,
+      "purpose_code": "S1303",
+      "description": "Remittance towards donations to religious and charitable institutions abroad"
+    },
+    {
+      "gr_no": "13",
+      "group_name": "Secondary Income",
+      "sub_group": null,
+      "purpose_code": "S1304",
+      "description": "Remittance towards grants and donations to other governments and charitable institutions established by the governments."
+    },
+    {
+      "gr_no": "13",
+      "group_name": "Secondary Income",
+      "sub_group": null,
+      "purpose_code": "S1305",
+      "description": "Contributions / donations by the Government to international institutions"
+    },
+    {
+      "gr_no": "13",
+      "group_name": "Secondary Income",
+      "sub_group": null,
+      "purpose_code": "S1306",
+      "description": "Remittance towards payment / refund of taxes"
+    },
+    {
+      "gr_no": "13",
+      "group_name": "Secondary Income",
+      "sub_group": null,
+      "purpose_code": "S1307",
+      "description": "Outflows on account of migrant transfers including personal effects"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1401",
+      "description": "Compensation of employees"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1402",
+      "description": "Remittance towards interest on Non-Resident deposits (FCNR(B) / NR(E)RA, etc.)"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1403",
+      "description": "Remittance towards interest on loans from Non-Residents (ST / MT / LT loans) e.g. External Commercial Borrowings, Trade Credits, etc."
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1405",
+      "description": "Remittance towards interest payment by ADs on their own account (to VOSTRO a/c holders or the OD on NOSTRO a/c.)"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1408",
+      "description": "Remittance of profit by FDI enterprises in India (by branches of foreign companies including bank branches)"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1409",
+      "description": "Remittance of dividends by FDI enterprises in India (other than branches) on equity and investment fund shares"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1410",
+      "description": "Payment of interest by FDI enterprises in India to their Parent company abroad"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1411",
+      "description": "Remittance of interest income on account of Portfolio Investment in India"
+    },
+    {
+      "gr_no": "14",
+      "group_name": "Primary Income",
+      "sub_group": null,
+      "purpose_code": "S1412",
+      "description": "Remittance of dividends on account of Portfolio Investment in India on equity and investment fund shares"
+    },
+    {
+      "gr_no": "15",
+      "group_name": "Others",
+      "sub_group": null,
+      "purpose_code": "S1501",
+      "description": "Refunds / rebates / reduction in invoice value on account of exports"
+    },
+    {
+      "gr_no": "15",
+      "group_name": "Others",
+      "sub_group": null,
+      "purpose_code": "S1502",
+      "description": "Reversal of wrong entries, refunds of amount remitted for non-exports"
+    },
+    {
+      "gr_no": "15",
+      "group_name": "Others",
+      "sub_group": null,
+      "purpose_code": "S1503",
+      "description": "Payments by residents for international bidding"
+    },
+    {
+      "gr_no": "15",
+      "group_name": "Others",
+      "sub_group": null,
+      "purpose_code": "S1504",
+      "description": "Notional sales when export bills negotiated / purchased / discounted are dishonored / crystallised / cancelled and reversed from suspense account"
+    },
+    {
+      "gr_no": "15",
+      "group_name": "Others",
+      "sub_group": null,
+      "purpose_code": "S1505",
+      "description": "Deemed Imports (exports between SEZ, EPZs and Domestic tariff areas)"
+    },
+    {
+      "gr_no": "16",
+      "group_name": "Maintenance and repair services n.i.e",
+      "sub_group": null,
+      "purpose_code": "S1601",
+      "description": "Payments on account of maintenance and repair services rendered for Vessels, ships, boats, warships, etc."
+    },
+    {
+      "gr_no": "16",
+      "group_name": "Maintenance and repair services n.i.e",
+      "sub_group": null,
+      "purpose_code": "S1602",
+      "description": "Payments on account of maintenance and repair services rendered for aircrafts, space shuttles, rockets, military aircrafts, helicopters, etc."
+    },
+    {
+      "gr_no": "17",
+      "group_name": "Manufacturing services (goods for processing)",
+      "sub_group": null,
+      "purpose_code": "S1701",
+      "description": "Payments"
+    }
+  ]
+}

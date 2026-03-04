@@ -1,0 +1,118 @@
+from __future__ import annotations
+
+from typing import Dict
+
+
+SW_VERSION_NO = "1"
+SW_CREATED_BY = "DIT-EFILING-JAVA"
+XML_CREATED_BY = "DIT-EFILING-JAVA"
+INTERMEDIARY_CITY = "Delhi"
+FORM_NAME = "FORM15CB"
+FORM_DESCRIPTION = "FORM15CB"
+ASSESSMENT_YEAR = "2017"
+SCHEMA_VER = "Ver1.1"
+FORM_VER = "1"
+
+IOR_WE_CODE = "02"
+HONORIFIC_M_S = "03"
+
+REMITTEE_ZIP_CODE = "999999"
+REMITTEE_STATE = "OUTSIDE INDIA"
+NAME_REMITTEE_DATE_FORMAT = "%d.%m.%Y"
+PROPOSED_DATE_OFFSET_DAYS = 15
+
+SEC_REM_COVERED_DEFAULT = "SEC. 195 READ WITH SEC. 115A"
+
+TAX_RESID_CERT_Y = "Y"
+INC_LIAB_INDIA_ALWAYS = "-1"
+TAX_IND_DTAA_ALWAYS = "N"
+RATE_TDS_SECB_FLG_TDS = "2"
+
+IT_RATE_LOW = 21.84
+IT_RATE_HIGH = 21.216
+
+BASIS_LOW = (
+    "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME AND TAX LIABILITY "
+    "IS CALCULATED AT 21.84 PERCENTAGE OF ABOVE."
+)
+BASIS_HIGH = (
+    "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME AND TAX LIABILITY "
+    "IS CALCULATED AT 21.216 PERCENTAGE OF ABOVE."
+)
+
+# Income Tax Act Section 195 rates - dynamic based on remittance amount (surcharge slabs)
+# Formula: Income Tax 20% + Surcharge + Cess 4%
+IT_ACT_RATE_SLAB_LOW = 20.80      # Up to ₹1 crore: 20% + 0% surcharge + 4% cess = 20.80%
+IT_ACT_RATE_SLAB_MID = 21.22      # ₹1 crore to ₹10 crore: 20% + 2% surcharge + 4% cess = 21.22%
+IT_ACT_RATE_SLAB_HIGH = 21.84     # Above ₹10 crore: 20% + 5% surcharge + 4% cess = 21.84%
+
+IT_ACT_AMOUNT_SLAB_LOW = 10_000_000     # ₹1 crore = 10 million
+IT_ACT_AMOUNT_SLAB_HIGH = 100_000_000   # ₹10 crore = 100 million
+
+BASIS_ACT_LOW = (
+    "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+    "AND TAX LIABILITY IS CALCULATED AT 20.80 PERCENTAGE OF ABOVE."
+)
+BASIS_ACT_MID = (
+    "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+    "AND TAX LIABILITY IS CALCULATED AT 21.22 PERCENTAGE OF ABOVE."
+)
+BASIS_ACT_HIGH = (
+    "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+    "AND TAX LIABILITY IS CALCULATED AT 21.84 PERCENTAGE OF ABOVE."
+)
+
+# ── User-selectable IT Act rates (replaces slab logic) ────────────────────────
+IT_ACT_RATES = [21.84, 21.216, 20.80]          # index 0 = default
+IT_ACT_RATE_DEFAULT = 21.84
+
+IT_ACT_BASIS: Dict[float, str] = {
+    21.84: (
+        "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+        "AND TAX LIABILITY IS CALCULATED AT 21.84 PERCENTAGE OF ABOVE."
+    ),
+    21.216: (
+        "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+        "AND TAX LIABILITY IS CALCULATED AT 21.216 PERCENTAGE OF ABOVE."
+    ),
+    20.80: (
+        "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+        "AND TAX LIABILITY IS CALCULATED AT 20.80 PERCENTAGE OF ABOVE."
+    ),
+}
+
+CA_DEFAULTS: Dict[str, str] = {
+    "NameAcctnt": "SONDUR ANAND",
+    "NameFirmAcctnt": "ANAND S & ASSOCIATES",
+    "AcctntFlatDoorBuilding": "NO. 55, SECOND FLOOR",
+    "PremisesBuildingVillage": "S.V. COMPLEX",
+    "AcctntRoadStreet": "K.R. ROAD",
+    "AcctntAreaLocality": "BASAVANAGUDI",
+    "AcctntTownCityDistrict": "BENGALURU",
+    "AcctntPincode": "560004",
+    "MembershipNumber": "216066",
+    "AcctntState": "15",
+    "AcctntCountryCode": "91",
+}
+
+CA_FIRM_OPTIONS = ["ANAND S & ASSOCIATES", "S ANANTHA AND CO."]
+
+SHORT_CURRENCY_OPTIONS = [
+    "EUR",
+    "USD",
+    "GBP",
+    "JPY",
+    "AUD",
+    "SGD",
+    "CHF",
+    "CAD",
+    "CNY",
+    "SEK",
+    "NOK",
+    "DKK",
+    "NZD",
+    "Other",
+]
+
+MODE_TDS = "TDS"
+MODE_NON_TDS = "NON_TDS"

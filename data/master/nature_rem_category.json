@@ -1,0 +1,266 @@
+[
+  {
+    "code": "-1",
+    "label": "Select"
+  },
+  {
+    "code": "16.1",
+    "label": "ADVERTISEMENT FEE"
+  },
+  {
+    "code": "16.2",
+    "label": "AMC CHARGES"
+  },
+  {
+    "code": "16.3",
+    "label": "ARCHITECTURAL SERVICES"
+  },
+  {
+    "code": "16.4",
+    "label": "BANDWIDTH CHARGES"
+  },
+  {
+    "code": "16.5",
+    "label": "BROKERAGE CHARGES"
+  },
+  {
+    "code": "16.6",
+    "label": "BUSINESS INCOME OTHER THAN THAT COVERED BY CATEGORIES ABOVE"
+  },
+  {
+    "code": "16.7",
+    "label": "CARGO HANDLING SERVICES INSPECTION & LOGISTICS SERVICES"
+  },
+  {
+    "code": "16.8",
+    "label": "CELLULAR ROAMING CHARGES"
+  },
+  {
+    "code": "16.9",
+    "label": "CHARTER HIRE CHARGES (SHIPPING)"
+  },
+  {
+    "code": "16.10",
+    "label": "CLEARING & FORWARDING CHARGES"
+  },
+  {
+    "code": "16.11",
+    "label": "COMMISSION"
+  },
+  {
+    "code": "16.12",
+    "label": "COMMUNICATION CHARGES"
+  },
+  {
+    "code": "16.13",
+    "label": "CONSULTING SERVICES"
+  },
+  {
+    "code": "16.14",
+    "label": "DESIGNING FEE"
+  },
+  {
+    "code": "16.15",
+    "label": "DIRECTORS FEES"
+  },
+  {
+    "code": "16.16",
+    "label": "DIVIDEND"
+  },
+  {
+    "code": "16.17",
+    "label": "DRILLING"
+  },
+  {
+    "code": "16.18",
+    "label": "ENGINEERING SERVICES"
+  },
+  {
+    "code": "16.19",
+    "label": "EQUIPMENT RENTAL CHARGES"
+  },
+  {
+    "code": "16.20",
+    "label": "FABRICATION SERVICES"
+  },
+  {
+    "code": "16.21",
+    "label": "FEES FOR TECHNICAL SERVICES/ FEES FOR INCLUDED SERVICES"
+  },
+  {
+    "code": "16.22",
+    "label": "FREIGHT CHARGES"
+  },
+  {
+    "code": "16.23",
+    "label": "INCOME FROM IMMOVEABLE PROPERTY"
+  },
+  {
+    "code": "16.24",
+    "label": "INCOME FROM SHIPPING, INLAND WATERWAYS OR AIR TRANSPORT"
+  },
+  {
+    "code": "16.25",
+    "label": "INSTALLATION & COMMISSIONING SERVICES"
+  },
+  {
+    "code": "16.26",
+    "label": "INSURANCE COMMISSIONS"
+  },
+  {
+    "code": "16.27",
+    "label": "INTEREST PAYMENT"
+  },
+  {
+    "code": "16.28",
+    "label": "INVESTMENT INCOME"
+  },
+  {
+    "code": "16.29",
+    "label": "LEASE PAYMENT"
+  },
+  {
+    "code": "16.30",
+    "label": "LICENSING FEE"
+  },
+  {
+    "code": "16.31",
+    "label": "LONG TERM CAPITAL GAINS"
+  },
+  {
+    "code": "16.32",
+    "label": "MEMBERSHIP FEE"
+  },
+  {
+    "code": "16.33",
+    "label": "MOBILESTATION CHARGES"
+  },
+  {
+    "code": "16.34",
+    "label": "PAYMENTS FOR SOFTWARE BUNDLED WITH HARDWARE"
+  },
+  {
+    "code": "16.35",
+    "label": "PAYMENTS TO PROFESSORS, TEACHERS OR RESEARCH SCHOLARS"
+  },
+  {
+    "code": "16.36",
+    "label": "PAYMENTS TO SPORTS PERSON & ARTISTS"
+  },
+  {
+    "code": "16.37",
+    "label": "PAYMENTS TO STUDENTS OR BUSINESS APPRENTICE"
+  },
+  {
+    "code": "16.38",
+    "label": "PENSIONS(OTHER THAN THOSE RELATED TO PAST EMPLOYMENT)"
+  },
+  {
+    "code": "16.39",
+    "label": "PROCESSING CHARGES"
+  },
+  {
+    "code": "16.40",
+    "label": "PROFESSIONAL SERVICES"
+  },
+  {
+    "code": "16.41",
+    "label": "PURCHASE OF SOFTWARE"
+  },
+  {
+    "code": "16.42",
+    "label": "R&D CHARGES"
+  },
+  {
+    "code": "16.43",
+    "label": "REGISTRATION CHARGES"
+  },
+  {
+    "code": "16.44",
+    "label": "REIMBURSEMENT OF EXPENSES"
+  },
+  {
+    "code": "16.45",
+    "label": "REPATRIATION OF SURPLUS FUNDS"
+  },
+  {
+    "code": "16.46",
+    "label": "RETAINERSHIP FEES"
+  },
+  {
+    "code": "16.47",
+    "label": "RETENTION FEES"
+  },
+  {
+    "code": "16.48",
+    "label": "ROYALTY"
+  },
+  {
+    "code": "16.49",
+    "label": "SALES AND MARKETING SERVICES"
+  },
+  {
+    "code": "16.50",
+    "label": "SEISMIC DATA PROCESSING"
+  },
+  {
+    "code": "16.51",
+    "label": "SHORT TERM CAPITAL GAINS"
+  },
+  {
+    "code": "16.52",
+    "label": "SOFTWARE LICENCES"
+  },
+  {
+    "code": "16.53",
+    "label": "SPONSORSHIP FEES"
+  },
+  {
+    "code": "16.54",
+    "label": "SUBSCRIPTION FEES"
+  },
+  {
+    "code": "16.55",
+    "label": "SUPERVISION CHARGES"
+  },
+  {
+    "code": "16.56",
+    "label": "SURVEY FEES"
+  },
+  {
+    "code": "16.57",
+    "label": "TELECASTING SERVICES"
+  },
+  {
+    "code": "16.58",
+    "label": "TENDER FEES"
+  },
+  {
+    "code": "16.59",
+    "label": "TESTING CHARGES"
+  },
+  {
+    "code": "16.60",
+    "label": "TRAINING"
+  },
+  {
+    "code": "16.61",
+    "label": "WARRANTY SERVICES"
+  },
+  {
+    "code": "16.62",
+    "label": "WINNING FROM HORSE RACES."
+  },
+  {
+    "code": "16.63",
+    "label": "WINNING FROM LOTTERIES, CROSSWORD PUZZLES, CARD GAMES AND OTHER GAMES OF ANY SORT."
+  },
+  {
+    "code": "16.64",
+    "label": "CONSULAR RECEIPTS"
+  },
+  {
+    "code": "16.99",
+    "label": "OTHER INCOME / OTHER (NOT IN THE NATURE OF INCOME)"
+  }
+]

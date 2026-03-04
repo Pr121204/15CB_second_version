@@ -1,0 +1,710 @@
+[
+  {
+    "code": "-1",
+    "currency": "Select"
+  },
+  {
+    "code": "1",
+    "currency": "AFGAHANI"
+  },
+  {
+    "code": "2",
+    "currency": "ALBANIAN LEK"
+  },
+  {
+    "code": "3",
+    "currency": "ALGERIAN DINAR"
+  },
+  {
+    "code": "4",
+    "currency": "ANDORAN PESTA"
+  },
+  {
+    "code": "5",
+    "currency": "ANGOLAN NEW KWANZA"
+  },
+  {
+    "code": "6",
+    "currency": "ARGENTINE PESOS"
+  },
+  {
+    "code": "7",
+    "currency": "ARMENIAN DRAM"
+  },
+  {
+    "code": "8",
+    "currency": "ARUBAN GUILDER"
+  },
+  {
+    "code": "9",
+    "currency": "AUSTRALIAN DOLLAR"
+  },
+  {
+    "code": "10",
+    "currency": "AUSTRIAN SCHILLING"
+  },
+  {
+    "code": "11",
+    "currency": "AZERBAIJAN MANAT"
+  },
+  {
+    "code": "12",
+    "currency": "BAHAMIAN DOLLAR"
+  },
+  {
+    "code": "13",
+    "currency": "BAHRAINI DINAR"
+  },
+  {
+    "code": "14",
+    "currency": "BANGLADESH TAKA"
+  },
+  {
+    "code": "15",
+    "currency": "BARBADOS DOLLAR"
+  },
+  {
+    "code": "16",
+    "currency": "BELARUSSIAN RUBLE"
+  },
+  {
+    "code": "17",
+    "currency": "BELGIAN FRANC"
+  },
+  {
+    "code": "18",
+    "currency": "BELIZE DOLLAR"
+  },
+  {
+    "code": "19",
+    "currency": "BERMUDIAN DOLLAR"
+  },
+  {
+    "code": "20",
+    "currency": "BHUTAN NGULTRUM"
+  },
+  {
+    "code": "21",
+    "currency": "BOLIVIAN BOLIVIANO"
+  },
+  {
+    "code": "22",
+    "currency": "BOTSWANA PULA"
+  },
+  {
+    "code": "23",
+    "currency": "BRAZILIAN REAL"
+  },
+  {
+    "code": "24",
+    "currency": "BRUNEI DOLLAR"
+  },
+  {
+    "code": "25",
+    "currency": "BULGARIAN LEV"
+  },
+  {
+    "code": "26",
+    "currency": "BURUNDI FRANC"
+  },
+  {
+    "code": "27",
+    "currency": "CAMBODIAN REIL"
+  },
+  {
+    "code": "28",
+    "currency": "CANADIAN DOLLAR"
+  },
+  {
+    "code": "29",
+    "currency": "CAPE VERDE ESCUDO"
+  },
+  {
+    "code": "30",
+    "currency": "CAYMAN ISLANDS DOLLAR"
+  },
+  {
+    "code": "31",
+    "currency": "CFP FRANCS"
+  },
+  {
+    "code": "32",
+    "currency": "CHILEAN PESO"
+  },
+  {
+    "code": "33",
+    "currency": "COLOMBIAN PESO"
+  },
+  {
+    "code": "34",
+    "currency": "COMOROS FRANC"
+  },
+  {
+    "code": "35",
+    "currency": "COSTA RICAN COLON"
+  },
+  {
+    "code": "36",
+    "currency": "CROATIA KUNA"
+  },
+  {
+    "code": "37",
+    "currency": "CUBAN PESO"
+  },
+  {
+    "code": "38",
+    "currency": "CYPRUS POUND"
+  },
+  {
+    "code": "39",
+    "currency": "DANISH KRONE"
+  },
+  {
+    "code": "40",
+    "currency": "DEUTSCH MARK"
+  },
+  {
+    "code": "41",
+    "currency": "DJIBOUTI FRANC"
+  },
+  {
+    "code": "42",
+    "currency": "DOBRA"
+  },
+  {
+    "code": "43",
+    "currency": "DOMINICBN PESO"
+  },
+  {
+    "code": "44",
+    "currency": "EAST CARRIBEAN DOLLAR"
+  },
+  {
+    "code": "45",
+    "currency": "ECUADOR SUCRE"
+  },
+  {
+    "code": "46",
+    "currency": "EGYPTIAN POUND"
+  },
+  {
+    "code": "47",
+    "currency": "EL SALVADOR COLON"
+  },
+  {
+    "code": "48",
+    "currency": "ESTONIAN KROON"
+  },
+  {
+    "code": "49",
+    "currency": "ETHOPIAN BIRR"
+  },
+  {
+    "code": "50",
+    "currency": "EURO"
+  },
+  {
+    "code": "51",
+    "currency": "FALKLAND ISLANDSPOUND"
+  },
+  {
+    "code": "52",
+    "currency": "FIJI DOLLAR"
+  },
+  {
+    "code": "53",
+    "currency": "FINISH MARKKA"
+  },
+  {
+    "code": "54",
+    "currency": "FRENCH FRANC"
+  },
+  {
+    "code": "55",
+    "currency": "GAMBIAN DALASI"
+  },
+  {
+    "code": "56",
+    "currency": "GEORGIAN LARI"
+  },
+  {
+    "code": "57",
+    "currency": "GHANA CEDI"
+  },
+  {
+    "code": "58",
+    "currency": "GIBRALTAR POUND"
+  },
+  {
+    "code": "59",
+    "currency": "GREEK DRACHMA"
+  },
+  {
+    "code": "60",
+    "currency": "GUATEMALA QUETZAL"
+  },
+  {
+    "code": "61",
+    "currency": "GUINEA FRANC"
+  },
+  {
+    "code": "62",
+    "currency": "GUINEA-BISSAU PESO"
+  },
+  {
+    "code": "63",
+    "currency": "GUYANA DOLLAR"
+  },
+  {
+    "code": "64",
+    "currency": "HAITI GOURDE"
+  },
+  {
+    "code": "65",
+    "currency": "HONDURAS LEMPIRA"
+  },
+  {
+    "code": "66",
+    "currency": "HONGKONG DOLLAR"
+  },
+  {
+    "code": "67",
+    "currency": "HRYVNIA"
+  },
+  {
+    "code": "68",
+    "currency": "HUNGARIAN FORINT"
+  },
+  {
+    "code": "69",
+    "currency": "ICELAND KRONA"
+  },
+  {
+    "code": "70",
+    "currency": "INDIAN RUPEE"
+  },
+  {
+    "code": "71",
+    "currency": "INDONESIAN RUPIAH"
+  },
+  {
+    "code": "72",
+    "currency": "IRANIAN RIAL"
+  },
+  {
+    "code": "73",
+    "currency": "IRAQI DINAR"
+  },
+  {
+    "code": "74",
+    "currency": "IRISH POUNDS"
+  },
+  {
+    "code": "75",
+    "currency": "ISRAELI SHEKEL"
+  },
+  {
+    "code": "76",
+    "currency": "ITALIAN LIRA"
+  },
+  {
+    "code": "77",
+    "currency": "JAMAICAN DOLLAR"
+  },
+  {
+    "code": "78",
+    "currency": "JAPANESE YEN"
+  },
+  {
+    "code": "79",
+    "currency": "JORDANIAN DINAR"
+  },
+  {
+    "code": "80",
+    "currency": "KAZAKSTAN TENGE"
+  },
+  {
+    "code": "81",
+    "currency": "KENYAN SHILLING"
+  },
+  {
+    "code": "82",
+    "currency": "KINA"
+  },
+  {
+    "code": "83",
+    "currency": "KORUNA"
+  },
+  {
+    "code": "84",
+    "currency": "KUWAITI DINAR"
+  },
+  {
+    "code": "85",
+    "currency": "KWACHA"
+  },
+  {
+    "code": "86",
+    "currency": "KYAT"
+  },
+  {
+    "code": "87",
+    "currency": "KYRGYZSTAN SOM"
+  },
+  {
+    "code": "88",
+    "currency": "LAOS KIP"
+  },
+  {
+    "code": "89",
+    "currency": "LATVIAN LAT"
+  },
+  {
+    "code": "90",
+    "currency": "LEBANESE POUND"
+  },
+  {
+    "code": "91",
+    "currency": "LEONE"
+  },
+  {
+    "code": "92",
+    "currency": "LESOTHO LOTI"
+  },
+  {
+    "code": "93",
+    "currency": "LIBERIAN DOLLAR"
+  },
+  {
+    "code": "94",
+    "currency": "LIBYAN DINAR"
+  },
+  {
+    "code": "95",
+    "currency": "LILANGENI"
+  },
+  {
+    "code": "96",
+    "currency": "LITHUANIAN LITAS"
+  },
+  {
+    "code": "97",
+    "currency": "LUXEMBOURG FRANCS"
+  },
+  {
+    "code": "98",
+    "currency": "MACAU PATACA"
+  },
+  {
+    "code": "99",
+    "currency": "OTHERS"
+  },
+  {
+    "code": "100",
+    "currency": "MACEDONIAN DENAR"
+  },
+  {
+    "code": "101",
+    "currency": "MALAGASSY FRANC"
+  },
+  {
+    "code": "102",
+    "currency": "MALAWIAN KWACHA"
+  },
+  {
+    "code": "103",
+    "currency": "MALAYSIAN RINGGIT"
+  },
+  {
+    "code": "104",
+    "currency": "MALDIVE RUFIYAA"
+  },
+  {
+    "code": "105",
+    "currency": "MALTESE LIRA"
+  },
+  {
+    "code": "106",
+    "currency": "MAURITANIAN OUGUIYA"
+  },
+  {
+    "code": "107",
+    "currency": "MAURITIUS RUPEE"
+  },
+  {
+    "code": "108",
+    "currency": "MEXICAN PESO"
+  },
+  {
+    "code": "109",
+    "currency": "MOLDOVAN LEU"
+  },
+  {
+    "code": "110",
+    "currency": "MONGOLIAN TUGRIK"
+  },
+  {
+    "code": "111",
+    "currency": "MORACCAN DIRHAM"
+  },
+  {
+    "code": "112",
+    "currency": "MOZAMBIQUE METICBL"
+  },
+  {
+    "code": "113",
+    "currency": "NAMIBIA DOLLAR"
+  },
+  {
+    "code": "114",
+    "currency": "NEPALESE RUPEE"
+  },
+  {
+    "code": "115",
+    "currency": "NETHERLAND ANTILLIAN GUILDER"
+  },
+  {
+    "code": "116",
+    "currency": "NETHERLANDS GUILDER"
+  },
+  {
+    "code": "117",
+    "currency": "NEW DINAR"
+  },
+  {
+    "code": "118",
+    "currency": "NEW TAIWAN DOLLAR"
+  },
+  {
+    "code": "119",
+    "currency": "NEW ZEALAND DOLLAR"
+  },
+  {
+    "code": "120",
+    "currency": "NICARAGUAN CORDOBA ORO"
+  },
+  {
+    "code": "121",
+    "currency": "NIGERIAN NAIRA"
+  },
+  {
+    "code": "122",
+    "currency": "NORTH KOREAN WON"
+  },
+  {
+    "code": "123",
+    "currency": "NORWEGIAN KRONES"
+  },
+  {
+    "code": "124",
+    "currency": "PAKISTANI RUPEE"
+  },
+  {
+    "code": "125",
+    "currency": "PANAMAN BALBOA"
+  },
+  {
+    "code": "126",
+    "currency": "PARAGUAY GUARANI"
+  },
+  {
+    "code": "127",
+    "currency": "PARANGA"
+  },
+  {
+    "code": "128",
+    "currency": "PERUVIAN NUEVO SOL"
+  },
+  {
+    "code": "129",
+    "currency": "PESO"
+  },
+  {
+    "code": "130",
+    "currency": "PHILLIPINES PESOS"
+  },
+  {
+    "code": "131",
+    "currency": "POLISH ZLOTY"
+  },
+  {
+    "code": "132",
+    "currency": "PORTUGUESE ESCUDO"
+  },
+  {
+    "code": "133",
+    "currency": "POUND STERLING"
+  },
+  {
+    "code": "134",
+    "currency": "QATARI RIAL"
+  },
+  {
+    "code": "135",
+    "currency": "RAND"
+  },
+  {
+    "code": "136",
+    "currency": "RIAL OMANIS"
+  },
+  {
+    "code": "137",
+    "currency": "ROMANIAN LEU"
+  },
+  {
+    "code": "138",
+    "currency": "ROUBLE"
+  },
+  {
+    "code": "139",
+    "currency": "RWANDA FRANC"
+  },
+  {
+    "code": "140",
+    "currency": "SAUDI RIYAL"
+  },
+  {
+    "code": "141",
+    "currency": "SEYCHELLES RUPEE"
+  },
+  {
+    "code": "142",
+    "currency": "SINGAPORE DOLLAR"
+  },
+  {
+    "code": "143",
+    "currency": "SLOVAKI KORUNA"
+  },
+  {
+    "code": "144",
+    "currency": "SLOVENIAN TOLAR"
+  },
+  {
+    "code": "145",
+    "currency": "SOLOMAN ISLANDS DOLLAR"
+  },
+  {
+    "code": "146",
+    "currency": "SOMALI SHILLING"
+  },
+  {
+    "code": "147",
+    "currency": "SOUTH KOREAN WON"
+  },
+  {
+    "code": "148",
+    "currency": "SPANISH PESETA"
+  },
+  {
+    "code": "149",
+    "currency": "SRI LANKA RUPEE"
+  },
+  {
+    "code": "150",
+    "currency": "ST. HELENA POUND"
+  },
+  {
+    "code": "151",
+    "currency": "SUDANESE DINAR"
+  },
+  {
+    "code": "152",
+    "currency": "SURINAME GUILDER"
+  },
+  {
+    "code": "153",
+    "currency": "SWEDISH KRONA"
+  },
+  {
+    "code": "154",
+    "currency": "SWISS FRANC"
+  },
+  {
+    "code": "155",
+    "currency": "SYRIAN POUND"
+  },
+  {
+    "code": "156",
+    "currency": "TAJIK ROUBLE"
+  },
+  {
+    "code": "157",
+    "currency": "TALA"
+  },
+  {
+    "code": "158",
+    "currency": "TANZANIAN SCHILLING"
+  },
+  {
+    "code": "159",
+    "currency": "THAI BAHTS"
+  },
+  {
+    "code": "160",
+    "currency": "TIMOR ESCUDO"
+  },
+  {
+    "code": "161",
+    "currency": "TRINIDAD & TOBAGO DOLLAR"
+  },
+  {
+    "code": "162",
+    "currency": "TURKEMENI MANAT"
+  },
+  {
+    "code": "163",
+    "currency": "TURKISH LIRA"
+  },
+  {
+    "code": "164",
+    "currency": "TURNISIAN DINAR"
+  },
+  {
+    "code": "165",
+    "currency": "UAE DIRHAM"
+  },
+  {
+    "code": "166",
+    "currency": "UGANDA SHILLING"
+  },
+  {
+    "code": "167",
+    "currency": "US DOLLAR"
+  },
+  {
+    "code": "168",
+    "currency": "UZBEKISTAN SUM"
+  },
+  {
+    "code": "169",
+    "currency": "VATU"
+  },
+  {
+    "code": "170",
+    "currency": "VENEZUELAN BOLIVAR"
+  },
+  {
+    "code": "171",
+    "currency": "VIETNAM DONG"
+  },
+  {
+    "code": "172",
+    "currency": "YEMENI RIAL"
+  },
+  {
+    "code": "173",
+    "currency": "YUAN RENMINBI"
+  },
+  {
+    "code": "174",
+    "currency": "ZAIRE"
+  },
+  {
+    "code": "175",
+    "currency": "ZIMBABWE DOLLAR"
+  },
+  {
+    "code": "176",
+    "currency": "CFA FRANC"
+  }
+]

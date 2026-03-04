@@ -1,0 +1,14 @@
+{
+  "indian_company_aliases": {
+    "bosch ltd": "Bosch Limited",
+    "rbei": "RBEI"
+  },
+  "foreign_party_aliases": {},
+  "party_bank_aliases": {
+    "bosch limited": "Bosch Limited",
+    "bosch ltd": "Bosch Limited",
+    "rbei": "RBEI"
+  },
+  "nature_aliases": {},
+  "country_aliases": {}
+}

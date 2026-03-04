@@ -1,0 +1,12 @@
+streamlit
+pytesseract
+pdf2image
+Pillow
+pdfplumber
+opencv-python-headless
+google-genai
+python-dotenv
+python-dateutil
+streamlit-google-auth
+openpyxl
+pandas
