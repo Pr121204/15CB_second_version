@@ -1,51 +1,100 @@
 from __future__ import annotations
 
-"""
-Streamlit application entrypoint for the enhanced Form 15CB Batch Generator.
+# """
+# Streamlit application entrypoint for the enhanced Form 15CB Batch Generator.
 
-This version supersedes the original application by supporting batch
-processing of invoices contained within a single ZIP archive accompanied
-by an Excel spreadsheet.  The new workflow allows users to upload a ZIP
-file, automatically derive the currency, exchange rate and date of
-deduction from the spreadsheet, set global defaults for TDS/Non‑TDS
-mode and gross‑up, and then process all invoices in one click.  Per
-invoice overrides remain available for exceptional cases, and XML
-generation is supported both individually and in batch.
+# This version supersedes the original application by supporting batch
+# processing of invoices contained within a single ZIP archive accompanied
+# by an Excel spreadsheet.  The new workflow allows users to upload a ZIP
+# file, automatically derive the currency, exchange rate and date of
+# deduction from the spreadsheet, set global defaults for TDS/Non‑TDS
+# mode and gross‑up, and then process all invoices in one click.  Per
+# invoice overrides remain available for exceptional cases, and XML
+# generation is supported both individually and in batch.
 
-Key enhancements:
+# Key enhancements:
 
-* ZIP ingestion: the user uploads a single ZIP archive containing one
-  Excel (.xlsx) file and one or more invoice documents (.pdf/.jpg/.png).
-  The application reads the Excel to fetch currency, INR/FCY amounts,
-  calculates the exchange rate and extracts the posting date for the
-  TDS deduction.
-* Global controls: a pair of toggles allow the CA to set the default
-  TDS/Non‑TDS mode and whether gross‑up applies.  These values are
-  automatically applied to all invoices but can be overridden per
-  invoice.
-* Per‑invoice overrides: within each invoice tab the user can change
-  the mode and gross‑up settings if a particular invoice deviates from
-  the batch default.  Changing the global defaults clears all
-  overrides and recomputes derived values without re‑calling Gemini.
-* Robust date parsing: the ``Posting Date`` column of the Excel may
-  contain serial numbers, dates or strings in multiple formats.  The
-  parsed date populates ``DednDateTds`` in the XML.  Proposed
-  remittance date remains today+15 days.
-* Partial downloads: generating XML for all invoices includes only
-  those that have been processed successfully; invoices that failed or
-  remain unprocessed are skipped with a summary explaining why.
+# * ZIP ingestion: the user uploads a single ZIP archive containing one
+#   Excel (.xlsx) file and one or more invoice documents (.pdf/.jpg/.png).
+#   The application reads the Excel to fetch currency, INR/FCY amounts,
+#   calculates the exchange rate and extracts the posting date for the
+#   TDS deduction.
+# * Global controls: a pair of toggles allow the CA to set the default
+#   TDS/Non‑TDS mode and whether gross‑up applies.  These values are
+#   automatically applied to all invoices but can be overridden per
+#   invoice.
+# * Per‑invoice overrides: within each invoice tab the user can change
+#   the mode and gross‑up settings if a particular invoice deviates from
+#   the batch default.  Changing the global defaults clears all
+#   overrides and recomputes derived values without re‑calling Gemini.
+# * Robust date parsing: the ``Posting Date`` column of the Excel may
+#   contain serial numbers, dates or strings in multiple formats.  The
+#   parsed date populates ``DednDateTds`` in the XML.  Proposed
+#   remittance date remains today+15 days.
+# * Partial downloads: generating XML for all invoices includes only
+#   those that have been processed successfully; invoices that failed or
+#   remain unprocessed are skipped with a summary explaining why.
 
-Existing functionality—such as invoice text extraction via Gemini,
-master data lookup, tax computation and XML generation—are preserved
-and reused from the original modules.
-"""
+# Existing functionality—such as invoice text extraction via Gemini,
+# master data lookup, tax computation and XML generation—are preserved
+# and reused from the original modules.
+# """
 
 import io
 import os
 import time
+from datetime import datetime
 from typing import Dict, List
 
 import streamlit as st
+
+# Must be the absolute first Streamlit command — placed before any local
+# module import so that modules which touch st.secrets on import (e.g.
+# field_extractor) cannot race ahead of this call.
+st.set_page_config(
+    page_title="Form 15CB Batch Generator",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+# Custom CSS for the invoice details card
+st.markdown("""
+<style>
+.excel-card {
+    background-color: #262730;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #464855;
+    margin-bottom: 20px;
+}
+.excel-card div {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+.excel-card div:last-child {
+    margin-bottom: 0;
+}
+.excel-card .label {
+    font-weight: 600;
+    margin-right: 10px;
+    width: 140px;
+    display: inline-block;
+}
+.excel-card .arrow {
+    margin-right: 15px;
+    color: #00d4ff;
+}
+.excel-card code {
+    background-color: #1e1e26;
+    color: #00ffcc;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 1.1em;
+}
+</style>
+""", unsafe_allow_html=True)
 
 from pdf2image import convert_from_bytes
 
@@ -110,7 +159,7 @@ def _ensure_session_state() -> None:
 # XML field validation
 # -----------------------------------------------------------------------------
 
-def _validate_xml_fields(fields: Dict[str, str], mode: str = MODE_TDS) -> List[str]:
+def _validate_xml_fields(fields: Dict[str, str], mode: str = MODE_TDS, dedn_date_iso: str = "") -> List[str]:
     """Validate XML fields before generation.
 
     This function largely mirrors the behaviour of the original app,
@@ -151,8 +200,28 @@ def _validate_xml_fields(fields: Dict[str, str], mode: str = MODE_TDS) -> List[s
             errors.append("Amount of remittance must be entered.")
         if not str(fields.get("ActlAmtTdsForgn") or "").strip():
             errors.append("Actual amount remitted must be entered.")
+        if not _is_valid_iso_date(dedn_date_iso):
+            errors.append("Deduction Date (Posting Date) missing in Excel; cannot generate XML")
 
     return errors
+
+
+def _is_valid_iso_date(value: str) -> bool:
+    text = str(value or "").strip()
+    if not text:
+        return False
+    try:
+        datetime.strptime(text, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
+
+
+def _get_invoice_dedn_date(inv: Dict[str, object]) -> str:
+    excel = inv.get("excel") or {}
+    if isinstance(excel, dict):
+        return str(excel.get("dedn_date_tds") or "").strip()
+    return ""
 
 
 # -----------------------------------------------------------------------------
@@ -160,20 +229,15 @@ def _validate_xml_fields(fields: Dict[str, str], mode: str = MODE_TDS) -> List[s
 # -----------------------------------------------------------------------------
 
 def _effective_mode(inv: Dict[str, object]) -> str:
-    """Resolve the effective mode (TDS/Non‑TDS) for an invoice."""
-    override = inv.get("mode_override")
-    if override:
-        return override
-    return st.session_state["global_controls"].get("mode", MODE_TDS)
+    """Resolve the effective mode (TDS/Non‑TDS) for an invoice.
+    Overrides the global setting only if an override is explicitly set in the inv record
+    (legacy support, though UI no longer sets these).
+    """
+    return inv.get("mode_override") or st.session_state["global_controls"].get("mode", MODE_TDS)
 
 
 def _effective_gross(inv: Dict[str, object]) -> bool:
-    """Resolve the effective gross‑up flag for an invoice.
-
-    If the invoice is in Non‑TDS mode the gross‑up flag is forced to
-    ``False`` regardless of overrides or global settings.  Otherwise it
-    inherits the override (if set) or the global default.
-    """
+    """Resolve the effective gross‑up flag for an invoice."""
     mode = _effective_mode(inv)
     if mode == MODE_NON_TDS:
         return False
@@ -184,10 +248,7 @@ def _effective_gross(inv: Dict[str, object]) -> bool:
 
 
 def _effective_it_rate(inv: Dict[str, object]) -> float:
-    """Resolve the effective IT Act rate for an invoice.
-
-    Returns the per-invoice override if set, otherwise the global default.
-    """
+    """Resolve the effective IT Act rate for an invoice."""
     override = inv.get("it_act_rate_override")
     if override is not None:
         return float(override)
@@ -217,7 +278,7 @@ def _reset_invoice_states() -> None:
                 "exchange_rate": inv["excel"].get("exchange_rate", 0),
                 "mode": effective_mode,
                 "is_gross_up": effective_gross,
-                "tds_deduction_date": inv["excel"].get("dedn_date_tds", ""),
+                "tds_deduction_date": _get_invoice_dedn_date(inv),
                 "it_act_rate": effective_rate,
             }
             try:
@@ -265,7 +326,8 @@ def _process_single_invoice(inv_id: str) -> None:
         "exchange_rate": inv["excel"].get("exchange_rate", 0),
         "mode": mode,
         "is_gross_up": gross_up,
-        "tds_deduction_date": inv["excel"].get("dedn_date_tds", ""),
+        "tds_deduction_date": _get_invoice_dedn_date(inv),
+        "it_act_rate": _effective_it_rate(inv),
     }
     # Extract core fields
     extracted: Dict[str, str] = {}
@@ -385,7 +447,8 @@ def _generate_xml_for_invoice(inv_id: str) -> None:
     # Determine current mode (should match build state)
     mode = _effective_mode(inv)
     xml_fields = invoice_state_to_xml_fields(inv["state"])
-    errors = _validate_xml_fields(xml_fields, mode=mode)
+    dedn_iso = str(inv.get("state", {}).get("form", {}).get("DednDateTds") or "").strip()
+    errors = _validate_xml_fields(xml_fields, mode=mode, dedn_date_iso=dedn_iso)
     if errors:
         inv["xml_status"] = "failed"
         inv["xml_error"] = "; ".join(errors)
@@ -409,11 +472,6 @@ def _generate_xml_for_invoice(inv_id: str) -> None:
 
 def main() -> None:
     _ensure_session_state()
-    st.set_page_config(
-        page_title="Form 15CB Batch Generator",
-        layout="wide",
-        initial_sidebar_state="collapsed",
-    )
     st.title("Form 15CB Batch Generator (ZIP-enabled)")
 
     # Step 1 – Upload ZIP
@@ -507,6 +565,7 @@ def main() -> None:
             # Reset overrides and recompute existing invoices from extracted data
             _reset_invoice_states()
             st.info("Global settings updated. All overrides cleared and invoices recomputed.")
+            st.rerun()
 
         # Batch actions
         action_col1, action_col2, action_col3 = st.columns([2, 2, 2])
@@ -559,9 +618,12 @@ def main() -> None:
                 else:
                     skipped.append(inv_id)
             disabled = len(ready_files) == 0
+            # Build zip data safely — always bytes, never None
+            zip_data = generate_zip_from_xmls(ready_files) if ready_files else b""
+
             if st.download_button(
                 "Download All XMLs as ZIP",
-                data=generate_zip_from_xmls(ready_files) if ready_files else None,
+                data=zip_data,
                 file_name="form15cb_batch.zip",
                 mime="application/zip",
                 disabled=disabled,
@@ -590,67 +652,28 @@ def main() -> None:
                     st.error(f"Failed: {inv.get('error')}")
                 else:
                     st.info("Not processed yet")
-                # Local controls – per‑invoice override
-                mode_override = inv.get("mode_override") or st.session_state["global_controls"].get("mode", MODE_TDS)
-                gross_override = inv.get("gross_override") if inv.get("gross_override") is not None else st.session_state["global_controls"].get("gross_up", False)
-                it_rate_effective = _effective_it_rate(inv)
+                # Excel metadata block
+                st.markdown("#### 📊 Invoice details (from Excel)")
+                ex = inv.get("excel", {})
+                
+                currency = ex.get("currency") or "—"
+                exchange_rate = ex.get("exchange_rate")
+                exchange_rate_str = f"{float(exchange_rate):.4f}" if exchange_rate and float(exchange_rate) > 0 else "—"
+                dedn_date = ex.get("dedn_date_tds") or "—"
 
-                # Per-invoice IT Act Rate selectbox labels
-                _INV_IT_LABELS = [
-                    f"{r}% (Default)" if r == IT_ACT_RATE_DEFAULT else f"{r}%"
-                    for r in IT_ACT_RATES
-                ]
-                _INV_IT_MAP = dict(zip(_INV_IT_LABELS, IT_ACT_RATES))
-                _eff_label = next(
-                    (lbl for lbl, val in _INV_IT_MAP.items() if val == it_rate_effective),
-                    _INV_IT_LABELS[0],
-                )
+                with st.container(border=True):
+                    st.markdown(f'''
+                    <div class="excel-card">
+                        <div><span class="label">Currency</span> <span class="arrow">→</span> <code>{currency}</code></div>
+                        <div><span class="label">Exchange Rate</span> <span class="arrow">→</span> <code>{exchange_rate_str}</code></div>
+                        <div><span class="label">Deduction Date</span> <span class="arrow">→</span> <code>{dedn_date}</code></div>
+                    </div>
+                    ''', unsafe_allow_html=True)
+                state_meta = inv.get("state", {}).get("meta", {}) if isinstance(inv.get("state"), dict) else {}
+                dedn_missing_flag = bool((state_meta if isinstance(state_meta, dict) else {}).get("dedn_date_missing"))
+                if dedn_missing_flag or not _is_valid_iso_date(str(ex.get("dedn_date_tds") or "")):
+                    st.warning("Deduction Date (Posting Date) missing in Excel; XML generation is blocked for this invoice.")
 
-                c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
-                with c1:
-                    selected_mode = st.radio(
-                        "Mode (TDS/Non\u2011TDS)",
-                        [MODE_TDS, MODE_NON_TDS],
-                        index=0 if mode_override == MODE_TDS else 1,
-                        horizontal=True,
-                        key=f"mode_override_{inv_id}",
-                    )
-                with c2:
-                    selected_gross = st.checkbox(
-                        "Gross\u2011up for this invoice?",
-                        value=bool(gross_override),
-                        disabled=(selected_mode == MODE_NON_TDS),
-                        key=f"gross_override_{inv_id}",
-                    )
-                with c3:
-                    selected_it_label = st.selectbox(
-                        "IT Act Rate (%)",
-                        options=_INV_IT_LABELS,
-                        index=_INV_IT_LABELS.index(_eff_label),
-                        key=f"it_rate_override_{inv_id}",
-                    )
-                    selected_it_rate = _INV_IT_MAP.get(selected_it_label, IT_ACT_RATE_DEFAULT)
-                with c4:
-                    st.write("")
-                # Apply overrides if they differ from the inherited values
-                if selected_mode != _effective_mode(inv):
-                    inv["mode_override"] = selected_mode
-                else:
-                    inv["mode_override"] = None
-                # Only allow gross override when TDS
-                if selected_mode != MODE_NON_TDS:
-                    if selected_gross != _effective_gross(inv):
-                        inv["gross_override"] = selected_gross
-                    else:
-                        inv["gross_override"] = None
-                else:
-                    inv["gross_override"] = None
-                # IT Act rate override
-                global_it = float(st.session_state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT))
-                if selected_it_rate != global_it:
-                    inv["it_act_rate_override"] = selected_it_rate
-                else:
-                    inv["it_act_rate_override"] = None
                 # Buttons for processing and XML generation
                 bc1, bc2, bc3 = st.columns([2, 2, 2])
                 with bc1:
@@ -682,7 +705,7 @@ def main() -> None:
                         xml_filename = f"form15cb_{filename_stub}.xml"
                         st.download_button(
                             "Download XML",
-                            data=inv["xml_bytes"],
+                            data=inv["xml_bytes"] if inv.get("xml_bytes") else b"",
                             file_name=xml_filename,
                             mime="application/xml",
                             key=f"download_xml_{inv_id}",
@@ -712,7 +735,7 @@ def main() -> None:
                             "exchange_rate": inv["excel"].get("exchange_rate", 0),
                             "mode": effective_mode,
                             "is_gross_up": effective_gross,
-                            "tds_deduction_date": inv["excel"].get("dedn_date_tds", ""),
+                            "tds_deduction_date": _get_invoice_dedn_date(inv),
                             "it_act_rate": effective_rate,
                         }
                         try:
@@ -730,7 +753,7 @@ def main() -> None:
                     # Finally render the form using existing batch_form_ui helper
                     from modules.batch_form_ui import render_invoice_tab
                     try:
-                        new_state = render_invoice_tab(inv["state"])
+                        new_state = render_invoice_tab(inv["state"], show_header=False)
                         # Recompute again in case user edits fields in UI
                         new_state = recompute_invoice(new_state)
                         inv["state"] = new_state

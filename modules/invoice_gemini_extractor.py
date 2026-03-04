@@ -25,18 +25,29 @@ except Exception:  # pragma: no cover
 
 load_dotenv()
 
-try:
-    import streamlit as st
+def _get_gemini_config() -> tuple:
+    """Lazily read GEMINI_API_KEY and GEMINI_MODEL_NAME at call time.
 
-    GEMINI_API_KEY: Optional[str] = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY"))
-    GEMINI_MODEL_NAME: str = st.secrets.get("GEMINI_MODEL_NAME", os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash"))
-except Exception:
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-    GEMINI_MODEL_NAME = os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash")
+    Deferring the st.secrets access until this function is called (rather
+    than at module import time) prevents Streamlit from raising
+    "set_page_config must be called before any other Streamlit command"
+    when invoice_gemini_extractor is imported before st.set_page_config() runs.
+    """
+    try:
+        import streamlit as st
+        return (
+            st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY")),
+            st.secrets.get("GEMINI_MODEL_NAME", os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash")),
+        )
+    except Exception:
+        return (
+            os.getenv("GEMINI_API_KEY"),
+            os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash"),
+        )
 
 from modules.master_lookups import load_country_code_map, match_remitter, resolve_country_code
 from modules.logger import get_logger
-from modules.text_normalizer import normalize_invoice_text, normalize_single_line_text
+from modules.text_normalizer import fix_concatenated_words, normalize_invoice_text, normalize_single_line_text
 
 
 logger = get_logger()
@@ -130,6 +141,7 @@ def _extract_modern_response_text(response: object) -> str:
 
 def _generate_with_gemini_text(prompt: str, max_output_tokens: int = 2048) -> Tuple[str, str]:
     backend = _gemini_backend()
+    GEMINI_API_KEY, GEMINI_MODEL_NAME = _get_gemini_config()
     if not GEMINI_API_KEY or not backend:
         return "", ""
     if backend == "legacy":
@@ -172,6 +184,7 @@ def _generate_with_gemini_text(prompt: str, max_output_tokens: int = 2048) -> Tu
 
 def _generate_with_gemini_image(prompt: str, image_path_or_bytes: Union[str, bytes, Path], mime_type: str) -> str:
     backend = _gemini_backend()
+    GEMINI_API_KEY, GEMINI_MODEL_NAME = _get_gemini_config()
     if not GEMINI_API_KEY or not backend:
         return ""
 
@@ -298,10 +311,10 @@ CRITICAL REQUIREMENTS:
 EXTRACT THESE FIELDS:
 {
   "remitter_name": "exact FULL legal company name of the sender/issuer/from-party (the company paying the invoice)",
-  "remitter_address": "COMPLETE full address of the sender/issuer including street, city, postal code, and country",
+  "remitter_address": "COMPLETE full address of the sender/issuer including street, city, postal code, and country. If multiple address lines exist, you MUST join them with commas AND spaces (e.g. 'Hosur Road, Adugodi, Bangalore, 560030, India').",
   "remitter_country": "country name of remitter extracted from their address",
   "beneficiary_name": "exact FULL legal company name of the recipient/to-party/bill-to party (the FOREIGN company being paid).",
-  "beneficiary_address": "COMPLETE full address of the recipient as a single string in the format 'Street Name + Number, ZIP City' (e.g. 'Stollwerckstrasse 11, 51149 Koln'). If multiple address lines exist, join them with commas. Always put street first, then ZIP code, then city name. Do not include the country name here; that must go in beneficiary_country separately.",
+  "beneficiary_address": "COMPLETE full address of the recipient as a single string in the format 'Street Name + Number, ZIP City' (e.g. 'Stollwerckstrasse 11, 51149 Koln'). If multiple address lines exist, you MUST join them with commas AND spaces (e.g. '60-61 Britton Street, London, EC1M 5UX'). Always put street first, then ZIP code, then city name. Do not include the country name here; that must go in beneficiary_country separately.",
   "beneficiary_country": "country name of beneficiary extracted from their address (NOT from remitter address)",
   "invoice_number": "invoice number or reference number as printed on the document",
   "invoice_date": "date in DD/MM/YYYY format",
@@ -387,10 +400,10 @@ Return ONLY valid JSON with no additional text or markdown formatting."""
 PROMPT = """Extract the following fields from this invoice as JSON only, no explanation:
 {
   "remitter_name": "exact legal company name of the sender/issuer/from-party",
-  "remitter_address": "full address of the sender/issuer",
+  "remitter_address": "full address of the sender/issuer. You MUST combine multiple lines with commas AND spaces (e.g., 'Street, City, Postcode, Country').",
   "remitter_country": "country name of remitter extracted from remitter address",
   "beneficiary_name": "exact legal company name of the recipient/to-party/bill-to party",
-  "beneficiary_address": "full address of the recipient/to-party/bill-to party",
+  "beneficiary_address": "full address of the recipient as a single string. You MUST combine multiple lines with commas AND spaces (e.g., 'Street Name, ZIP Code, City Name'). Do not include the country name here; it goes in beneficiary_country.",
   "beneficiary_country": "country name of beneficiary extracted from beneficiary address",
   "invoice_number": "invoice number or reference number as printed",
   "invoice_date": "date in DD/MM/YYYY format",
@@ -916,8 +929,35 @@ def _is_email_domain(text: str) -> bool:
     return False
 
 
+def _collapse_underscored_letter_tokens(text: str) -> str:
+    """
+    Collapses tokens that look like single letters separated by underscores.
+    Example: "E_T_A__S _G_M_B_H_" -> "ETAS GMBH"
+    """
+    if "_" not in text:
+        return text
+    
+    tokens = text.split()
+    new_tokens = []
+    for t in tokens:
+        # Only act on tokens with underscores that are letters + underscores
+        if "_" in t and re.fullmatch(r"[A-Za-z_]+", t):
+            parts = [p for p in t.split("_") if p]
+            # If we have at least 2 parts and all are single characters, collapse them
+            if len(parts) >= 2 and all(len(p) == 1 for p in parts):
+                new_tokens.append("".join(parts))
+            else:
+                new_tokens.append(t)
+        else:
+            new_tokens.append(t)
+    return " ".join(new_tokens)
+
+
 def _normalize_company_name(name: str) -> str:
-    n = normalize_single_line_text(str(name or ""))
+    # First collapse underscored letter tokens (OCR/LLM artifacts)
+    n = _collapse_underscored_letter_tokens(str(name or ""))
+    # Then continue with standard normalization
+    n = normalize_single_line_text(n)
     if not n:
         return ""
     
@@ -961,11 +1001,23 @@ def _normalize_company_name(name: str) -> str:
     return n.upper()
 
 
+def _fix_address_spacing(text: str) -> str:
+    """Ensure a space exists after every comma if followed by a non-space character."""
+    if not text:
+        return ""
+    # Add space after comma if followed by a non-space char
+    return re.sub(r",([^\s])", r", \1", text)
+
+
 def _normalize_extracted_text(value: str) -> str:
     s = normalize_single_line_text(str(value or ""))
     if not s:
         return ""
-    return s
+    return _fix_address_spacing(s)
+
+
+def _normalize_extracted_address(value: str) -> str:
+    return fix_concatenated_words(_normalize_extracted_text(str(value or "")))
 
 
 def _detect_country_signals_from_text(text: str) -> str:
@@ -1653,6 +1705,7 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
         logger.warning("gemini_extract_skipped reason=empty_or_short_text text_len=%s", len(str(text or "")))
         return out
     backend = _gemini_backend()
+    GEMINI_API_KEY, GEMINI_MODEL_NAME = _get_gemini_config()
     if not GEMINI_API_KEY or not backend:
         fallback_fields = _fallback_invoice_fields_from_text(text)
         out["invoice_number"] = fallback_fields.get("invoice_number", "")
@@ -1700,7 +1753,7 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
             )
     logger.info("gemini_extract_response parsed_keys=%s", sorted(parsed.keys()))
     out["remitter_name"] = _normalize_company_name(str(parsed.get("remitter_name") or "").strip())
-    out["remitter_address"] = _normalize_extracted_text(str(parsed.get("remitter_address") or "").strip())
+    out["remitter_address"] = _normalize_extracted_address(str(parsed.get("remitter_address") or "").strip())
     out["remitter_country_text"] = _normalize_extracted_text(str(parsed.get("remitter_country") or "").strip())
     # CHANGE 1: Reject email domains as beneficiary_name
     beneficiary_raw = str(parsed.get("beneficiary_name") or "").strip()
@@ -1709,7 +1762,7 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
         out["beneficiary_name"] = ""
     else:
         out["beneficiary_name"] = _normalize_company_name(beneficiary_raw)
-    out["beneficiary_address"] = _normalize_extracted_text(str(parsed.get("beneficiary_address") or "").strip())
+    out["beneficiary_address"] = _normalize_extracted_address(str(parsed.get("beneficiary_address") or "").strip())
     out["beneficiary_country_text"] = _normalize_extracted_text(str(parsed.get("beneficiary_country") or "").strip())
     out["invoice_number"] = str(parsed.get("invoice_number") or "").strip()
     out["invoice_date_raw"] = str(parsed.get("invoice_date") or "").strip()
@@ -1784,8 +1837,8 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
     # Enforce final display normalization for key party fields.
     out["remitter_name"] = _normalize_company_name(str(out.get("remitter_name") or ""))
     out["beneficiary_name"] = _normalize_company_name(str(out.get("beneficiary_name") or ""))
-    out["remitter_address"] = _normalize_extracted_text(str(out.get("remitter_address") or ""))
-    out["beneficiary_address"] = _normalize_extracted_text(str(out.get("beneficiary_address") or ""))
+    out["remitter_address"] = _normalize_extracted_address(str(out.get("remitter_address") or ""))
+    out["beneficiary_address"] = _normalize_extracted_address(str(out.get("beneficiary_address") or ""))
     logger.info(
         "gemini_extract_done summary=%s",
         {
@@ -1836,6 +1889,7 @@ def extract_invoice_core_fields_from_image(image_path_or_bytes: Union[str, bytes
     }
     
     backend = _gemini_backend()
+    GEMINI_API_KEY, GEMINI_MODEL_NAME = _get_gemini_config()
     if not GEMINI_API_KEY or not backend:
         logger.warning(
             "image_extract_skipped reason=missing_client_or_key has_key=%s legacy_loaded=%s modern_loaded=%s",
@@ -1860,10 +1914,10 @@ def extract_invoice_core_fields_from_image(image_path_or_bytes: Union[str, bytes
         
         # Extract and normalize fields
         out["remitter_name"] = _normalize_company_name(str(parsed.get("remitter_name") or "").strip())
-        out["remitter_address"] = _normalize_extracted_text(str(parsed.get("remitter_address") or "").strip())
+        out["remitter_address"] = _normalize_extracted_address(str(parsed.get("remitter_address") or "").strip())
         out["remitter_country_text"] = _normalize_extracted_text(str(parsed.get("remitter_country") or "").strip())
         out["beneficiary_name"] = _normalize_company_name(str(parsed.get("beneficiary_name") or "").strip())
-        out["beneficiary_address"] = _normalize_extracted_text(str(parsed.get("beneficiary_address") or "").strip())
+        out["beneficiary_address"] = _normalize_extracted_address(str(parsed.get("beneficiary_address") or "").strip())
         out["beneficiary_country_text"] = _normalize_extracted_text(str(parsed.get("beneficiary_country") or "").strip())
         out["invoice_number"] = str(parsed.get("invoice_number") or "").strip()
         out["invoice_date_raw"] = str(parsed.get("invoice_date") or "").strip()
@@ -1945,8 +1999,8 @@ def extract_invoice_core_fields_from_image(image_path_or_bytes: Union[str, bytes
         )
         out["remitter_name"] = _normalize_company_name(str(out.get("remitter_name") or ""))
         out["beneficiary_name"] = _normalize_company_name(str(out.get("beneficiary_name") or ""))
-        out["remitter_address"] = _normalize_extracted_text(str(out.get("remitter_address") or ""))
-        out["beneficiary_address"] = _normalize_extracted_text(str(out.get("beneficiary_address") or ""))
+        out["remitter_address"] = _normalize_extracted_address(str(out.get("remitter_address") or ""))
+        out["beneficiary_address"] = _normalize_extracted_address(str(out.get("beneficiary_address") or ""))
         
         logger.info(
             "image_extract_done summary=%s",

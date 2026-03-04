@@ -418,6 +418,29 @@ def normalize_single_line_text(text: str) -> str:
     return normalize_invoice_text(text, keep_newlines=False)
 
 
+def fix_concatenated_words(text: str) -> str:
+    """
+    Fixes PDF extraction artifacts where words are joined without spaces.
+
+    Handles:
+    - lowercase->Uppercase boundary: "HosurRoad" -> "Hosur Road"
+    - letter->digit boundary: "Bangalore560030" -> "Bangalore 560030"
+    - digit->letter boundary: "560030India" -> "560030 India"
+    - acronym end before Title case: "INDIAHosur" -> "INDIA Hosur"
+    """
+    if not text:
+        return text
+
+    s = str(text)
+    s = re.sub(r"([a-z])([A-Z])", r"\1 \2", s)
+    s = re.sub(r"([A-Za-z])(\d)", r"\1 \2", s)
+    # Do not split ordinal suffixes like 1st/2nd/3rd/4th.
+    s = re.sub(r"(\d)(?!(?:st|nd|rd|th)\b)([A-Za-z])", r"\1 \2", s, flags=re.IGNORECASE)
+    s = re.sub(r"([A-Z]{2,})([A-Z][a-z])", r"\1 \2", s)
+    s = re.sub(r" {2,}", " ", s)
+    return s.strip()
+
+
 def is_ascii_clean(text: str) -> bool:
     s = str(text or "")
     return all(ord(ch) < 128 for ch in s)

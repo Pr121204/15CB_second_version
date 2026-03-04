@@ -116,3 +116,18 @@ SHORT_CURRENCY_OPTIONS = [
 
 MODE_TDS = "TDS"
 MODE_NON_TDS = "NON_TDS"
+
+FIELD_MAX_LENGTH = {
+    "NameRemitter": 120,
+    "NameRemittee": 120,
+    "RemitteeFlatDoorBuilding": 75,
+    "RemitteeAreaLocality": 75,
+    "RemitteeTownCityDistrict": 75,
+    "RemitteeRoadStreet": 75,
+    "BranchName": 75,
+    "BasisDeterTax": 250,
+    "RelevantDtaa": 150,
+    "RelevantArtDtaa": 150,
+    "NatureRemDtaa": 150,
+    "ReasonNot": 250,
+}

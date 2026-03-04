@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Dict, List
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 import streamlit as st
 
@@ -12,6 +12,7 @@ from modules.form15cb_constants import (
     PROPOSED_DATE_OFFSET_DAYS,
     REMITTEE_STATE,
     REMITTEE_ZIP_CODE,
+    FIELD_MAX_LENGTH,
 )
 from modules.currency_mapping import load_currency_exact_index, resolve_currency_selection
 from modules.invoice_calculator import recompute_invoice
@@ -30,6 +31,16 @@ from modules.master_lookups import (
 )
 
 logger = get_logger()
+
+
+def _parse_iso_date(value: str) -> date | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.strptime(text, "%Y-%m-%d").date()
+    except ValueError:
+        return None
 
 
 def _dtaa_rate_percent(raw: str) -> str:
@@ -90,16 +101,36 @@ def _apply_remitter_match(state: Dict[str, object], remitter_name: str) -> None:
         logger.warning("ui_remitter_not_matched invoice_id=%s remitter_name=%s", invoice_id, remitter_name)
 
 
-def render_invoice_tab(state: Dict[str, object]) -> Dict[str, object]:
+def check_field_length_warnings(form: Dict[str, str]) -> List[str]:
+    """Identify fields that exceed their maximum allowed length."""
+    warnings = []
+    for field, max_len in FIELD_MAX_LENGTH.items():
+        val = str(form.get(field) or "")
+        if len(val) > max_len:
+            warnings.append(
+                f"⚠️ '{field}' is {len(val)} chars " f"(max {max_len}) — will be trimmed."
+            )
+    return warnings
+
+
+def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True) -> Dict[str, object]:
     meta = state["meta"]
     extracted = state["extracted"]
     form = state["form"]
 
     invoice_id = str(meta["invoice_id"])
     mode = str(meta.get("mode") or MODE_TDS)
-    st.markdown("### FORM NO. 15CB")
-    st.caption("Certificate of an accountant")
-    st.caption(f"Mode: {'TDS' if mode == MODE_TDS else 'Non-TDS'}")
+    
+    if show_header:
+        st.markdown("### FORM NO. 15CB")
+        st.caption("Certificate of an accountant")
+        st.caption(f"Mode: {'TDS' if mode == MODE_TDS else 'Non-TDS'}")
+
+    # --- Field Length Warnings ---
+    length_warnings = check_field_length_warnings(form)
+    if length_warnings:
+        for w in length_warnings:
+            st.warning(w)
 
     # ── Invoice Reference Section (at the TOP of the form) ──
     st.markdown("### 📄 Invoice Reference")
@@ -445,7 +476,27 @@ def render_invoice_tab(state: Dict[str, object]) -> Dict[str, object]:
             else:
                 logger.warning("ui_rate_missing invoice_id=%s", invoice_id)
         # date remains outside the two-column row so it spans full width
-        form["DednDateTds"] = st.date_input("Date of deduction of TDS", key=f"{invoice_id}_dedn_date").isoformat()
+        dedn_key = f"{invoice_id}_dedn_date"
+        dedn_default = _parse_iso_date(str(form.get("DednDateTds") or ""))
+        if dedn_default is None:
+            if dedn_key in st.session_state:
+                del st.session_state[dedn_key]
+            form["DednDateTds"] = ""
+            st.warning("Deduction Date (Posting Date) missing or invalid; XML generation is blocked until corrected.")
+            manual_key = f"{invoice_id}_dedn_date_manual"
+            manual_value = st.text_input(
+                "Date of deduction of TDS (YYYY-MM-DD)",
+                value=str(form.get("DednDateTds") or ""),
+                key=manual_key,
+            ).strip()
+            if _parse_iso_date(manual_value):
+                form["DednDateTds"] = manual_value
+        else:
+            form["DednDateTds"] = st.date_input(
+                "Date of deduction of TDS",
+                value=dedn_default,
+                key=dedn_key,
+            ).isoformat()
     else:
         st.caption("Non-TDS mode - TDS fields are shown but disabled and will output as zero.")
 

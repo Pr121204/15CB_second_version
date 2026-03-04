@@ -213,8 +213,11 @@ def build_invoice_registry(df: pd.DataFrame, invoice_files: Iterable[Tuple[str, 
             except Exception:
                 inr_amount = 0.0
             exchange_rate = abs(inr_amount / fcy_amount) if fcy_amount not in (0, 0.0) else 0.0
+            
+            # Use 'Posting Date' for 'Date of deduction of TDS' as per user request
             posting_raw = row.get("Posting Date")
             dedn_date = parse_excel_date(posting_raw)
+        
         invoices[stem] = {
             "invoice_id": stem,
             "file_name": filename,

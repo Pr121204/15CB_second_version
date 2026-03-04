@@ -19,6 +19,7 @@ from modules.form15cb_constants import (
     IT_ACT_RATES,
     MODE_NON_TDS,
     MODE_TDS,
+    FIELD_MAX_LENGTH,
     NAME_REMITTEE_DATE_FORMAT,
     PROPOSED_DATE_OFFSET_DAYS,
     RATE_TDS_SECB_FLG_TDS,
@@ -307,6 +308,22 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
     return state
 
 
+def _enforce_field_limits(out: Dict[str, str]) -> Dict[str, str]:
+    """Truncate fields to their maximum allowed lengths defined in FIELD_MAX_LENGTH."""
+    for field, max_len in FIELD_MAX_LENGTH.items():
+        if field in out:
+            val = str(out[field])
+            if len(val) > max_len:
+                logger.warning(
+                    "field_truncated field=%s original_len=%s max=%s",
+                    field,
+                    len(val),
+                    max_len,
+                )
+                out[field] = val[:max_len]
+    return out
+
+
 def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
     meta = state.get("meta", {})
     extracted = state.get("extracted", {})
@@ -372,7 +389,7 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
         "NameBankCode": str(form.get("NameBankCode") or ""),
         "BranchName": str(form.get("BranchName") or ""),
         "BsrCode": str(form.get("BsrCode") or ""),
-        "PropDateRem": str(form.get("PropDateRem") or ""),
+        "PropDateRem": format_dotted_date(str(form.get("PropDateRem") or "")),
         "NatureRemCategory": str(form.get("NatureRemCategory") or ""),
         "NatureRemCode": str(form.get("NatureRemCode") or ""),
         "RevPurCategory": str(form.get("RevPurCategory") or ""),
@@ -404,10 +421,10 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
         "RateTdsSecbFlg": str(form.get("RateTdsSecbFlg") or (RATE_TDS_SECB_FLG_TDS if mode == MODE_TDS else "")),
         "RateTdsSecB": str(form.get("RateTdsSecB") or ""),
         "ActlAmtTdsForgn": str(form.get("ActlAmtTdsForgn") or ""),
-        "DednDateTds": str(form.get("DednDateTds") or ""),
+        "DednDateTds": format_dotted_date(str(form.get("DednDateTds") or "")),
     }
     out.update(CA_DEFAULTS)
     out["NameFirmAcctnt"] = str(form.get("NameFirmAcctnt") or CA_DEFAULTS["NameFirmAcctnt"])
     out["NameAcctnt"] = str(form.get("NameAcctnt") or CA_DEFAULTS["NameAcctnt"])
-    
-    return out
+
+    return _enforce_field_limits(out)

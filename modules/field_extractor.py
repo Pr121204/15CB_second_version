@@ -36,13 +36,27 @@ logger = logging.getLogger(__name__)
 
 # Load env
 load_dotenv()
-try:
-    import streamlit as st
-    GEMINI_API_KEY: Optional[str] = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY"))
-    GEMINI_MODEL_NAME: str = st.secrets.get("GEMINI_MODEL_NAME", os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash"))
-except Exception:
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-    GEMINI_MODEL_NAME = os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash")
+
+
+def _get_gemini_config() -> tuple:
+    """Lazily read GEMINI_API_KEY and GEMINI_MODEL_NAME at call time.
+
+    Deferring the st.secrets access until this function is called (rather
+    than at module import time) prevents Streamlit from raising
+    "set_page_config must be called before any other Streamlit command"
+    when field_extractor is imported before st.set_page_config() runs.
+    """
+    try:
+        import streamlit as st
+        return (
+            st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY")),
+            st.secrets.get("GEMINI_MODEL_NAME", os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash")),
+        )
+    except Exception:
+        return (
+            os.getenv("GEMINI_API_KEY"),
+            os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash"),
+        )
 
 # You can tune these if needed
 GEMINI_TEMPERATURE: float = float(os.getenv("GEMINI_TEMPERATURE", "0"))
@@ -225,6 +239,9 @@ def extract_fields(text: str) -> Dict[str, str]:
     logger.info("=" * 80)
     logger.info("FORM 15CB FIELD EXTRACTION (GEMINI ONLY)")
     logger.info("=" * 80)
+
+    # Resolve config lazily so st.secrets is never accessed at import time.
+    GEMINI_API_KEY, GEMINI_MODEL_NAME = _get_gemini_config()
 
     if not text or len(text.strip()) < 50:
         logger.warning("Text too short; returning blanks")

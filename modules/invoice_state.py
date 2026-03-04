@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Dict
 import re
 
@@ -24,7 +24,7 @@ from modules.master_lookups import (
     resolve_dtaa,
     split_dtaa_article_text,
 )
-from modules.text_normalizer import normalize_single_line_text
+from modules.text_normalizer import fix_concatenated_words, normalize_single_line_text
 
 # CHANGE 2: Phone prefix to country code mapping for low-confidence inference
 # Internal numeric country codes used by this project (e.g., "49" for Germany).
@@ -306,6 +306,17 @@ def _infer_country_from_phone_prefix(text: str) -> str:
 logger = get_logger()
 
 
+def _is_valid_iso_date(value: str) -> bool:
+    text = str(value or "").strip()
+    if not text:
+        return False
+    try:
+        datetime.strptime(text, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
+
+
 def _split_beneficiary_address(address: str) -> tuple[str, str, str]:
     text = " ".join(str(address or "").split()).strip(" ,")
     if not text:
@@ -438,17 +449,22 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     # configuration contains a non-empty string, use it; otherwise fall
     # back to today's date to preserve legacy behaviour.
     dedn_cfg = str(config.get("tds_deduction_date") or "").strip()
-    if dedn_cfg:
-        form["DednDateTds"] = dedn_cfg
-    else:
-        form["DednDateTds"] = date.today().isoformat()
+    dedn_valid = _is_valid_iso_date(dedn_cfg)
+    form["DednDateTds"] = dedn_cfg if dedn_valid else ""
+    state["meta"]["dedn_date_missing"] = not dedn_valid
+    state["meta"]["dedn_date_invalid"] = bool(dedn_cfg) and not dedn_valid
     # Proposed date of remittance is always today + offset, as per
     # specifications.  Do not attempt to derive from the Excel sheet.
     form["PropDateRem"] = (date.today() + timedelta(days=PROPOSED_DATE_OFFSET_DAYS)).isoformat()
 
     # Infer country from beneficiary name/country text/address combined.
     beneficiary_country_text = normalize_single_line_text(str(extracted.get("beneficiary_country_text") or ""))
-    beneficiary_address = normalize_single_line_text(str(extracted.get("beneficiary_address") or ""))
+    beneficiary_address = fix_concatenated_words(
+        normalize_single_line_text(str(extracted.get("beneficiary_address") or ""))
+    )
+    remitter_address = fix_concatenated_words(
+        normalize_single_line_text(str(extracted.get("remitter_address") or ""))
+    )
     beneficiary_name = normalize_single_line_text(str(extracted.get("beneficiary_name") or ""))
     extraction_core_empty = not any(
         str(extracted.get(k) or "").strip()
@@ -473,13 +489,13 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
         remitter_probe = " ".join(
             [
                 str(extracted.get("remitter_country_text") or ""),
-                str(extracted.get("remitter_address") or ""),
+                remitter_address,
                 str(extracted.get("remitter_name") or ""),
             ]
         )
         alternate_country_code = infer_country_from_beneficiary_name(
             remitter_probe,
-            str(extracted.get("remitter_address") or ""),
+            remitter_address,
         )
         if alternate_country_code and alternate_country_code != "91":
             logger.warning(
@@ -618,7 +634,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     if extracted.get("beneficiary_country_text") and str(form.get("RemitteeCountryCode") or "") in {"", "9999"}:
         inferred_by_text = infer_country_from_beneficiary_name(
             str(extracted.get("beneficiary_country_text") or ""),
-            str(extracted.get("beneficiary_address") or "")  # Also scan address
+            beneficiary_address  # Also scan address
         )
         if mode == MODE_TDS and inferred_by_text == "91":
             inferred_by_text = ""
