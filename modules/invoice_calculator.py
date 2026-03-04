@@ -16,6 +16,7 @@ from modules.form15cb_constants import (
     IOR_WE_CODE,
     IT_ACT_BASIS,
     IT_ACT_RATE_DEFAULT,
+    IT_ACT_RATES,
     MODE_NON_TDS,
     MODE_TDS,
     NAME_REMITTEE_DATE_FORMAT,
@@ -132,12 +133,12 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
     form.setdefault("TaxPayGrossSecb", "N")
     form.setdefault("TaxResidCert", TAX_RESID_CERT_Y)
 
-    # Read canonical DTAA rate from form first (written by UI handler), then resolved fallback, then legacy field
+    # Read canonical DTAA rate from form first (editable by user/tests), then resolved fallback
     dtaa_rate_percent = _to_float(
         str(
-            form.get("dtaa_rate")
+            form.get("RateTdsADtaa")
+            or form.get("dtaa_rate")
             or resolved.get("dtaa_rate_percent")
-            or form.get("RateTdsADtaa")
             or ""
         )
     )
@@ -162,7 +163,11 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
     is_gross_up = bool(meta.get("is_gross_up", False))
 
     # ── Read user-selected IT Act rate ────────────────────────────────────
-    selected_it_rate = _to_float(form.get("ItActRateSelected")) or IT_ACT_RATE_DEFAULT
+    raw_rate = _to_float(form.get("ItActRateSelected"))
+    if raw_rate not in IT_ACT_RATES:
+        selected_it_rate = IT_ACT_RATE_DEFAULT
+    else:
+        selected_it_rate = raw_rate
     form["ItActRateSelected"] = str(selected_it_rate)
 
     # --- PRIORITY 1: GROSS-UP FLOW ---
@@ -215,10 +220,15 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
 
     elif mode == MODE_TDS and dtaa_rate_percent is not None:
         it_factor, it_basis = get_effective_it_rate(selected_it_rate)
-        it_liab = invoice_inr * (Decimal(str(it_factor)) / Decimal("100"))
-        dtaa_liab = invoice_inr * (Decimal(str(dtaa_rate_percent)) / Decimal("100"))
-        tds_fcy_dec = invoice_fcy * (Decimal(str(dtaa_rate_percent)) / Decimal("100"))
-        tds_inr_dec = invoice_inr * (Decimal(str(dtaa_rate_percent)) / Decimal("100"))
+        
+        dtaa_rate_dec = Decimal(str(dtaa_rate_percent))
+        it_rate_dec = Decimal(str(it_factor))
+        applied_rate_dec = min(dtaa_rate_dec, it_rate_dec)
+        
+        it_liab = invoice_inr * (it_rate_dec / Decimal("100"))
+        dtaa_liab = invoice_inr * (dtaa_rate_dec / Decimal("100"))
+        tds_fcy_dec = invoice_fcy * (applied_rate_dec / Decimal("100"))
+        tds_inr_dec = invoice_inr * (applied_rate_dec / Decimal("100"))
         actual_fcy = invoice_fcy - tds_fcy_dec
 
         # INR tax amounts should be whole rupees (rounded)
@@ -229,10 +239,13 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
         form["AmtPayForgnTds"] = _fmt_num(float(tds_fcy_dec))
         form["AmtPayIndianTds"] = _fmt_num(_round_to_int(float(tds_inr_dec)))
         form["ActlAmtTdsForgn"] = _fmt_num(float(actual_fcy))
-        form["RateTdsSecB"] = _fmt_num(dtaa_rate_percent)
+        
+        form["RateTdsSecB"] = _fmt_num(float(applied_rate_dec))
         form["RateTdsADtaa"] = _fmt_num(dtaa_rate_percent)
         form.setdefault("RateTdsSecbFlg", RATE_TDS_SECB_FLG_TDS)
+        
         form.setdefault("BasisDeterTax", it_basis)
+            
         form.setdefault("RemittanceCharIndia", "Y")
         logger.info(
             "recompute_tds_done invoice_id=%s values=%s",
