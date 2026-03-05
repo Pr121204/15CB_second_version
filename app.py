@@ -89,23 +89,12 @@ st.markdown("""
 .excel-card code {
     background-color: #1e1e26;
     color: #00ffcc;
-    padding: 2px 6px;
+    padding: 3px 8px;
     border-radius: 4px;
-    font-size: 1.1em;
-}
-.override-card {
-    background-color: #262730;
-    color: #ffffff;
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: 1px solid #464855;
-    margin-bottom: 10px;
-}
-.override-card .label {
+    font-size: 1.25em;
     font-weight: 600;
-    color: #00d4ff;
-    font-size: 0.95em;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -166,6 +155,8 @@ def _ensure_session_state() -> None:
             "gross_up": False,
             "it_act_rate": IT_ACT_RATE_DEFAULT,
         }
+    if "ui_epoch" not in st.session_state:
+        st.session_state["ui_epoch"] = 0
 
 
 # -----------------------------------------------------------------------------
@@ -268,54 +259,112 @@ def _effective_it_rate(inv: Dict[str, object]) -> float:
     return float(st.session_state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT))
 
 
-def _reset_invoice_states() -> None:
-    """Clear overrides and recompute invoices after a global change.
+def _compute_config_sig(inv: Dict[str, object]) -> tuple:
+    """Signature of config inputs that affect state rebuild from extracted data.
 
-    When the user toggles the global mode or gross‑up controls we clear
-    all per‑invoice overrides, mark invoices as needing recompute and
-    rebuild their state from existing extracted data.  No Gemini calls
-    occur during this function.
+    Includes mode, gross-up, IT rate, currency, exchange rate and deduction
+    date.  Does NOT include form edits — those are handled by
+    ``recompute_invoice`` without a full rebuild.
+    """
+    ex = inv.get("excel") or {}
+    try:
+        currency = str(ex.get("currency") or "")
+    except Exception:
+        currency = ""
+    try:
+        fx = float(ex.get("exchange_rate") or 0.0)
+    except Exception:
+        fx = 0.0
+    dedn = _get_invoice_dedn_date(inv)
+
+    return (
+        _effective_mode(inv),
+        bool(_effective_gross(inv)),
+        float(_effective_it_rate(inv)),
+        currency,
+        fx,
+        dedn,
+    )
+
+
+def _rebuild_state_from_extracted(inv_id: str, inv: Dict[str, object]) -> None:
+    """Rebuild invoice state from existing inv["extracted"] (NO Gemini calls).
+
+    Clears XML because computed values may change.
+    Updates inv["config_sig"].
+    """
+    if not inv.get("extracted"):
+        return
+
+    ex = inv.get("excel") or {}
+    config = {
+        "currency_short": ex.get("currency", ""),
+        "exchange_rate": ex.get("exchange_rate", 0),
+        "mode": _effective_mode(inv),
+        "is_gross_up": _effective_gross(inv),
+        "tds_deduction_date": _get_invoice_dedn_date(inv),  # Posting Date -> DednDateTds
+        "it_act_rate": _effective_it_rate(inv),
+    }
+
+    state = build_invoice_state(inv_id, inv["file_name"], inv["extracted"], config)
+    state = recompute_invoice(state)
+    inv["state"] = state
+    inv["status"] = "processed"
+    inv["error"] = None
+
+    # Clear XML because numbers could change
+    inv["xml_bytes"] = None
+    inv["xml_status"] = "none"
+    inv["xml_error"] = None
+
+    inv["config_sig"] = _compute_config_sig(inv)
+
+
+def _reset_invoice_states() -> None:
+    """Recompute invoices after a global change, preserving per-invoice overrides.
+
+    When the user toggles the global mode, gross-up or IT Act rate controls
+    we recompute derived state from existing extracted data.  Per-invoice
+    mode and gross-up overrides are intentionally preserved so that
+    individual invoice customisations survive global changes.  Only the
+    IT Act rate override is cleared because there is no per-invoice IT
+    rate UI yet.  No Gemini calls occur during this function.
     """
     invoices = st.session_state["invoices"]
     for inv_id, inv in invoices.items():
-        # Preserve per-invoice mode_override and gross_override so that
-        # changing global controls does not wipe out intentional per-invoice
-        # overrides.  Only the IT Act rate override is cleared here because
-        # the global IT Act rate selectbox is the single source of truth
-        # until per-invoice IT Act rate UI is added.
+        # Per-invoice mode_override and gross_override are intentionally
+        # preserved so that individual invoice customisations survive
+        # global changes.  IT Act rate override is cleared because there
+        # is no per-invoice IT Act rate UI yet.
         inv["it_act_rate_override"] = None
-        # If the invoice has been extracted already, rebuild its state
+
         if inv.get("extracted"):
-            effective_mode = _effective_mode(inv)
-            effective_gross = _effective_gross(inv)
-            effective_rate = _effective_it_rate(inv)
-            config = {
-                "currency_short": inv["excel"].get("currency", ""),
-                "exchange_rate": inv["excel"].get("exchange_rate", 0),
-                "mode": effective_mode,
-                "is_gross_up": effective_gross,
-                "tds_deduction_date": _get_invoice_dedn_date(inv),
-                "it_act_rate": effective_rate,
-            }
-            try:
-                state = build_invoice_state(inv_id, inv["file_name"], inv["extracted"], config)
-                state = recompute_invoice(state)
-                inv["state"] = state
-                inv["status"] = "processed"
-                inv["error"] = None
-            except Exception as exc:
-                inv["state"] = None
-                inv["status"] = "failed"
-                inv["error"] = str(exc)
+            # memoized rebuild: only rebuild if config signature changed
+            new_sig = _compute_config_sig(inv)
+            old_sig = inv.get("config_sig")
+            if new_sig != old_sig:
+                try:
+                    _rebuild_state_from_extracted(inv_id, inv)
+                except Exception as exc:
+                    inv["state"] = None
+                    inv["status"] = "failed"
+                    inv["error"] = str(exc)
+                    inv["xml_bytes"] = None
+                    inv["xml_status"] = "none"
+                    inv["xml_error"] = None
+            else:
+                # no change; keep existing state
+                inv["status"] = inv.get("status") or "processed"
+                if inv.get("status") != "failed":
+                    inv["error"] = None
         else:
             # not yet processed
             inv["state"] = None
             inv["status"] = "new"
             inv["error"] = None
-        # Clear any previously generated XML
-        inv["xml_bytes"] = None
-        inv["xml_status"] = "none"
-        inv["xml_error"] = None
+            inv["xml_bytes"] = None
+            inv["xml_status"] = "none"
+            inv["xml_error"] = None
 
 
 def _process_single_invoice(inv_id: str) -> None:
@@ -434,6 +483,8 @@ def _process_single_invoice(inv_id: str) -> None:
             inv["state"] = state
             inv["status"] = "processed"
             inv["error"] = None
+            # Set config signature so per-tab memoization doesn't re-rebuild
+            inv["config_sig"] = _compute_config_sig(inv)
             # Clear previous XML
             inv["xml_bytes"] = None
             inv["xml_status"] = "none"
@@ -509,6 +560,13 @@ def main() -> None:
                 df = read_excel(excel_bytes)
                 invoices = build_invoice_registry(df, invoice_files)
                 st.session_state["invoices"] = invoices
+                # Defensive: explicitly clear per-invoice overrides in case of ID collisions between ZIPs
+                for inv in st.session_state["invoices"].values():
+                    inv["mode_override"] = None
+                    inv["gross_override"] = None
+                    inv["it_act_rate_override"] = None
+                    inv["config_sig"] = None
+
                 st.session_state["zip_context"] = {
                     "zip_name": uploaded_zip.name,
                     "excel_name": excel_name,
@@ -524,6 +582,12 @@ def main() -> None:
                     f"Loaded {len(invoices)} invoices from {uploaded_zip.name}. "
                     f"Excel file: {excel_name}"
                 )
+                # Clear stale global widget states so they reset to defaults
+                st.session_state.pop("global_mode_radio", None)
+                st.session_state.pop("global_gross_checkbox", None)
+                st.session_state.pop("global_it_rate_select", None)
+                st.session_state["ui_epoch"] = st.session_state.get("ui_epoch", 0) + 1
+                st.rerun()
             except Exception as exc:
                 st.session_state["invoices"] = {}
                 st.session_state["zip_context"] = None
@@ -552,7 +616,7 @@ def main() -> None:
         gc1, gc2, gc3 = st.columns([2, 2, 3])
         with gc1:
             new_mode = st.radio(
-                "TDS Mode",
+                "Tax Mode",
                 [MODE_TDS, MODE_NON_TDS],
                 index=0 if prev_mode == MODE_TDS else 1,
                 horizontal=True,
@@ -560,7 +624,7 @@ def main() -> None:
             )
         with gc2:
             new_gross = st.checkbox(
-                "Gross\u2011up Tax for all invoices?",
+                "💰 Gross\u2011up tax (company bears tax)",
                 value=bool(prev_gross),
                 disabled=(new_mode == MODE_NON_TDS),
                 key="global_gross_checkbox",
@@ -578,9 +642,10 @@ def main() -> None:
             st.session_state["global_controls"]["mode"] = new_mode
             st.session_state["global_controls"]["gross_up"] = new_gross
             st.session_state["global_controls"]["it_act_rate"] = new_it_rate
+            st.session_state["ui_epoch"] += 1
             # Reset overrides and recompute existing invoices from extracted data
             _reset_invoice_states()
-            st.info("Global settings updated. All overrides cleared and invoices recomputed.")
+            st.info("Global settings updated. Invoices recomputed. Existing per-invoice overrides were preserved.")
             st.rerun()
 
         # Batch actions
@@ -663,11 +728,11 @@ def main() -> None:
                 # Status indicators
                 status = inv.get("status", "new")
                 if status == "processed":
-                    st.success("Processed")
+                    st.success("✅ Invoice processed successfully")
                 elif status == "failed":
-                    st.error(f"Failed: {inv.get('error')}")
+                    st.error(f"❌ Processing failed: {inv.get('error')}")
                 else:
-                    st.info("Not processed yet")
+                    st.info("⏳ Invoice not processed yet")
                 # Excel metadata block
                 st.markdown("#### 📊 Invoice details (from Excel)")
                 ex = inv.get("excel", {})
@@ -690,33 +755,56 @@ def main() -> None:
                 if dedn_missing_flag or not _is_valid_iso_date(str(ex.get("dedn_date_tds") or "")):
                     st.warning("Deduction Date (Posting Date) missing in Excel; XML generation is blocked for this invoice.")
 
-                # ── Per-invoice Override Card ──
-                st.markdown("#### ✅ Invoice controls (Overrides)")
+                # ── Per-invoice Control Card ──
+                st.markdown("#### ✅ Invoice controls")
                 with st.container(border=True):
-                    st.markdown('''<div class="override-card">
-                        <div><span class="label">Per-invoice settings</span> — leave unchanged to inherit global defaults</div>
-                    </div>''', unsafe_allow_html=True)
-
                     global_mode = st.session_state["global_controls"]["mode"]
                     global_gross = st.session_state["global_controls"]["gross_up"]
 
-                    cur_mode = inv.get("mode_override") or global_mode
+                    # Use effective values so radio/checkbox reflect existing overrides
+                    effective_mode_val = _effective_mode(inv)
+                    effective_gross_val = _effective_gross(inv)
+                    epoch = st.session_state.get("ui_epoch", 0)
+
                     ov_c1, ov_c2 = st.columns(2)
                     with ov_c1:
                         selected_mode = st.radio(
-                            "Mode",
+                            "Tax Mode",
                             [MODE_TDS, MODE_NON_TDS],
-                            index=0 if cur_mode == MODE_TDS else 1,
+                            index=0 if effective_mode_val == MODE_TDS else 1,
                             horizontal=True,
-                            key=f"ov_mode_{inv_id}",
+                            key=f"ov_mode_{inv_id}_{epoch}",
                         )
+
+                    gross_key = f"ov_gross_{inv_id}_{epoch}"
+                    last_mode_key = f"ov_last_mode_{inv_id}_{epoch}"
+
+                    # Track previous mode for this invoice in this epoch
+                    prev_mode = st.session_state.get(last_mode_key, effective_mode_val)
+
+                    prev_gross_key = f"ov_prev_gross_{inv_id}_{epoch}"
+                    prev_gross_val = st.session_state.get(gross_key, effective_gross_val)
+
+                    # If switching into NON_TDS, remember last gross (from TDS)
+                    if selected_mode == MODE_NON_TDS and prev_mode != MODE_NON_TDS:
+                        st.session_state[prev_gross_key] = bool(prev_gross_val)
+
+                    if selected_mode == MODE_NON_TDS:
+                        st.session_state[gross_key] = False
+                    else:
+                        # Coming back from NON_TDS -> TDS, re-seed gross once to remembered/default
+                        if prev_mode == MODE_NON_TDS:
+                            desired_default = st.session_state.get(prev_gross_key, global_gross)
+                            st.session_state[gross_key] = bool(desired_default)
+
+                    st.session_state[last_mode_key] = selected_mode
+
                     with ov_c2:
-                        cur_gross = _effective_gross(inv) if cur_mode == MODE_TDS else False
                         selected_gross = st.checkbox(
-                            "Gross\u2011up",
-                            value=cur_gross,
+                            "💰 Gross\u2011up tax (company bears tax)",
+                            value=st.session_state.get(gross_key, effective_gross_val),
                             disabled=(selected_mode == MODE_NON_TDS),
-                            key=f"ov_gross_{inv_id}",
+                            key=gross_key,
                         )
 
                     # Write overrides (None = inherit global)
@@ -770,45 +858,41 @@ def main() -> None:
                             st.success(f"Saved: {path}")
                 # If processed, render the invoice form for editing
                 if inv.get("status") == "processed" and inv.get("state") is not None:
-                    # Recompute the state if overrides changed but the user hasn't clicked process again
-                    # This ensures on‑the‑fly updates when toggling mode/gross in the tab
-                    effective_mode = _effective_mode(inv)
-                    effective_gross = _effective_gross(inv)
-                    effective_rate = _effective_it_rate(inv)
-                    current_it = str(inv.get("state", {}).get("form", {}).get("ItActRateSelected") or "")
-                    if (
-                        inv.get("state", {}).get("meta", {}).get("mode") != effective_mode
-                        or bool(inv.get("state", {}).get("meta", {}).get("is_gross_up")) != bool(effective_gross)
-                        or current_it != str(effective_rate)
-                    ):
-                        # Rebuild state without re-extracting
-                        config = {
-                            "currency_short": inv["excel"].get("currency", ""),
-                            "exchange_rate": inv["excel"].get("exchange_rate", 0),
-                            "mode": effective_mode,
-                            "is_gross_up": effective_gross,
-                            "tds_deduction_date": _get_invoice_dedn_date(inv),
-                            "it_act_rate": effective_rate,
-                        }
+                    # Memoized rebuild: only rebuild from extracted when config
+                    # (mode/gross/IT rate/currency/fx/dedn_date) changed.
+                    # User form edits are handled by recompute_invoice below.
+                    new_sig = _compute_config_sig(inv)
+                    old_sig = inv.get("config_sig")
+                    if new_sig != old_sig:
                         try:
-                            new_state = build_invoice_state(inv_id, inv["file_name"], inv["extracted"], config)
-                            new_state = recompute_invoice(new_state)
-                            inv["state"] = new_state
-                            # Clear XML since numbers changed
-                            inv["xml_bytes"] = None
-                            inv["xml_status"] = "none"
-                            inv["xml_error"] = None
+                            _rebuild_state_from_extracted(inv_id, inv)
+                            st.caption("🔄 Recomputed with custom settings (no re-extraction).")
                         except Exception as exc:
                             logger.exception("state_rebuild_failed invoice=%s", inv_id)
                             inv["error"] = str(exc)
                             inv["status"] = "failed"
-                    # Finally render the form using existing batch_form_ui helper
+                    # Render the form using existing batch_form_ui helper
                     from modules.batch_form_ui import render_invoice_tab
                     try:
                         new_state = render_invoice_tab(inv["state"], show_header=False)
-                        # Recompute again in case user edits fields in UI
+                        # Snapshot key computed fields before recompute
+                        form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                        _snap_keys = (
+                            "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
+                            "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
+                            "BasisDeterTax", "RateTdsADtaa",
+                        )
+                        before = tuple(str(form.get(k) or "") for k in _snap_keys)
+                        # Recompute tax fields in case user edits (e.g. DTAA rate)
                         new_state = recompute_invoice(new_state)
+                        form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                        after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
                         inv["state"] = new_state
+                        # Only clear XML when computed values actually changed
+                        if after != before:
+                            inv["xml_bytes"] = None
+                            inv["xml_status"] = "none"
+                            inv["xml_error"] = None
                         st.session_state["invoices"][inv_id] = inv
                     except Exception as exc:
                         logger.exception("render_invoice_failed invoice=%s", inv_id)

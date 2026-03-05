@@ -1,37 +1,37 @@
-"""
-Module: zip_intake
+# """
+# Module: zip_intake
 
-This module provides helper functions to ingest a ZIP archive that contains
-one Excel spreadsheet and a collection of invoice documents.  The Excel
-spreadsheet contains metadata for each invoice (such as the reference
-identifier, currency, foreign and local amounts, and the posting date for
-TDS deduction).  The functions here parse the ZIP, read the Excel using
-``pandas``, compute derived values (like exchange rates and the final
-``DednDateTds`` field), and produce a dictionary of invoice records
-compatible with the rest of the Form 15CB application.
+# This module provides helper functions to ingest a ZIP archive that contains
+# one Excel spreadsheet and a collection of invoice documents.  The Excel
+# spreadsheet contains metadata for each invoice (such as the reference
+# identifier, currency, foreign and local amounts, and the posting date for
+# TDS deduction).  The functions here parse the ZIP, read the Excel using
+# ``pandas``, compute derived values (like exchange rates and the final
+# ``DednDateTds`` field), and produce a dictionary of invoice records
+# compatible with the rest of the Form 15CB application.
 
-Key design points:
+# Key design points:
 
-* The Excel file is expected to have exactly one sheet and one row per
-  invoice.  The ``Reference`` column must match the filename (stem) of
-  each invoice in the ZIP.  This mapping allows us to look up the
-  currency, amounts and posting date for each invoice without manual
-  intervention.
-* The exchange rate is computed as ``abs(INR amount / FCY amount)`` so
-  that the resulting rate is always positive, even if the amounts are
-  negative in the Excel export.
-* Dates in the ``Posting Date`` column may be strings in a variety of
-  formats, Excel serial numbers, Python ``datetime`` objects or ``NaN``.
-  The ``parse_excel_date`` function handles these cases and returns
-  ``YYYY-MM-DD`` strings.  If parsing fails, an empty string is
-  returned and the UI will allow the user to correct it.
-* Each invoice record includes placeholders for extraction, state,
-  overrides and XML status to support the higher‑level logic in
-  ``app.py``.  These records live entirely in ``st.session_state``.
+# * The Excel file is expected to have exactly one sheet and one row per
+#   invoice.  The ``Reference`` column must match the filename (stem) of
+#   each invoice in the ZIP.  This mapping allows us to look up the
+#   currency, amounts and posting date for each invoice without manual
+#   intervention.
+# * The exchange rate is computed as ``abs(INR amount / FCY amount)`` so
+#   that the resulting rate is always positive, even if the amounts are
+#   negative in the Excel export.
+# * Dates in the ``Posting Date`` column may be strings in a variety of
+#   formats, Excel serial numbers, Python ``datetime`` objects or ``NaN``.
+#   The ``parse_excel_date`` function handles these cases and returns
+#   ``YYYY-MM-DD`` strings.  If parsing fails, an empty string is
+#   returned and the UI will allow the user to correct it.
+# * Each invoice record includes placeholders for extraction, state,
+#   overrides and XML status to support the higher‑level logic in
+#   ``app.py``.  These records live entirely in ``st.session_state``.
 
-You should not need to modify this module when extending the app unless
-the structure of the Excel changes.
-"""
+# You should not need to modify this module when extending the app unless
+# the structure of the Excel changes.
+# """
 
 from __future__ import annotations
 
@@ -160,6 +160,14 @@ def parse_excel_date(value: object) -> str:
     return ""
 
 
+def _to_float(v) -> float:
+    try:
+        s = str(v).replace(",", "").strip()
+        return float(s) if s else 0.0
+    except Exception:
+        return 0.0
+
+
 def build_invoice_registry(df: pd.DataFrame, invoice_files: Iterable[Tuple[str, bytes]]) -> Dict[str, Dict[str, object]]:
     """Constructs the initial invoice registry from the DataFrame and files.
 
@@ -204,14 +212,10 @@ def build_invoice_registry(df: pd.DataFrame, invoice_files: Iterable[Tuple[str, 
         dedn_date = ""
         if row is not None:
             currency = str(row.get("Document currency") or "").strip().upper()
-            try:
-                fcy_amount = float(row.get("Amount in doc. curr.") or 0)
-            except Exception:
-                fcy_amount = 0.0
-            try:
-                inr_amount = float(row.get("Amount in local currency") or 0)
-            except Exception:
-                inr_amount = 0.0
+            if currency == "NAN":
+                currency = ""
+            fcy_amount = _to_float(row.get("Amount in doc. curr."))
+            inr_amount = _to_float(row.get("Amount in local currency"))
             exchange_rate = abs(inr_amount / fcy_amount) if fcy_amount not in (0, 0.0) else 0.0
             
             # Use 'Posting Date' for 'Date of deduction of TDS' as per user request
@@ -235,6 +239,9 @@ def build_invoice_registry(df: pd.DataFrame, invoice_files: Iterable[Tuple[str, 
             # Overrides (None means inherit global)
             "mode_override": None,
             "gross_override": None,
+            "it_act_rate_override": None,
+            # Memoization
+            "config_sig": None,
             # Processing artifacts
             "extracted": None,
             "state": None,
