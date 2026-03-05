@@ -8,3 +8,4 @@ data/logs/
 .streamlit/secrets.toml
 tests_chatgpt/
 tests_claude/
+tests/
