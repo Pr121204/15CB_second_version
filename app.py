@@ -93,6 +93,19 @@ st.markdown("""
     border-radius: 4px;
     font-size: 1.1em;
 }
+.override-card {
+    background-color: #262730;
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #464855;
+    margin-bottom: 10px;
+}
+.override-card .label {
+    font-weight: 600;
+    color: #00d4ff;
+    font-size: 0.95em;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -265,8 +278,11 @@ def _reset_invoice_states() -> None:
     """
     invoices = st.session_state["invoices"]
     for inv_id, inv in invoices.items():
-        inv["mode_override"] = None
-        inv["gross_override"] = None
+        # Preserve per-invoice mode_override and gross_override so that
+        # changing global controls does not wipe out intentional per-invoice
+        # overrides.  Only the IT Act rate override is cleared here because
+        # the global IT Act rate selectbox is the single source of truth
+        # until per-invoice IT Act rate UI is added.
         inv["it_act_rate_override"] = None
         # If the invoice has been extracted already, rebuild its state
         if inv.get("extracted"):
@@ -673,6 +689,42 @@ def main() -> None:
                 dedn_missing_flag = bool((state_meta if isinstance(state_meta, dict) else {}).get("dedn_date_missing"))
                 if dedn_missing_flag or not _is_valid_iso_date(str(ex.get("dedn_date_tds") or "")):
                     st.warning("Deduction Date (Posting Date) missing in Excel; XML generation is blocked for this invoice.")
+
+                # ── Per-invoice Override Card ──
+                st.markdown("#### ✅ Invoice controls (Overrides)")
+                with st.container(border=True):
+                    st.markdown('''<div class="override-card">
+                        <div><span class="label">Per-invoice settings</span> — leave unchanged to inherit global defaults</div>
+                    </div>''', unsafe_allow_html=True)
+
+                    global_mode = st.session_state["global_controls"]["mode"]
+                    global_gross = st.session_state["global_controls"]["gross_up"]
+
+                    cur_mode = inv.get("mode_override") or global_mode
+                    ov_c1, ov_c2 = st.columns(2)
+                    with ov_c1:
+                        selected_mode = st.radio(
+                            "Mode",
+                            [MODE_TDS, MODE_NON_TDS],
+                            index=0 if cur_mode == MODE_TDS else 1,
+                            horizontal=True,
+                            key=f"ov_mode_{inv_id}",
+                        )
+                    with ov_c2:
+                        cur_gross = _effective_gross(inv) if cur_mode == MODE_TDS else False
+                        selected_gross = st.checkbox(
+                            "Gross\u2011up",
+                            value=cur_gross,
+                            disabled=(selected_mode == MODE_NON_TDS),
+                            key=f"ov_gross_{inv_id}",
+                        )
+
+                    # Write overrides (None = inherit global)
+                    inv["mode_override"] = selected_mode if selected_mode != global_mode else None
+                    if selected_mode == MODE_NON_TDS:
+                        inv["gross_override"] = None  # forced off
+                    else:
+                        inv["gross_override"] = selected_gross if selected_gross != global_gross else None
 
                 # Buttons for processing and XML generation
                 bc1, bc2, bc3 = st.columns([2, 2, 2])
