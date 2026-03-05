@@ -378,6 +378,8 @@ def _process_single_invoice(inv_id: str) -> None:
         return
     file_bytes = inv["file_bytes"]
     file_name = inv["file_name"]
+    inv["status"] = "processing"
+    inv["error"] = None
     # Guard: skip extremely large files
     if len(file_bytes) > MAX_FILE_SIZE:
         inv["status"] = "failed"
@@ -649,47 +651,83 @@ def main() -> None:
             st.rerun()
 
         # Batch actions
-        action_col1, action_col2, action_col3 = st.columns([2, 2, 2])
+        def _is_pending(inv: Dict[str, object]) -> bool:
+            return inv.get("status") not in ("processed", "failed")
+
+        def _is_processed(inv: Dict[str, object]) -> bool:
+            return inv.get("status") == "processed"
+
+        def _is_xml_missing(inv: Dict[str, object]) -> bool:
+            return inv.get("xml_status") != "ok" or not inv.get("xml_bytes")
+
+        def _is_xml_ready(inv: Dict[str, object]) -> bool:
+            return inv.get("xml_status") == "ok" and bool(inv.get("xml_bytes"))
+
+        action_col1, action_col2, action_col3, action_col4 = st.columns([2, 2, 2, 2])
         with action_col1:
-            if st.button("Process All Invoices", type="primary"):
-                processed = 0
-                failed = 0
-                total = len(invoices)
+            if st.button("Process Pending Only", type="primary"):
+                processed_n = 0
+                failed_n = 0
+                pending_ids = [inv_id for inv_id, inv in invoices.items() if _is_pending(inv)]
+                if not pending_ids:
+                    st.info("No pending invoices.")
+                else:
+                    for inv_id in pending_ids:
+                        _process_single_invoice(inv_id)
+                        if invoices[inv_id]["status"] == "processed":
+                            processed_n += 1
+                        else:
+                            failed_n += 1
+                    if failed_n == 0:
+                        st.success(f"Processed {processed_n} pending invoices.")
+                    else:
+                        st.warning(f"Processed {processed_n} pending invoices. {failed_n} failed.")
+
+        with action_col2:
+            if st.button("Process All Invoices"):
+                processed_n = 0
+                failed_n = 0
                 for inv_id in invoices.keys():
                     _process_single_invoice(inv_id)
                     if invoices[inv_id]["status"] == "processed":
-                        processed += 1
+                        processed_n += 1
                     else:
-                        failed += 1
-                if failed == 0:
-                    st.success(f"All {processed} invoices processed successfully.")
+                        failed_n += 1
+                if failed_n == 0:
+                    st.success(f"All {processed_n} invoices processed successfully.")
                 else:
-                    st.warning(f"Processed {processed} invoices with {failed} failures.")
-        with action_col2:
-            if st.button("Generate XML for All", disabled=not any(
-                inv.get("status") == "processed" for inv in invoices.values()
-            )):
-                ok = 0
-                failed = 0
-                for inv_id in invoices.keys():
-                    if invoices[inv_id].get("status") == "processed":
+                    st.warning(f"Processed {processed_n} invoices with {failed_n} failures.")
+
+        with action_col3:
+            if st.button(
+                "Generate XML (Missing Only)",
+                disabled=not any(_is_processed(inv) and _is_xml_missing(inv) for inv in invoices.values()),
+            ):
+                ok_n = 0
+                failed_n = 0
+                target_ids = [
+                    inv_id for inv_id, inv in invoices.items()
+                    if _is_processed(inv) and _is_xml_missing(inv)
+                ]
+                if not target_ids:
+                    st.info("No invoices need XML generation.")
+                else:
+                    for inv_id in target_ids:
                         _generate_xml_for_invoice(inv_id)
                         if invoices[inv_id]["xml_status"] == "ok":
-                            ok += 1
+                            ok_n += 1
                         else:
-                            failed += 1
-                if ok > 0 and failed == 0:
-                    st.success(f"Generated XML for all {ok} invoices.")
-                elif ok > 0:
-                    st.warning(f"Generated XML for {ok} invoices. {failed} failed.")
-                else:
-                    st.error("No invoices were ready to generate XML.")
-        with action_col3:
-            # Prepare ZIP for download; include only invoices with xml_status==ok
+                            failed_n += 1
+                    if failed_n == 0:
+                        st.success(f"Generated XML for {ok_n} invoices.")
+                    else:
+                        st.warning(f"Generated XML for {ok_n} invoices. {failed_n} failed.")
+
+        with action_col4:
             ready_files: List[tuple[str, bytes]] = []
             skipped: List[str] = []
             for inv_id, inv in invoices.items():
-                if inv.get("xml_status") == "ok" and inv.get("xml_bytes"):
+                if _is_xml_ready(inv):
                     filename_stub = (
                         (inv.get("state", {}).get("extracted", {}).get("invoice_number") or inv_id)
                         .replace(" ", "_")
@@ -698,29 +736,83 @@ def main() -> None:
                     ready_files.append((xml_filename, inv["xml_bytes"]))
                 else:
                     skipped.append(inv_id)
-            disabled = len(ready_files) == 0
-            # Build zip data safely — always bytes, never None
-            zip_data = generate_zip_from_xmls(ready_files) if ready_files else b""
 
-            if st.download_button(
-                "Download All XMLs as ZIP",
+            zip_data = generate_zip_from_xmls(ready_files) if ready_files else b""
+            st.download_button(
+                "Download XML ZIP",
                 data=zip_data,
                 file_name="form15cb_batch.zip",
                 mime="application/zip",
-                disabled=disabled,
+                disabled=(len(ready_files) == 0),
                 key="download_all_zip",
-            ):
-                pass
-            if not disabled:
-                st.caption(f"{len(ready_files)} invoices included. Skipped {len(skipped)}.")
+            )
+            if ready_files:
+                st.caption(f"{len(ready_files)} included. {len(skipped)} skipped.")
 
         # Divider before invoice tabs
         st.divider()
         st.subheader("Step 3 – Review and Edit Invoices")
 
-        # Render each invoice in its own tab
-        tab_ids = list(invoices.keys())
-        tabs = st.tabs([invoices[i]["file_name"] for i in tab_ids])
+        # --- Batch summary + filter (CA-friendly) ---
+        total = len(invoices)
+        processed = sum(1 for inv in invoices.values() if inv.get("status") == "processed")
+        failed = sum(1 for inv in invoices.values() if inv.get("status") == "failed")
+        xml_ready = sum(1 for inv in invoices.values() if inv.get("xml_status") == "ok" and inv.get("xml_bytes"))
+        not_processed = sum(1 for inv in invoices.values() if inv.get("status") not in ("processed", "failed"))
+
+        # Count "Deduction date missing" only when effective mode is TDS (since Non-TDS doesn't need it)
+        dedn_missing = 0
+        for inv in invoices.values():
+            if _effective_mode(inv) != MODE_TDS:
+                continue
+            ex = inv.get("excel", {}) or {}
+            state_meta = (inv.get("state", {}) or {}).get("meta", {}) if isinstance(inv.get("state"), dict) else {}
+            flag = bool((state_meta or {}).get("dedn_date_missing"))
+            if flag or not _is_valid_iso_date(str(ex.get("dedn_date_tds") or "")):
+                dedn_missing += 1
+
+        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        c1.metric("Total", total)
+        c2.metric("Processed", processed)
+        c3.metric("Failed", failed)
+        c4.metric("XML Ready", xml_ready)
+        c5.metric("Not processed", not_processed)
+        c6.metric("Deduction date missing", dedn_missing)
+
+        filter_choice = st.selectbox(
+            "Show invoices",
+            ["All", "Not processed", "Processed", "Failed", "XML Ready", "Deduction date missing"],
+            index=0,
+            key="invoice_filter_choice",
+        )
+
+        tab_ids_all = list(invoices.keys())
+
+        def _matches_filter(inv: Dict[str, object]) -> bool:
+            if filter_choice == "All":
+                return True
+            if filter_choice == "Not processed":
+                return inv.get("status") not in ("processed", "failed")
+            if filter_choice == "Processed":
+                return inv.get("status") == "processed"
+            if filter_choice == "Failed":
+                return inv.get("status") == "failed"
+            if filter_choice == "XML Ready":
+                return bool(inv.get("xml_status") == "ok" and inv.get("xml_bytes"))
+            if filter_choice == "Deduction date missing":
+                if _effective_mode(inv) != MODE_TDS:
+                    return False
+                ex = inv.get("excel", {}) or {}
+                state_meta = (inv.get("state", {}) or {}).get("meta", {}) if isinstance(inv.get("state"), dict) else {}
+                flag = bool((state_meta or {}).get("dedn_date_missing"))
+                return flag or not _is_valid_iso_date(str(ex.get("dedn_date_tds") or ""))
+            return True
+
+        tab_ids = [inv_id for inv_id in tab_ids_all if _matches_filter(invoices[inv_id])]
+        if not tab_ids:
+            st.info("No invoices match the selected filter.")
+
+        tabs = st.tabs([invoices[i]["file_name"] for i in tab_ids]) if tab_ids else []
         for tab, inv_id in zip(tabs, tab_ids):
             inv = invoices[inv_id]
             with tab:

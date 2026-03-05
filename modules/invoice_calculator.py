@@ -389,7 +389,7 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
         "NameBankCode": str(form.get("NameBankCode") or ""),
         "BranchName": str(form.get("BranchName") or ""),
         "BsrCode": str(form.get("BsrCode") or ""),
-        "PropDateRem": format_dotted_date(str(form.get("PropDateRem") or "")),
+        "PropDateRem": str(form.get("PropDateRem") or ""),
         "NatureRemCategory": str(form.get("NatureRemCategory") or ""),
         "NatureRemCode": str(form.get("NatureRemCode") or ""),
         "RevPurCategory": str(form.get("RevPurCategory") or ""),
@@ -421,7 +421,7 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
         "RateTdsSecbFlg": str(form.get("RateTdsSecbFlg") or (RATE_TDS_SECB_FLG_TDS if mode == MODE_TDS else "")),
         "RateTdsSecB": str(form.get("RateTdsSecB") or ""),
         "ActlAmtTdsForgn": str(form.get("ActlAmtTdsForgn") or ""),
-        "DednDateTds": format_dotted_date(str(form.get("DednDateTds") or "")),
+        "DednDateTds": str(form.get("DednDateTds") or ""),
     }
     out.update(CA_DEFAULTS)
     out["NameFirmAcctnt"] = str(form.get("NameFirmAcctnt") or CA_DEFAULTS["NameFirmAcctnt"])

@@ -83,8 +83,8 @@ def _fill_template(fields: Dict[str, str], template_path: str) -> str:
         xml_content = f.read()
     for field_name, field_value in fields.items():
         # Normalize numeric values first, then escape for XML.
-        # Preserve 2 decimals for Rate fields as specifically requested.
-        preserve = field_name in ("RateTdsSecB", "RateTdsADtaa")
+        # Rate fields should drop .00 if whole, according to modern requirements.
+        preserve = False
         normalized_value = normalize_numeric_value(field_value, preserve_decimals=preserve)
         escaped_value = escape_xml(normalized_value)
         xml_content = xml_content.replace("{{" + field_name + "}}", escaped_value)
