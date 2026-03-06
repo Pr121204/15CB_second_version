@@ -105,8 +105,10 @@ from modules.form15cb_constants import IT_ACT_RATE_DEFAULT, IT_ACT_RATES, MODE_N
 from modules.invoice_state import build_invoice_state
 from modules.invoice_calculator import invoice_state_to_xml_fields, recompute_invoice
 from modules.invoice_gemini_extractor import (
+    TEXT_EXTRACTION_MIN_THRESHOLD,
     extract_invoice_core_fields,
     extract_invoice_core_fields_from_image,
+    gemini_extract_from_images_only,
     merge_multi_page_image_extractions,
 )
 from modules.pdf_reader import extract_text_from_pdf
@@ -131,7 +133,7 @@ MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 MAX_SCANNED_PDF_PAGES = max(1, int(os.getenv("MAX_SCANNED_PDF_PAGES", "6")))
 # Application version and last updated timestamp
 VERSION = "4.0"
-LAST_UPDATED = "March 2026"
+LAST_UPDATED = "March 2026"
 
 logger = get_logger()
 
@@ -142,26 +144,26 @@ logger = get_logger()
 
 def _ensure_session_state() -> None:
     """Initialise keys in ``st.session_state`` that this app relies on."""
-    if "invoices" not in st.session_state:
-        # Mapping of invoice_id -> invoice record (see zip_intake.build_invoice_registry)
-        st.session_state["invoices"] = {}
-    if "zip_context" not in st.session_state:
-        # Metadata about the currently loaded ZIP (name, Excel name, timestamp)
-        st.session_state["zip_context"] = None
-    if "global_controls" not in st.session_state:
-        # Defaults for mode and gross‑up that apply to all invoices
-        st.session_state["global_controls"] = {
-            "mode": MODE_TDS,
-            "gross_up": False,
-            "it_act_rate": IT_ACT_RATE_DEFAULT,
-        }
-    if "ui_epoch" not in st.session_state:
-        st.session_state["ui_epoch"] = 0
+    if "mode" not in st.session_state:
+        st.session_state["mode"] = "single"
+    for mode in ["single_mode", "bulk_mode"]:
+        if mode not in st.session_state:
+            st.session_state[mode] = {
+                "invoices": {},
+                "global_controls": {
+                    "mode": MODE_TDS,
+                    "gross_up": False,
+                    "it_act_rate": IT_ACT_RATE_DEFAULT,
+                },
+                "ui_epoch": 0,
+                "zip_context": None,
+                "single_context": None,
+            }
 
+def _get_current_state() -> dict:
+    mode = st.session_state.get("mode", "single")
+    return st.session_state[f"{mode}_mode"]
 
-# -----------------------------------------------------------------------------
-# XML field validation
-# -----------------------------------------------------------------------------
 
 def _validate_xml_fields(fields: Dict[str, str], mode: str = MODE_TDS, dedn_date_iso: str = "") -> List[str]:
     """Validate XML fields before generation.
@@ -249,7 +251,7 @@ def _effective_mode(inv: Dict[str, object]) -> str:
     Overrides the global setting only if an override is explicitly set in the inv record
     (legacy support, though UI no longer sets these).
     """
-    return inv.get("mode_override") or st.session_state["global_controls"].get("mode", MODE_TDS)
+    return inv.get("mode_override") or _get_current_state()["global_controls"].get("mode", MODE_TDS)
 
 
 def _effective_gross(inv: Dict[str, object]) -> bool:
@@ -260,7 +262,7 @@ def _effective_gross(inv: Dict[str, object]) -> bool:
     override = inv.get("gross_override")
     if override is not None:
         return bool(override)
-    return bool(st.session_state["global_controls"].get("gross_up", False))
+    return bool(_get_current_state()["global_controls"].get("gross_up", False))
 
 
 def _effective_it_rate(inv: Dict[str, object]) -> float:
@@ -268,7 +270,7 @@ def _effective_it_rate(inv: Dict[str, object]) -> float:
     override = inv.get("it_act_rate_override")
     if override is not None:
         return float(override)
-    return float(st.session_state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT))
+    return float(_get_current_state()["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT))
 
 
 def _compute_config_sig(inv: Dict[str, object]) -> tuple:
@@ -342,7 +344,7 @@ def _reset_invoice_states() -> None:
     IT Act rate override is cleared because there is no per-invoice IT
     rate UI yet.  No Gemini calls occur during this function.
     """
-    invoices = st.session_state["invoices"]
+    invoices = _get_current_state()["invoices"]
     for inv_id, inv in invoices.items():
         # Per-invoice mode_override and gross_override are intentionally
         # preserved so that individual invoice customisations survive
@@ -385,7 +387,7 @@ def _process_single_invoice(inv_id: str) -> None:
     Updates the invoice record in place with extracted data, state and
     status.  Uses the current effective mode and gross‑up settings.
     """
-    inv = st.session_state["invoices"][inv_id]
+    inv = _get_current_state()["invoices"][inv_id]
     if inv.get("status") == "processing":
         return
     file_bytes = inv["file_bytes"]
@@ -420,7 +422,7 @@ def _process_single_invoice(inv_id: str) -> None:
                     logger.exception("pdf_text_extraction_failed file=%s", file_name)
                     text = ""
                 if text and len(text.strip()) >= 20:
-                    extracted = extract_invoice_core_fields(text)
+                    extracted = extract_invoice_core_fields(text, invoice_id=inv_id)
                 else:
                     # Attempt page-by-page OCR
                     try:
@@ -436,7 +438,7 @@ def _process_single_invoice(inv_id: str) -> None:
                             buf = io.BytesIO()
                             page_img.save(buf, format="JPEG", quality=90)
                             image_bytes = buf.getvalue()
-                            page_extracted = extract_invoice_core_fields_from_image(image_bytes)
+                            page_extracted = extract_invoice_core_fields_from_image(image_bytes, invoice_id=inv_id)
                             # Free OCR for fallback
                             try:
                                 page_ocr = extract_text_from_image_file(image_bytes) or ""
@@ -450,7 +452,7 @@ def _process_single_invoice(inv_id: str) -> None:
                                 and len(page_ocr.strip()) >= 50
                             ):
                                 try:
-                                    text_extracted = extract_invoice_core_fields(page_ocr)
+                                    text_extracted = extract_invoice_core_fields(page_ocr, invoice_id=inv_id)
                                 except Exception:
                                     logger.exception("pdf_image_page_text_fallback_failed file=%s page=%s", file_name, page_idx)
                             merged_page = dict(text_extracted)
@@ -470,7 +472,7 @@ def _process_single_invoice(inv_id: str) -> None:
                     else:
                         # Final fallback: treat as plain image
                         try:
-                            extracted = extract_invoice_core_fields_from_image(file_bytes)
+                            extracted = extract_invoice_core_fields_from_image(file_bytes, invoice_id=inv_id)
                             text = extract_text_from_image_file(file_bytes) or ""
                         except Exception:
                             logger.exception("pdf_image_ocr_fallback_failed file=%s", file_name)
@@ -480,7 +482,7 @@ def _process_single_invoice(inv_id: str) -> None:
                             extracted["_raw_invoice_text"] = text
             else:
                 # Image uploads (jpg/png)
-                extracted = extract_invoice_core_fields_from_image(file_bytes)
+                extracted = extract_invoice_core_fields_from_image(file_bytes, invoice_id=inv_id)
                 try:
                     raw_text = extract_text_from_image_file(file_bytes) or ""
                 except Exception:
@@ -520,7 +522,7 @@ def _generate_xml_for_invoice(inv_id: str) -> None:
     Performs validation and generation.  Updates the invoice record
     ``xml_status`` and ``xml_bytes`` accordingly.
     """
-    inv = st.session_state["invoices"][inv_id]
+    inv = _get_current_state()["invoices"][inv_id]
     if inv.get("state") is None:
         inv["xml_status"] = "failed"
         inv["xml_error"] = "Invoice has not been processed."
@@ -551,9 +553,9 @@ def _generate_xml_for_invoice(inv_id: str) -> None:
 # Streamlit UI
 # -----------------------------------------------------------------------------
 
-def main() -> None:
-    _ensure_session_state()
+def render_bulk_invoice_page() -> None:
     st.title("Form 15CB Batch Generator (ZIP-enabled)")
+    state = _get_current_state()
 
     # Step 1 – Upload ZIP
     st.subheader("Step 1 – Upload ZIP of invoices and Excel")
@@ -566,28 +568,28 @@ def main() -> None:
     if uploaded_zip is not None:
         # Load only if a different file has been uploaded
         if (
-            st.session_state.get("zip_context") is None
-            or st.session_state["zip_context"].get("zip_name") != uploaded_zip.name
+            state.get("zip_context") is None
+            or state["zip_context"].get("zip_name") != uploaded_zip.name
         ):
             try:
                 excel_name, excel_bytes, invoice_files = parse_zip(uploaded_zip.getvalue())
                 df = read_excel(excel_bytes)
                 invoices = build_invoice_registry(df, invoice_files)
-                st.session_state["invoices"] = invoices
+                state["invoices"] = invoices
                 # Defensive: explicitly clear per-invoice overrides in case of ID collisions between ZIPs
-                for inv in st.session_state["invoices"].values():
+                for inv in state["invoices"].values():
                     inv["mode_override"] = None
                     inv["gross_override"] = None
                     inv["it_act_rate_override"] = None
                     inv["config_sig"] = None
 
-                st.session_state["zip_context"] = {
+                state["zip_context"] = {
                     "zip_name": uploaded_zip.name,
                     "excel_name": excel_name,
                     "loaded_at": time.time(),
                 }
                 # Reset global controls to defaults
-                st.session_state["global_controls"] = {
+                state["global_controls"] = {
                     "mode": MODE_TDS,
                     "gross_up": False,
                     "it_act_rate": IT_ACT_RATE_DEFAULT,
@@ -600,21 +602,21 @@ def main() -> None:
                 st.session_state.pop("global_mode_radio", None)
                 st.session_state.pop("global_gross_checkbox", None)
                 st.session_state.pop("global_it_rate_select", None)
-                st.session_state["ui_epoch"] = st.session_state.get("ui_epoch", 0) + 1
+                state["ui_epoch"] = state.get("ui_epoch", 0) + 1
                 st.rerun()
             except Exception as exc:
-                st.session_state["invoices"] = {}
-                st.session_state["zip_context"] = None
+                state["invoices"] = {}
+                state["zip_context"] = None
                 logger.exception("zip_upload_failed")
                 st.error(f"Failed to parse ZIP: {exc}")
 
-    invoices = st.session_state.get("invoices", {})
+    invoices = state.get("invoices", {})
     if invoices:
         # Global controls
         st.subheader("Step 2 – Configure Defaults and Process")
-        prev_mode = st.session_state["global_controls"].get("mode", MODE_TDS)
-        prev_gross = st.session_state["global_controls"].get("gross_up", False)
-        prev_it_rate = st.session_state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
+        prev_mode = state["global_controls"].get("mode", MODE_TDS)
+        prev_gross = state["global_controls"].get("gross_up", False)
+        prev_it_rate = state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
 
         # Build display labels for IT Act Rate selectbox
         _IT_RATE_LABELS = [
@@ -653,10 +655,10 @@ def main() -> None:
             new_it_rate = _IT_RATE_MAP.get(new_it_label, IT_ACT_RATE_DEFAULT)
         # Check for changes and apply reset/recompute if needed
         if new_mode != prev_mode or new_gross != prev_gross or new_it_rate != prev_it_rate:
-            st.session_state["global_controls"]["mode"] = new_mode
-            st.session_state["global_controls"]["gross_up"] = new_gross
-            st.session_state["global_controls"]["it_act_rate"] = new_it_rate
-            st.session_state["ui_epoch"] += 1
+            state["global_controls"]["mode"] = new_mode
+            state["global_controls"]["gross_up"] = new_gross
+            state["global_controls"]["it_act_rate"] = new_it_rate
+            state["ui_epoch"] += 1
             # Reset overrides and recompute existing invoices from extracted data
             _reset_invoice_states()
             st.info("Global settings updated. Invoices recomputed. Existing per-invoice overrides were preserved.")
@@ -862,13 +864,13 @@ def main() -> None:
                 # ── Per-invoice Control Card ──
                 st.markdown("#### ✅ Invoice controls")
                 with st.container(border=True):
-                    global_mode = st.session_state["global_controls"]["mode"]
-                    global_gross = st.session_state["global_controls"]["gross_up"]
+                    global_mode = state["global_controls"]["mode"]
+                    global_gross = state["global_controls"]["gross_up"]
 
                     # Use effective values so radio/checkbox reflect existing overrides
                     effective_mode_val = _effective_mode(inv)
                     effective_gross_val = _effective_gross(inv)
-                    epoch = st.session_state.get("ui_epoch", 0)
+                    epoch = state.get("ui_epoch", 0)
 
                     ov_c1, ov_c2 = st.columns(2)
                     with ov_c1:
@@ -978,7 +980,12 @@ def main() -> None:
                     # Render the form using existing batch_form_ui helper
                     from modules.batch_form_ui import render_invoice_tab
                     try:
+                        old_form = dict(inv["state"].get("form", {}))
                         new_state = render_invoice_tab(inv["state"], show_header=False)
+                        new_form = new_state.get("form", {})
+                        for k in ["CountryRemMadeSecb", "NatureRemCategory", "RevPurCategory", "RevPurCode", "RateTdsADtaa", "BasisDeterTax", "TaxPayGrossSecb"]:
+                            if k in new_form and k in old_form and new_form[k] != old_form[k]:
+                                logger.info("ui_field_changed invoice_id=%s field=%s old=%r new=%r", inv_id, k, old_form[k], new_form[k])
                         # Snapshot key computed fields before recompute
                         form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
                         _snap_keys = (
@@ -997,7 +1004,7 @@ def main() -> None:
                             inv["xml_bytes"] = None
                             inv["xml_status"] = "none"
                             inv["xml_error"] = None
-                        st.session_state["invoices"][inv_id] = inv
+                        state["invoices"][inv_id] = inv
                     except Exception as exc:
                         logger.exception("render_invoice_failed invoice=%s", inv_id)
                         st.error(f"Rendering form failed: {exc}")
@@ -1007,5 +1014,190 @@ def main() -> None:
     st.caption(f"Version: {VERSION} | Last Updated: {LAST_UPDATED}")
 
 
+
+import io
+import os
+import re
+import math
+from modules.zip_intake import read_excel, _normalize_reference, _to_float, parse_excel_date
+
+def render_mode_switcher() -> None:
+    mode = st.session_state.get("mode", "single")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("📄 Process One Invoice", type="primary" if mode == "single" else "secondary", use_container_width=True):
+            st.session_state["mode"] = "single"
+            st.rerun()
+    with col2:
+        if st.button("🗂 Process Many Invoices", type="primary" if mode == "bulk" else "secondary", use_container_width=True):
+            st.session_state["mode"] = "bulk"
+            st.rerun()
+
+def render_single_invoice_page() -> None:
+    st.title("Form 15CB - Single Invoice")
+    state = _get_current_state()
+    invoices = state["invoices"]
+    
+    st.subheader("Step 1 – Upload Invoice & Excel")
+    col1, col2 = st.columns(2)
+    with col1:
+        uploaded_inv = st.file_uploader("Upload Invoice", type=["pdf", "jpg", "jpeg", "png"], key="single_inv_upload")
+    with col2:
+        uploaded_excel = st.file_uploader("Upload Excel", type=["xlsx"], key="single_excel_upload")
+        
+    if uploaded_inv and uploaded_excel:
+        if state.get("single_context") != uploaded_inv.name + "|" + uploaded_excel.name:
+            try:
+                df = read_excel(uploaded_excel.getvalue())
+                
+                stem = os.path.splitext(uploaded_inv.name)[0]
+                norm_stem = _normalize_reference(stem)
+                
+                # Check matches
+                matches = 0
+                if not df.empty:
+                    for _, row in df.fillna("").iterrows():
+                        if _normalize_reference(row.get("Reference")) == norm_stem:
+                            matches += 1
+                
+                if matches == 0:
+                    st.error(f"Could not find matching row in Excel for invoice reference: {stem}")
+                    return
+                elif matches > 1:
+                    st.warning(f"Multiple rows found in Excel for reference {stem}. Using the first one.")
+                
+                from modules.zip_intake import build_invoice_registry
+                invoices_dict = build_invoice_registry(df, [(uploaded_inv.name, uploaded_inv.getvalue())])
+                
+                if stem not in invoices_dict:
+                    st.error(f"Process failed. Could not prepare invoice state for {stem}.")
+                    return
+                
+                state["invoices"] = {stem: invoices_dict[stem]}
+                state["single_context"] = uploaded_inv.name + "|" + uploaded_excel.name
+                state["global_controls"] = {
+                    "mode": MODE_TDS,
+                    "gross_up": False,
+                    "it_act_rate": IT_ACT_RATE_DEFAULT,
+                }
+                st.success("Files loaded and matched successfully.")
+                st.rerun()
+            except Exception as e:
+                import traceback
+                st.error(f"Error processing files: {e}\n{traceback.format_exc()}")
+                return
+
+        invoices = state.get("invoices", {})
+        if invoices:
+            inv_id = list(invoices.keys())[0]
+            inv = invoices[inv_id]
+            
+            if inv["status"] == "new":
+                st.subheader("Step 2 – Configure and Process")
+                
+                prev_mode = state["global_controls"].get("mode", MODE_TDS)
+                prev_gross = state["global_controls"].get("gross_up", False)
+                
+                gc1, gc2 = st.columns(2)
+                with gc1:
+                    new_mode = st.radio(
+                        "Tax Mode",
+                        [MODE_TDS, MODE_NON_TDS],
+                        index=0 if prev_mode == MODE_TDS else 1,
+                        horizontal=True,
+                        key="single_mode_radio",
+                    )
+                with gc2:
+                    new_gross = st.checkbox(
+                        "💰 Gross\u2011up tax (company bears tax)",
+                        value=bool(prev_gross),
+                        disabled=(new_mode == MODE_NON_TDS),
+                        key="single_gross_checkbox",
+                    )
+                    if new_mode == MODE_NON_TDS:
+                        new_gross = False
+                
+                if new_mode != prev_mode or new_gross != prev_gross:
+                    state["global_controls"]["mode"] = new_mode
+                    state["global_controls"]["gross_up"] = new_gross
+                    
+                if st.button("Process Invoice", type="primary"):
+                    _process_single_invoice(inv_id)
+                    st.rerun()
+                st.info("Processing...")
+            elif inv["status"] == "failed":
+                st.error(f"Processing failed: {inv.get('error')}")
+            elif inv["status"] == "processed":
+                st.subheader("Step 3 – Review and Generate XML")
+                
+                ex = inv.get("excel", {})
+                currency = ex.get("currency") or "—"
+                exchange_rate = ex.get("exchange_rate")
+                exchange_rate_str = f"{float(exchange_rate):.4f}" if exchange_rate and float(exchange_rate) > 0 else "—"
+                dedn_date = ex.get("dedn_date_tds") or "—"
+                with st.container(border=True):
+                    st.markdown(f'''
+                    <div class="excel-card">
+                        <div><span class="label">Currency</span> <span class="arrow">→</span> <code>{currency}</code></div>
+                        <div><span class="label">Exchange Rate</span> <span class="arrow">→</span> <code>{exchange_rate_str}</code></div>
+                        <div><span class="label">Deduction Date</span> <span class="arrow">→</span> <code>{dedn_date}</code></div>
+                    </div>
+                    ''', unsafe_allow_html=True)
+                
+                # Render the invoice form for editing
+                from modules.batch_form_ui import render_invoice_tab
+                try:
+                    old_form = dict(inv["state"].get("form", {}))
+                    new_state = render_invoice_tab(inv["state"], show_header=False)
+                    new_form = new_state.get("form", {})
+                    
+                    form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                    _snap_keys = (
+                        "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
+                        "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
+                        "BasisDeterTax", "RateTdsADtaa",
+                    )
+                    before = tuple(str(form.get(k) or "") for k in _snap_keys)
+                    new_state = recompute_invoice(new_state)
+                    form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                    after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
+                    inv["state"] = new_state
+                    if after != before:
+                        inv["xml_bytes"] = None
+                        inv["xml_status"] = "none"
+                        inv["xml_error"] = None
+                    state["invoices"][inv_id] = inv
+                except Exception as exc:
+                    st.error(f"Rendering form failed: {exc}")
+
+                c1, c2 = st.columns(2)
+                with c1:
+                    if st.button("Generate XML", type="primary"):
+                        _generate_xml_for_invoice(inv_id)
+                        if inv.get("xml_status") == "ok":
+                            st.success("XML generated successfully.")
+                        else:
+                            st.error(f"XML generation failed: {inv.get('xml_error')}")
+                with c2:
+                    if inv.get("xml_status") == "ok" and inv.get("xml_bytes"):
+                        filename_stub = (inv.get("state", {}).get("extracted", {}).get("invoice_number") or inv_id).replace(" ", "_")
+                        st.download_button(
+                            "Download XML",
+                            data=inv["xml_bytes"],
+                            file_name=f"form15cb_{filename_stub}.xml",
+                            mime="application/xml"
+                        )
+
+def main() -> None:
+    _ensure_session_state()
+    render_mode_switcher()
+    mode = st.session_state.get("mode", "single")
+    if mode == "single":
+        render_single_invoice_page()
+    else:
+        render_bulk_invoice_page()
+
+
 if __name__ == "__main__":
     main()
+

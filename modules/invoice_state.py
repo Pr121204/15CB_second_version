@@ -421,6 +421,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     mode = config.get("mode", MODE_TDS)
     source_short = config.get("currency_short", "")
     resolved_currency = resolve_currency_selection(source_short, load_currency_exact_index())
+    source_nature, source_group, source_code = "missing", "missing", "missing"
     state: Dict[str, object] = {
         "meta": {
             "invoice_id": invoice_id,
@@ -682,6 +683,10 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
             )
         cls = classify_remittance(raw_text, extracted)
         if cls:
+            logger.info(
+                "classification_classifier_output invoice_id=%s nature_code=%r purpose_code=%r confidence=%s review=%s evidence=%r",
+                invoice_id, cls.nature.code, cls.purpose.purpose_code, cls.confidence, cls.needs_review, cls.evidence
+            )
             # We want to preserve Gemini's values if they exist, else fallback to classifier
             gemini_code = str(extracted.get("purpose_code") or "").strip()
             gemini_group = str(extracted.get("purpose_group") or "").strip()
@@ -689,6 +694,8 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
 
             if not gemini_code:
                 # Fallback to classifier for purpose
+                source_group = "classifier"
+                source_code = "classifier"
                 form["_purpose_group"] = cls.purpose.group_name
                 form["_purpose_code"] = cls.purpose.purpose_code
                 gr_no_norm = str(int(cls.purpose.gr_no)) if str(cls.purpose.gr_no).isdigit() else cls.purpose.gr_no
@@ -699,6 +706,8 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
                 extracted["purpose_group"] = cls.purpose.group_name
             else:
                 # Keep Gemini's purpose
+                source_group = "gemini"
+                source_code = "gemini"
                 form["_purpose_group"] = gemini_group
                 form["_purpose_code"] = gemini_code
                 
@@ -716,10 +725,12 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
 
             if not gemini_nature:
                 # Fallback to classifier for nature
+                source_nature = "classifier"
                 form["NatureRemCategory"] = cls.nature.code
                 extracted["nature_of_remittance"] = cls.nature.label
             else:
                 # Keep Gemini's nature. Find its code from options
+                source_nature = "gemini"
                 nature_opts = load_nature_options()
                 ncode = ""
                 for opt in nature_opts:
@@ -741,6 +752,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
         # Fallback to old Gemini-direct approach
         if extracted.get("nature_of_remittance"):
             nature_label = str(extracted.get("nature_of_remittance", "")).strip()
+            source_nature = "gemini"
             nature_opts = load_nature_options()
             for opt in nature_opts:
                 if str(opt.get("label", "")).strip() == nature_label:
@@ -749,6 +761,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
 
         if extracted.get("purpose_code"):
             purpose_code = str(extracted.get("purpose_code", "")).strip().upper()
+            source_code = "gemini"
             purpose_grouped = load_purpose_grouped()
             for group_name, codes in purpose_grouped.items():
                 for code_record in codes:
@@ -792,6 +805,44 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
             invoice_id,
             extracted.get("remitter_name", ""),
         )
+
+    # Add classification final + mismatch logging
+    final_nature = form.get("NatureRemCategory", "")
+    final_rev_cat = form.get("RevPurCategory", "")
+    final_rev_code = form.get("RevPurCode", "")
+    
+    logger.info(
+        "classification_final invoice_id=%s nature_text=%r purpose_group=%r purpose_code=%r NatureRemCategory=%r RevPurCategory=%r RevPurCode=%r source_nature=%s source_group=%s source_code=%s",
+        invoice_id,
+        extracted.get("nature_of_remittance", ""),
+        form.get("_purpose_group", ""),
+        form.get("_purpose_code", ""),
+        final_nature,
+        final_rev_cat,
+        final_rev_code,
+        source_nature,
+        source_group,
+        source_code,
+    )
+    
+    gemini_code = str(extracted.get("purpose_code") or "").strip().upper()
+    if gemini_code and final_rev_code and not final_rev_code.endswith(gemini_code):
+        logger.warning(
+            "classification_mismatch invoice_id=%s gemini_purpose=%r xml_purpose=%r msg='Gemini purpose overridden'",
+            invoice_id, gemini_code, final_rev_code
+        )
+    if 'cls' in locals() and cls:
+        if cls.purpose.purpose_code and final_rev_code and not final_rev_code.endswith(cls.purpose.purpose_code):
+            logger.warning(
+                "classification_mismatch invoice_id=%s classifier_purpose=%r xml_purpose=%r msg='Classifier purpose not used'",
+                invoice_id, cls.purpose.purpose_code, final_rev_code
+            )
+        if cls.nature.code and final_nature and final_nature != cls.nature.code:
+            logger.warning(
+                "classification_mismatch invoice_id=%s classifier_nature_code=%r xml_nature_code=%r msg='Classifier nature overridden'",
+                invoice_id, cls.nature.code, final_nature
+            )
+
     state = recompute_invoice(state)
     logger.info(
         "state_build_done invoice_id=%s form_snapshot=%s",

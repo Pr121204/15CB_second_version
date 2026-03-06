@@ -53,6 +53,10 @@ from modules.text_normalizer import fix_concatenated_words, normalize_invoice_te
 logger = get_logger()
 
 MASTER_DIR = Path(__file__).resolve().parent.parent / "data" / "master"
+try:
+    TEXT_EXTRACTION_MIN_THRESHOLD = max(20, int(os.getenv("TEXT_EXTRACTION_MIN_THRESHOLD", "300")))
+except Exception:
+    TEXT_EXTRACTION_MIN_THRESHOLD = 300
 
 
 def _load_json(path: Path, default):
@@ -322,7 +326,10 @@ EXTRACT THESE FIELDS:
   "currency": "3-letter ISO currency code (e.g., EUR, USD, GBP, JPY, INR)",
   "nature_of_remittance": "best matching label from this list - return EXACT label or empty string: ADVERTISEMENT FEE, AMC CHARGES, ARCHITECTURAL SERVICES, BANDWIDTH CHARGES, BROKERAGE CHARGES, CARGO HANDLING SERVICES INSPECTION & LOGISTICS SERVICES, COMMISSION, COMPUTER & INFORMATION SERVICES, CONSULTING SERVICES, DESIGNING CHARGES, ENGINEERING SERVICES, FEES FOR TECHNICAL SERVICES, FOREIGN INSURANCE, FREIGHT, GRAPHIC DESIGN CHARGES, INSURANCE PREMIUM, LEGAL SERVICES, SOFTWARE LICENCES, SUBSCRIPTION FEES, TECHNICAL SERVICES, TESTING CHARGES, TRAINING CHARGES, TRANSPORT SERVICES, TRAVEL & ACCOMMODATION CHARGES",
   "purpose_group": "best matching RBI purpose group (e.g., 'Other Business Services', 'Telecommunication, Computer & Information Services', 'Charges for the use of intellectual property n.i.e')",
-  "purpose_code": "best matching RBI purpose code (e.g., S1023, S0014, S1005)"
+  "purpose_code": "best matching RBI purpose code (e.g., S1023, S0014, S1005)",
+  "classification_evidence": ["array of short exact strings from invoice text justifying the classification"],
+  "review_required": false,
+  "classification_confidence": "high"
 }
 
 CRITICAL INSTRUCTIONS FOR ACCURACY:
@@ -394,7 +401,63 @@ CRITICAL INSTRUCTIONS FOR ACCURACY:
    - Return pure number: "1245.67" (not "1.245,67 EUR")
    - Currency: Look for symbols (€, £, $, ¥) or 3-letter codes (EUR, GBP, USD, JPY)
 
+
+9. CLASSIFICATION & PURPOSE CODE RULES (VERY IMPORTANT):
+   - Prefer the actual item/service being paid for over generic terms.
+   - "software", "license", "licence", "upgrade", "subscription", "renewal" strongly suggest SOFTWARE LICENCES and likely purpose code S0902. Do not classify these as registration charges.
+   - "commissioning", "installation", "startup", "engineer visit", "user site", "service ticket", "site support" strongly suggest FEES FOR TECHNICAL SERVICES (e.g., S1009), not Research & Development (R&D).
+   - Do not output broad guesses like "registration charges" unless the invoice text clearly says registration fee or conference/event registration.
+   - If invoice text supports multiple interpretations, return the best fit but set review_required=true.
+   - If unsure, never invent. Return best guess with evidence and review_required=true.
+   - If the exact purpose code is uncertain but the nature is clear, keep the best-supported nature, set review_required=true, and do not force a wrong purpose_code.
+
+   FEW-SHOT CLASSIFICATION EXAMPLES:
+   
+   Example 1: Software license / upgrade
+   Invoice text snippet: "Winsam 8 Upgrade", "Software upgrade", "License renewal"
+   Interpretation: nature_of_remittance: "SOFTWARE LICENCES", purpose_code: "S0902"
+   Reason: Payment for software rights/usage, not a registration charge.
+   
+   Example 2: Software subscription
+   Invoice text snippet: "Annual software subscription", "Enterprise license renewal"
+   Interpretation: nature_of_remittance: "SOFTWARE LICENCES", purpose_code: "S0902"
+   
+   Example 3: Technical commissioning at user site
+   Invoice text snippet: "Total commissioning charge user site", "Engineer visit", "Service ticket number"
+   Interpretation: nature_of_remittance: "FEES FOR TECHNICAL SERVICES", purpose_group: "Other Business Services", purpose_code: "S1009"
+   Reason: This is technical/on-site commissioning, not R&D.
+   
+   Example 4: Legal services
+   Invoice text snippet: "Legal services", "Attorney fee", "Contract review services"
+   Interpretation: nature_of_remittance: "LEGAL SERVICES"
+   
+   Example 5: True registration/event fee
+   Invoice text snippet: "Conference registration fee", "Delegate registration", "Seminar registration charges"
+   Interpretation: Map to registration/training category. Do not confuse with software upgrade/license.
+
 Return ONLY valid JSON with no additional text or markdown formatting."""
+
+
+IMAGE_ONLY_PROMPT = """This PDF could not be text-extracted. You are seeing raw rendered pages.
+Read every visible character carefully from the images.
+
+Extract all of the following by checking across ALL pages:
+- invoice_number (Invoice No., Rechnungsnummer, No.)
+- invoice_date (Date Invoice, Datum, DD.MM.YYYY-like dates)
+- amount (Invoice amount, Total, Grand total, Rechnungsbetrag)
+- currency (EUR/USD/GBP/etc.)
+- remitter_name (CUSTOMER/BUYER paying)
+- beneficiary_name (SUPPLIER/SELLER issuing invoice)
+- beneficiary_address (supplier address)
+- remitter_address (buyer/remitter address when visible)
+- nature_of_remittance (service description from line items)
+- purpose_group (best RBI group)
+- purpose_code (best RBI purpose code)
+
+Return JSON only.
+If a value is clearly visible, do not leave it empty.
+If truly not visible after careful review, return null.
+"""
 
 
 PROMPT = """Extract the following fields from this invoice as JSON only, no explanation:
@@ -411,7 +474,10 @@ PROMPT = """Extract the following fields from this invoice as JSON only, no expl
   "currency": "3-letter ISO currency code (EUR, USD, GBP, JPY, etc.)",
   "nature_of_remittance": "best matching label from this list - return EXACT label text or empty string: ADVERTISEMENT FEE, AMC CHARGES, ARCHITECTURAL SERVICES, BANDWIDTH CHARGES, BROKERAGE CHARGES, BUSINESS INCOME OTHER THAN THAT COVERED BY CATEGORIES ABOVE, CARGO HANDLING SERVICES INSPECTION & LOGISTICS SERVICES, CELLULAR ROAMING CHARGES, CHARTER HIRE CHARGES (SHIPPING), CLEARING & FORWARDING CHARGES, COMMISSION, COMPUTER & INFORMATION SERVICES, CONSULTING SERVICES, CUSTOM HOUSE AGENT CHARGES, DESIGNING CHARGES, DISTRIBUTION SERVICES, EDUCATIONAL SERVICES, ENGINEERING SERVICES, FACILITY RELATED SERVICES, FEES FOR TECHNICAL SERVICES, FOREIGN COMMISSION, FOREIGN HOSPITALITY, FOREIGN INSURANCE, FOREIGN SERVICE CHARGES, FREIGHT, GENERAL INSURANCE CLAIMS, GENERAL INSURANCE PREMIUM, GRAPHIC DESIGN CHARGES, HEALTH SERVICES, HOSPITALITY SERVICES, HOTEL & LODGING CHARGES, ISD CHARGES, INSURANCE AGENCY & BROKERAGE, INSURANCE PREMIUM, INSURANCE, INTERNET CHARGES, KNOWLEDGE BASED CONSULTING, LEGAL SERVICES, LIFE INSURANCE, LIFE INSURANCE PREMIUM, LIFE INSURANCE CLAIMS, LODGING CHARGES, MAINTENANCE & REPAIR CHARGES, MANAGEMENT FEES, MARINE INSURANCE PREMIUM, MARINE INSURANCE CLAIMS, MISCELLANEOUS PERSONAL SERVICES, MISCELLANEOUS PUBLISHED WORK, MISCELLANEOUS SERVICES, MISCELLANEOUS TECHNICAL SERVICES, MISCELLANEOUS TRANSPORT SERVICES, OPERATIONAL CHARGES FOR OVERSEAS OFFICES, OTHER DISTRIBUTION SERVICES, OTHER FINANCE CHARGES, OTHER MARITIME TRAFFIC MANAGEMENT, OTHER MISCELLANEOUS BUSINESS SERVICES, OTHER MISCELLANEOUS EDUCATIONAL SERVICES, OTHER MISCELLANEOUS HEALTH SERVICES, OTHER MISCELLANEOUS PROFESSIONAL SERVICES, OTHER MISCELLANEOUS SERVICES, PATIENT TREATMENT CHARGES, PERSONAL SERVICES, PHOTOGRAPHY CHARGES, POSTAL SERVICES, PUBLICATION SERVICES, PUBLISHING SERVICES, RADIO AND TELEVISION SERVICES, REIMBURSEMENT OF EXPENSES, REPAIR & MAINTENANCE CHARGES, REPAIR SERVICES, RESEARCH & DEVELOPMENT CHARGES, RESEARCH SERVICES, ROYALTY, ROYALTY ON COPYRIGHTS AND LITERARY WORKS, ROYALTY ON DESIGN & TRADEMARK, ROYALTY ON INDUSTRIAL PROCESS, ROYALTY ON PATENT, ROYALTY ON TECHNICAL KNOW-HOW, SOFTWARE LICENCES, SPACE & TIME LEASING & RENTAL CHARGES, SPACE AND TIME LEASING, SPACE/BANDWIDTH LEASING FOR TELECOMMUNICATION SERVICES, SPECIAL DRAWING RIGHTS (SDRS), SUBSCRIPTION FEES, SUBSCRIPTION FOR PERIODICALS & NEWSPAPERS, SUBSCRIPTION FOR PROFESSIONAL ASSOCIATIONS, SUBSCRIPTION FOR TECHNICAL DATA, SUBSCRIPTION SERVICES, SUPPORT & MAINTENANCE CHARGES, TAX AUDIT FEES, TECHNICAL ASSISTANCE FEES, TECHNICAL SERVICE FEES, TECHNICAL SUPPORT & MAINTENANCE, TELECOMMUNICATION CHARGES, TESTING & ANALYSIS CHARGES, TESTING CHARGES, CONSULTING SERVICES FOR TECHNICAL SERVICES, CONSULTANCY, TRAINING CHARGES, TRANSPORT SERVICES CHARGES, TRANSPORT SERVICES, TRANSPORT/SHIPPING CHARGES, TRAVEL CHARGES, TRAVEL & ACCOMODATION CHARGES, TRAVEL & ACCOMMODATION CHARGES, TRAVEL INSURANCE, TRIBUNAL LEVY, TRIMMING CHARGES, VIDEO PRODUCTION CHARGES, VISA FEES, VISA AND VACCINATION & HEALTH CHARGES, VISIT VISA FEES",
   "purpose_group": "best matching RBI purpose group name - return EXACT group name or empty string (e.g. 'Other Business Services', 'Charges for the use of intellectual property n.i.e', 'Telecommunication, Computer & Information Services', 'Financial and Insurance Services')",
-  "purpose_code": "best matching RBI purpose code from the group above - return EXACT code (e.g. S1023, S0014, S1005) or empty string if unsure"
+  "purpose_code": "best matching RBI purpose code from the group above - return EXACT code (e.g. S1023, S0014, S1005) or empty string if unsure",
+  "classification_evidence": ["array of short exact strings from invoice text justifying the classification"],
+  "review_required": false,
+  "classification_confidence": "high"
 }
 Return only valid JSON. If a field cannot be found, return an empty string for it.
 
@@ -489,7 +555,43 @@ CRITICAL INSTRUCTIONS:
    The buyer's (Indian company's) details often appear lower on the invoice (bill-to section).
    DO NOT let letter head position confuse role assignment. ALWAYS assign by address location.
    
-6. BEST EFFORT:
+
+6. CLASSIFICATION & PURPOSE CODE RULES (VERY IMPORTANT):
+
+   - Prefer the actual item/service being paid for over generic terms.
+   - "software", "license", "licence", "upgrade", "subscription", "renewal" strongly suggest SOFTWARE LICENCES and likely purpose code S0902. Do not classify these as registration charges.
+   - "commissioning", "installation", "startup", "engineer visit", "user site", "service ticket", "site support" strongly suggest FEES FOR TECHNICAL SERVICES (e.g., S1009), not Research & Development (R&D).
+   - Do not output broad guesses like "registration charges" unless the invoice text clearly says registration fee or conference/event registration.
+   - If invoice text supports multiple interpretations, return the best fit but set review_required=true.
+   - If unsure, never invent. Return best guess with evidence and review_required=true.
+   - If the exact purpose code is uncertain but the nature is clear, keep the best-supported nature, set review_required=true, and do not force a wrong purpose_code.
+
+   FEW-SHOT CLASSIFICATION EXAMPLES:
+   
+   Example 1: Software license / upgrade
+   Invoice text snippet: "Winsam 8 Upgrade", "Software upgrade", "License renewal"
+   Interpretation: nature_of_remittance: "SOFTWARE LICENCES", purpose_code: "S0902"
+   Reason: Payment for software rights/usage, not a registration charge.
+   
+   Example 2: Software subscription
+   Invoice text snippet: "Annual software subscription", "Enterprise license renewal"
+   Interpretation: nature_of_remittance: "SOFTWARE LICENCES", purpose_code: "S0902"
+   
+   Example 3: Technical commissioning at user site
+   Invoice text snippet: "Total commissioning charge user site", "Engineer visit", "Service ticket number"
+   Interpretation: nature_of_remittance: "FEES FOR TECHNICAL SERVICES", purpose_group: "Other Business Services", purpose_code: "S1009"
+   Reason: This is technical/on-site commissioning, not R&D.
+   
+   Example 4: Legal services
+   Invoice text snippet: "Legal services", "Attorney fee", "Contract review services"
+   Interpretation: nature_of_remittance: "LEGAL SERVICES"
+   
+   Example 5: True registration/event fee
+   Invoice text snippet: "Conference registration fee", "Delegate registration", "Seminar registration charges"
+   Interpretation: Map to registration/training category. Do not confuse with software upgrade/license.
+
+
+7. BEST EFFORT:
 
    - For nature_of_remittance, purpose_group, purpose_code: return your best matching suggestion even if 
      not 100% certain. Always return something unless the invoice gives absolutely no clue.
@@ -510,7 +612,10 @@ PROMPT_COMPACT = """Extract invoice fields as strict JSON only (no markdown, no 
   "currency": "",
   "nature_of_remittance": "",
   "purpose_group": "",
-  "purpose_code": ""
+  "purpose_code": "",
+  "classification_evidence": [],
+  "review_required": false,
+  "classification_confidence": "high"
 }
 Rules:
 1. Outward remittance policy: remitter is Indian payer, beneficiary is foreign payee.
@@ -1676,7 +1781,39 @@ def merge_multi_page_image_extractions(page_results: List[Dict[str, str]]) -> Tu
     return merged, meta
 
 
-def extract_invoice_core_fields(text: str) -> Dict[str, str]:
+def gemini_extract_from_images_only(
+    page_images: List[Union[str, bytes, Path]],
+    *,
+    invoice_id: str = "",
+    prompt: str = IMAGE_ONLY_PROMPT,
+) -> Dict[str, str]:
+    """Run Gemini vision extraction across all provided page images and merge results."""
+    if not page_images:
+        return {}
+    page_results: List[Dict[str, str]] = []
+    for idx, page_image in enumerate(page_images, start=1):
+        page_out = extract_invoice_core_fields_from_image(
+            page_image,
+            invoice_id=invoice_id,
+            prompt=prompt,
+        )
+        page_results.append(page_out)
+        logger.info(
+            "image_only_page_done invoice_id=%s page=%s populated=%s",
+            invoice_id,
+            idx,
+            any(str(page_out.get(k) or "").strip() for k in ("invoice_number", "amount", "currency_short", "beneficiary_name")),
+        )
+    if len(page_results) == 1:
+        merged = dict(page_results[0])
+    else:
+        merged, _ = merge_multi_page_image_extractions(page_results)
+    merged["_extraction_mode"] = "image_only"
+    merged["_image_pages_used"] = str(len(page_results))
+    return merged
+
+
+def extract_invoice_core_fields(text: str, invoice_id: str = "") -> Dict[str, str]:
     text = normalize_invoice_text(str(text or ""), keep_newlines=True)
     out = {
         "remitter_name": "",
@@ -1752,6 +1889,15 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
                 attempts[idx]["name"],
             )
     logger.info("gemini_extract_response parsed_keys=%s", sorted(parsed.keys()))
+    if invoice_id:
+        logger.info(
+            "classification_gemini_raw invoice_id=%s nature=%r purpose_group=%r purpose_code=%r beneficiary=%r",
+            invoice_id,
+            parsed.get("nature_of_remittance", ""),
+            parsed.get("purpose_group", ""),
+            parsed.get("purpose_code", ""),
+            parsed.get("beneficiary_name", ""),
+        )
     out["remitter_name"] = _normalize_company_name(str(parsed.get("remitter_name") or "").strip())
     out["remitter_address"] = _normalize_extracted_address(str(parsed.get("remitter_address") or "").strip())
     out["remitter_country_text"] = _normalize_extracted_text(str(parsed.get("remitter_country") or "").strip())
@@ -1783,6 +1929,8 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
     if nature_suggestion:
         matched_nature = _fuzzy_match_nature(nature_suggestion)
         out["nature_of_remittance"] = matched_nature
+        if invoice_id:
+            logger.info("classification_normalized invoice_id=%s nature_before=%r nature_after=%r", invoice_id, nature_suggestion, matched_nature)
         if matched_nature:
             logger.info("nature_of_remittance_matched suggestion=%s matched=%s", nature_suggestion, matched_nature)
     
@@ -1791,6 +1939,8 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
     if group_suggestion:
         matched_group = _fuzzy_match_purpose_group(group_suggestion)
         out["purpose_group"] = matched_group
+        if invoice_id:
+            logger.info("classification_normalized invoice_id=%s purpose_group_before=%r purpose_group_after=%r", invoice_id, group_suggestion, matched_group)
         if matched_group:
             logger.info("purpose_group_matched suggestion=%s matched=%s", group_suggestion, matched_group)
     
@@ -1799,6 +1949,8 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
     if code_suggestion:
         matched_code = _fuzzy_match_purpose_code(code_suggestion, out["purpose_group"])
         out["purpose_code"] = matched_code
+        if invoice_id:
+            logger.info("classification_normalized invoice_id=%s purpose_code_before=%r purpose_code_after=%r", invoice_id, code_suggestion, matched_code)
         if matched_code:
             logger.info("purpose_code_matched suggestion=%s matched=%s group=%s", code_suggestion, matched_code, out["purpose_group"])
     if out["purpose_code"] and not _is_valid_purpose_code(out["purpose_code"]):
@@ -1813,12 +1965,16 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
             # Fuzzy-match the fallback value to get exact master label
             matched = _fuzzy_match_nature(fallback_nature)
             out["nature_of_remittance"] = matched if matched else fallback_nature
+            if invoice_id:
+                logger.info("classification_normalized invoice_id=%s nature_before='' nature_after=%r source='keyword_fallback'", invoice_id, out["nature_of_remittance"])
             logger.info("nature_of_remittance_fallback keyword=%s matched=%s", fallback_nature, out["nature_of_remittance"])
         # Only apply code fallback if no code was matched from Gemini
         if not out["purpose_code"] and fallback_code:
             # Fuzzy-match the fallback value to get exact master code
             matched = _fuzzy_match_purpose_code(fallback_code, out["purpose_group"])
             out["purpose_code"] = matched if matched and _is_valid_purpose_code(matched) else ""
+            if invoice_id:
+                logger.info("classification_normalized invoice_id=%s purpose_code_before='' purpose_code_after=%r source='keyword_fallback'", invoice_id, out["purpose_code"])
             logger.info("purpose_code_fallback keyword=%s matched=%s group=%s", fallback_code, out["purpose_code"], out.get("purpose_group", ""))
     if out["purpose_code"]:
         # Keep group/code pair deterministic. Code is authoritative.
@@ -1860,7 +2016,11 @@ def extract_invoice_core_fields(text: str) -> Dict[str, str]:
     return out
 
 
-def extract_invoice_core_fields_from_image(image_path_or_bytes: Union[str, bytes, Path]) -> Dict[str, str]:
+def extract_invoice_core_fields_from_image(
+    image_path_or_bytes: Union[str, bytes, Path],
+    invoice_id: str = "",
+    prompt: str = IMAGE_EXTRACTION_PROMPT,
+) -> Dict[str, str]:
     """
     Extract invoice fields directly from an image using Gemini's vision capabilities.
     This bypasses OCR and sends the image directly to Gemini for better accuracy.
@@ -1908,7 +2068,7 @@ def extract_invoice_core_fields_from_image(image_path_or_bytes: Union[str, bytes
         mime_type = _get_image_mime_type(image_path_or_bytes)
 
         logger.info("image_extract_call model=%s mime_type=%s backend=%s", GEMINI_MODEL_NAME, mime_type, backend)
-        response_text = _generate_with_gemini_image(IMAGE_EXTRACTION_PROMPT, image_path_or_bytes, mime_type)
+        response_text = _generate_with_gemini_image(prompt, image_path_or_bytes, mime_type)
         parsed = _extract_json(response_text)
         logger.info("image_extract_response parsed_keys=%s", sorted(parsed.keys()))
         
