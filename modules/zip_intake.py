@@ -160,6 +160,22 @@ def parse_excel_date(value: object) -> str:
     return ""
 
 
+def _normalize_reference(value: object) -> str:
+    """Normalizes a reference value for robust matching.
+    
+    Steps:
+    - Uppercase
+    - Remove all internal/leading/trailing spaces
+    - Replace '/' with '-'
+    """
+    s = str(value or "").strip().upper()
+    if not s:
+        return ""
+    s = s.replace(" ", "")
+    s = s.replace("/", "-")
+    return s
+
+
 def _to_float(v) -> float:
     try:
         s = str(v).replace(",", "").strip()
@@ -192,16 +208,20 @@ def build_invoice_registry(df: pd.DataFrame, invoice_files: Iterable[Tuple[str, 
     invoices: Dict[str, Dict[str, object]] = {}
     if df is None:
         return invoices
-    # Normalize and index rows by Reference (strip whitespace)
+    
+    # Normalize and index rows by Reference
     ref_to_rows: Dict[str, List[pd.Series]] = {}
     if not df.empty:
         for _, row in df.fillna("").iterrows():
-            ref = str(row.get("Reference") or "").strip()
-            if ref:
-                ref_to_rows.setdefault(ref, []).append(row)
+            raw_ref = row.get("Reference")
+            norm_ref = _normalize_reference(raw_ref)
+            if norm_ref:
+                ref_to_rows.setdefault(norm_ref, []).append(row)
+
     for filename, fbytes in invoice_files:
         stem = os.path.splitext(os.path.basename(filename))[0]
-        row_list = ref_to_rows.get(stem, [])
+        norm_stem = _normalize_reference(stem)
+        row_list = ref_to_rows.get(norm_stem, [])
         row: pd.Series | None = row_list[0] if row_list else None
         # Derive values from row
         currency = ""

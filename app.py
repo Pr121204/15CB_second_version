@@ -190,14 +190,26 @@ def _validate_xml_fields(fields: Dict[str, str], mode: str = MODE_TDS, dedn_date
     basis = str(fields.get("BasisDeterTax") or "").strip()
     if not basis:
         errors.insert(0, "Please select the Basis of TDS determination (DTAA or Income Tax Act) before generating XML.")
-    elif basis == "DTAA":
+
+    dtaa_claimed = (
+        str(fields.get("TaxResidCert") or "").strip().upper() == "Y"
+        and str(fields.get("OtherRemDtaa") or "").strip().upper() == "N"
+    )
+    if dtaa_claimed:
         for field in ["RateTdsADtaa", "TaxIncDtaa", "TaxLiablDtaa"]:
             if not str(fields.get(field) or "").strip():
-                errors.append(f"{field} is required for DTAA basis.")
-    elif basis == "Act":
+                errors.append(f"{field} is required when DTAA is claimed.")
+        rate_dtaa = str(fields.get("RateTdsADtaa") or "").strip()
+        if rate_dtaa:
+            try:
+                if not float(rate_dtaa).is_integer():
+                    errors.append("RateTdsADtaa must be an integer when DTAA is claimed.")
+            except Exception:
+                errors.append("RateTdsADtaa must be numeric.")
+    else:
         for field in ["RateTdsSecB", "TaxLiablIt"]:
             if not str(fields.get(field) or "").strip():
-                errors.append(f"{field} is required for Income Tax Act basis.")
+                errors.append(f"{field} is required for non-DTAA computation.")
 
     if mode == MODE_TDS:
         if not str(fields.get("AmtPayForgnTds") or "").strip():

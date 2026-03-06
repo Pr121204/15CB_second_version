@@ -506,7 +506,7 @@ def render_form() -> Dict[str, str]:
         is_gross_up = bool(meta.get("is_gross_up", False)) # Assuming 'meta' is passed or accessible
         # Make gross-up read-only since it is a single-source-of-truth configuration from the upload step
         st.text_input("Tax grossed up (Y/N)", value="Y" if is_gross_up else "N", disabled=True, key="tax_grossed_up_input") # Using a generic key
-        fields["TaxPayGrossSecb"] = "Y" if is_gross_up else "N"
+        fields["TaxPayGrossSecb"] = "N"
         fields["SecRemCovered"] = st.text_input("Section covered under IT Act", value=fields.get("SecRemCovered", ""))
         fields["AmtIncChrgIt"] = st.text_input("Amount of income chargeable (INR)", value=fields.get("AmtIncChrgIt", ""))
         fields["TaxLiablIt"] = st.text_input("Tax liability under IT Act (INR)", value=fields.get("TaxLiablIt", ""))

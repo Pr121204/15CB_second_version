@@ -63,8 +63,11 @@ def validate_required_fields(fields: Dict[str, str], mode: str = MODE_TDS) -> No
         ]
         missing.extend([k for k in tds_required if not str(fields.get(k, "")).strip()])
         
-        # DTAA fields only required if DTAA is the basis or explicitly flagged
-        dtaa_active = str(fields.get("BasisDeterTax", "")).strip() == "DTAA" or str(fields.get("TaxIndDtaaFlg", "")).strip() == "Y"
+        # DTAA detail values are mandatory when DTAA is explicitly claimed.
+        dtaa_active = (
+            str(fields.get("TaxResidCert", "")).strip().upper() == "Y"
+            and str(fields.get("OtherRemDtaa", "")).strip().upper() == "N"
+        )
         if dtaa_active:
             dtaa_required = [
                 "TaxIncDtaa",
@@ -72,6 +75,12 @@ def validate_required_fields(fields: Dict[str, str], mode: str = MODE_TDS) -> No
                 "RateTdsADtaa",
             ]
             missing.extend([k for k in dtaa_required if not str(fields.get(k, "")).strip()])
+            try:
+                rate_dtaa = float(str(fields.get("RateTdsADtaa", "")).strip())
+                if not rate_dtaa.is_integer():
+                    missing.append("RateTdsADtaa (must be an integer when DTAA is claimed)")
+            except Exception:
+                missing.append("RateTdsADtaa (must be numeric when DTAA is claimed)")
             
     if missing:
         uniq_missing = sorted(set(missing))

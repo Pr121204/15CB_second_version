@@ -436,7 +436,7 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True) ->
     mode_is_tds = mode == MODE_TDS
     is_gross_up = bool(meta.get("is_gross_up", False))
     st.text_input("Grossed Up Tax", value="Y" if is_gross_up else "N", disabled=True, key=f"{invoice_id}_gross")
-    form["TaxPayGrossSecb"] = "Y" if is_gross_up else "N"
+    form["TaxPayGrossSecb"] = "N"
     form["RemittanceCharIndia"] = "Y" if mode_is_tds else "N"
     form["ReasonNot"] = st.text_input("Reason if not chargeable", key=f"{invoice_id}_reason_not", value=str(form.get("ReasonNot") or ""), disabled=mode_is_tds)
     form["RateTdsSecbFlg"] = "2" if mode_is_tds else ""

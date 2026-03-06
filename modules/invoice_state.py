@@ -457,7 +457,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     form["CurrencySecbCode"] = resolved_currency.get("code", "")
     form["RemitteeZipCode"] = "999999"
     form["RemitteeState"] = "OUTSIDE INDIA"
-    form["TaxPayGrossSecb"] = "Y" if state["meta"]["is_gross_up"] else "N"
+    form["TaxPayGrossSecb"] = "N"
     # Seed user-selectable IT Act rate (from config override or default)
     it_rate_cfg = config.get("it_act_rate")
     form["ItActRateSelected"] = str(it_rate_cfg) if it_rate_cfg else str(IT_ACT_RATE_DEFAULT)
@@ -682,20 +682,51 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
             )
         cls = classify_remittance(raw_text, extracted)
         if cls:
-            # Set purpose (authoritative for group/gr_no)
-            form["_purpose_group"] = cls.purpose.group_name
-            form["_purpose_code"] = cls.purpose.purpose_code
-            gr_no_norm = str(int(cls.purpose.gr_no)) if str(cls.purpose.gr_no).isdigit() else cls.purpose.gr_no
-            form["RevPurCategory"] = f"RB-{gr_no_norm}.1"
-            form["RevPurCode"] = f"RB-{gr_no_norm}.1-{cls.purpose.purpose_code}"
+            # We want to preserve Gemini's values if they exist, else fallback to classifier
+            gemini_code = str(extracted.get("purpose_code") or "").strip()
+            gemini_group = str(extracted.get("purpose_group") or "").strip()
+            gemini_nature = str(extracted.get("nature_of_remittance") or "").strip()
 
-            # Set nature
-            form["NatureRemCategory"] = cls.nature.code
+            if not gemini_code:
+                # Fallback to classifier for purpose
+                form["_purpose_group"] = cls.purpose.group_name
+                form["_purpose_code"] = cls.purpose.purpose_code
+                gr_no_norm = str(int(cls.purpose.gr_no)) if str(cls.purpose.gr_no).isdigit() else cls.purpose.gr_no
+                form["RevPurCategory"] = f"RB-{gr_no_norm}.1"
+                form["RevPurCode"] = f"RB-{gr_no_norm}.1-{cls.purpose.purpose_code}"
+                
+                extracted["purpose_code"] = cls.purpose.purpose_code
+                extracted["purpose_group"] = cls.purpose.group_name
+            else:
+                # Keep Gemini's purpose
+                form["_purpose_group"] = gemini_group
+                form["_purpose_code"] = gemini_code
+                
+                # We need to compute RevPurCategory and RevPurCode from gemini_code
+                purpose_grouped = load_purpose_grouped()
+                gr_no = "00"
+                for gn, codes in purpose_grouped.items():
+                    for cr in codes:
+                        if str(cr.get("purpose_code") or "").strip().upper() == gemini_code.upper():
+                            gr_no = str(cr.get("gr_no") or "00").strip()
+                            break
+                gr_no_norm = str(int(gr_no)) if gr_no.isdigit() else gr_no
+                form["RevPurCategory"] = f"RB-{gr_no_norm}.1"
+                form["RevPurCode"] = f"RB-{gr_no_norm}.1-{gemini_code}"
 
-            # Keep extracted consistent for UI mapping/logs
-            extracted["purpose_code"] = cls.purpose.purpose_code
-            extracted["purpose_group"] = cls.purpose.group_name
-            extracted["nature_of_remittance"] = cls.nature.label
+            if not gemini_nature:
+                # Fallback to classifier for nature
+                form["NatureRemCategory"] = cls.nature.code
+                extracted["nature_of_remittance"] = cls.nature.label
+            else:
+                # Keep Gemini's nature. Find its code from options
+                nature_opts = load_nature_options()
+                ncode = ""
+                for opt in nature_opts:
+                    if str(opt.get("label") or "").strip() == gemini_nature:
+                        ncode = str(opt.get("code") or "")
+                        break
+                form["NatureRemCategory"] = ncode or cls.nature.code
 
             resolved["remittance_confidence"] = str(cls.confidence)
             resolved["remittance_needs_review"] = "1" if cls.needs_review else "0"
