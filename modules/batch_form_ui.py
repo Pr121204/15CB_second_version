@@ -444,9 +444,10 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
         form["_purpose_code"] = p_code
         chosen = next((r for r in rows if r.get("purpose_code") == p_code), None)
         if chosen:
-            # Preserve gr_no as-is (do not treat 0 as missing)
             gr_val = chosen.get("gr_no")
             gr = str(gr_val) if gr_val is not None else "00"
+            # Strip leading zeros to match government utility format (e.g. "09" → "9")
+            gr = str(int(gr)) if gr.isdigit() else gr
             form["RevPurCategory"] = f"RB-{gr}.1"
             form["RevPurCode"] = f"RB-{gr}.1-{p_code}"
     else:

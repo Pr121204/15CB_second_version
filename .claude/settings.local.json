@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import json; data=json.load\\(open\\(''c:/Users/HP/Desktop/form15cb_final/data/master/Purpose_code_List.json''\\)\\); print\\([r for r in data[:30] if ''gr_no'' in r][:5]\\)\")",
+      "Bash(python3 -c \"import json; data=json.load\\(open\\(''c:/Users/HP/Desktop/form15cb_final/data/master/Purpose_code_List.json''\\)\\); keys=list\\(data.keys\\(\\)\\) if isinstance\\(data,dict\\) else []; print\\(keys[:5]\\); print\\(data[keys[0]][:3] if keys else data[:3]\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\(''data/master/Purpose_code_List.json''\\)\\); items=data if isinstance\\(data,list\\) else list\\(data.values\\(\\)\\)[0] if isinstance\\(data,dict\\) else []; print\\(items[:5]\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\(''data/master/Purpose_code_List.json''\\)\\); gr_nos=set\\(r[''gr_no''] for r in data if ''gr_no'' in r\\); print\\(sorted\\(gr_nos\\)\\)\")",
+      "Bash(python -c \":*)"
+    ]
+  }
+}
