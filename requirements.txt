@@ -12,3 +12,4 @@ openpyxl
 pandas
 sentence-transformers
 torch
+pillow
