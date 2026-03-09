@@ -273,3 +273,42 @@ def build_invoice_registry(df: pd.DataFrame, invoice_files: Iterable[Tuple[str, 
             "xml_error": None,
         }
     return invoices
+
+
+def build_invoice_record_no_excel(filename: str, file_bytes: bytes) -> Dict[str, object]:
+    """Build a single invoice record for No-Excel mode.
+
+    Structurally identical to an Excel-derived record.  The ``excel`` dict
+    fields ``currency``, ``exchange_rate``, and ``dedn_date_tds`` start
+    empty and are written by ``_nex_write_excel_proxy`` in app.py before
+    processing begins.  Every downstream function (build_invoice_state,
+    recompute_invoice, xml_generator) reads from ``inv['excel']`` and
+    therefore works without modification.
+    """
+    stem = os.path.splitext(os.path.basename(filename))[0]
+    return {
+        "invoice_id": stem,
+        "file_name": filename,
+        "file_bytes": file_bytes,
+        "file_type": filename.split(".")[-1].lower(),
+        "excel_row": {},  # no Excel row — debugging field left empty
+        "excel": {
+            "currency": "",
+            "fcy_amount": 0.0,
+            "inr_amount": 0.0,
+            "exchange_rate": 0.0,
+            "posting_date_raw": None,
+            "dedn_date_tds": "",
+        },
+        "mode_override": None,
+        "gross_override": None,
+        "it_act_rate_override": None,
+        "config_sig": None,
+        "extracted": None,
+        "state": None,
+        "xml_bytes": None,
+        "status": "new",
+        "error": None,
+        "xml_status": "none",
+        "xml_error": None,
+    }

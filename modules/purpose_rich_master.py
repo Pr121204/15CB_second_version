@@ -14,6 +14,231 @@ Transforms purpose codes from simple lookups into a structure that supports:
 PURCHASE_GOODS_CODE = "S0102"
 
 PURPOSE_RICH_MASTER = {
+    # ------------------------------------------------------------------
+    # S1023 — Other Technical Services (office default for project work)
+    # Covers: software project execution, UAT/PROD environments, backend
+    # development, platform engineering, DevOps, system integration, QA,
+    # testing services, infrastructure setup, automation, PLC/SCADA.
+    # DOES NOT cover: pure software consultancy (S0802), data processing
+    # (S0803), payroll (S1401).
+    # ------------------------------------------------------------------
+    "S1023": {
+        "group": "Other Business Services",
+        "nature": "FEES FOR TECHNICAL SERVICES",
+        "description": (
+            "Other technical services including software project execution, "
+            "UAT/PROD environment management, backend development, platform "
+            "engineering, DevOps, CI/CD, system integration, QA and testing "
+            "services, infrastructure setup, automation, PLC programming, "
+            "SCADA, and commissioning services."
+        ),
+        "dtaa_category": "FEES FOR TECHNICAL SERVICES",
+        "dtaa_article": "Article 12 / Article 12A",
+        "service_scope": [
+            "software project execution",
+            "uat environment management",
+            "production environment setup",
+            "backend development",
+            "platform engineering",
+            "devops services",
+            "ci/cd pipeline",
+            "system integration",
+            "qa and testing services",
+            "infrastructure setup",
+            "technical project delivery",
+            "application support and management",
+            "automation services",
+            "plc programming",
+            "scada implementation",
+            "commissioning services",
+            "release management",
+        ],
+        "keywords": {
+            "high": [
+                "backend",
+                "uat",
+                "prod",
+                "platform",
+                "deployment",
+                "software project",
+                "environment",
+                "devops",
+                "ci/cd",
+                "system integration",
+                "qa services",
+                "quality assurance",
+                "testing services",
+                "technical project",
+                "infrastructure setup",
+                "application support",
+                "application management",
+                "release management",
+                "sprint",
+                "plc programming",
+                "scada",
+                "automation",
+                "commissioning",
+                "technical service",
+                "charging of r&d services",
+                "performance testing",
+                "load testing",
+                "regression testing",
+                "backend development",
+                "platform development",
+                "platform engineering",
+                "environment setup",
+                "environment management",
+                "production support",
+            ],
+            "medium": [
+                "technical delivery",
+                "agile",
+                "infrastructure management",
+                "technical implementation",
+                "software delivery",
+                "project management services",
+                "application maintenance",
+                "backend services",
+                "integration services",
+                "migration services",
+                "upgrade services",
+                "system upgrade",
+                "go-live support",
+                "hypercare",
+            ],
+            "weak": [
+                "technical",
+                "project",
+                "implementation",
+                "integration",
+                "support services",
+            ],
+        },
+        "dominant_service_keywords": [
+            "backend",
+            "uat",
+            "platform",
+            "deployment",
+            "devops",
+            "automation",
+            "commissioning",
+            "scada",
+            "plc",
+        ],
+        "intercompany_patterns": [
+            "intercompany technical",
+            "cost recharge",
+            "technical recharge",
+        ],
+        "multi_service": True,
+        "umbrella_code": True,
+        "examples": [
+            "UAT environment setup and management for ERP project",
+            "Backend development and deployment services",
+            "PROD environment migration and support",
+            "Platform engineering services for digital transformation",
+            "DevOps CI/CD pipeline implementation",
+            "PLC programming and SCADA commissioning services",
+            "System integration services for manufacturing plant",
+        ],
+        "exclusions": [
+            "software license",
+            "saas subscription",
+            "data processing",
+            "database services",
+            "payroll",
+            "social security",
+        ],
+    },
+    # ------------------------------------------------------------------
+    # S0803 — Data Processing / Database / Managed Hosting
+    # Genuinely limited to: database services, data processing charges,
+    # managed hosting, cloud infrastructure/storage, data analytics.
+    # DOES NOT cover: UAT, PROD env, deployment, platform dev, backend,
+    # DevOps, testing services — those belong to S1023.
+    # ------------------------------------------------------------------
+    "S0803": {
+        "group": "Telecommunication, Computer & Information Services",
+        "nature": "DATA PROCESSING / DATABASE / HOSTING SERVICES",
+        "description": (
+            "Database services, data processing charges, managed hosting, "
+            "cloud infrastructure, data storage, and data analytics. "
+            "Not applicable for software project execution, UAT/PROD "
+            "environments, deployment, or technical service delivery."
+        ),
+        "dtaa_category": "Fees for Technical Services / Royalty",
+        "service_scope": [
+            "data processing",
+            "database services",
+            "managed hosting",
+            "cloud infrastructure",
+            "data storage",
+            "data management",
+            "data analytics",
+        ],
+        "keywords": {
+            "high": [
+                "data processing",
+                "database services",
+                "data storage",
+                "managed hosting",
+                "cloud infrastructure",
+                "data management",
+                "data analytics",
+                "data processing charges",
+                "database management",
+                "data centre services",
+                "data center services",
+            ],
+            "medium": [
+                "cloud hosting",
+                "server hosting",
+                "infrastructure management",
+                "data centre",
+                "data center",
+                "cloud support",
+                "data replication",
+                "data migration",
+                "database administration",
+            ],
+            "weak": [
+                "hosting",
+                "database",
+                "cloud",
+            ],
+        },
+        "dominant_service_keywords": [
+            "data processing",
+            "database",
+            "hosting",
+            "data management",
+            "data analytics",
+        ],
+        "intercompany_patterns": [
+            "data recharge",
+            "cloud recharge",
+        ],
+        "multi_service": False,
+        "umbrella_code": False,
+        "examples": [
+            "Monthly data processing charges for SAP instance",
+            "Database managed services fee",
+            "Cloud infrastructure hosting charges",
+            "Data analytics platform charges",
+        ],
+        "exclusions": [
+            "uat",
+            "deployment",
+            "software project",
+            "platform development",
+            "backend development",
+            "devops",
+            "testing services",
+            "technical project",
+            "payroll",
+            "social security",
+        ],
+    },
     "S1008": {
         "group": "Other Business Services",
         "nature": "FEES FOR TECHNICAL SERVICES / R&D SERVICES",
@@ -132,7 +357,14 @@ PURPOSE_RICH_MASTER = {
         ],
         "exclusions": [
             "hardware repair",
-            "legal consulting"
+            "legal consulting",
+            "software project",
+            "deployment services",
+            "platform development",
+            "backend development",
+            "devops",
+            "uat",
+            "testing services",
         ]
     },
     "S1006": {

@@ -284,7 +284,35 @@ HIGH_SIGNAL_RULES: List[HighSignalRule] = [
          r"\bprogramming\b",
      ]},
 
-    # IT/software consultancy/implementation (use when clearly IT/app)
+    # Software project execution / technical delivery (S1023 — office default for project keywords).
+    # These terms signal technical service delivery, NOT data processing (S0803) or
+    # pure software consultancy (S0802).  Weight 100 > S0803 (82) > S0802 (75).
+    {"purpose_code": "S1023", "nature_code": "16.21", "weight": 100,
+     "patterns": [
+         r"\bbackend\b",
+         r"\buat\b",                                      # User Acceptance Testing
+         r"\bprod\b",                                     # Production environment/deployment
+         r"\bplatform\b",
+         r"\bdeployment\b",
+         r"\bsoftware\s+project\b",
+         r"\benvironment\b",
+         r"\bdevops\b",
+         r"\bci[-/]?cd\b",
+         r"\bsystem\s+integration\b",
+         r"\bqa\s+services?\b|\bquality\s+assurance\b",
+         r"\btesting\s+services?\b",
+         r"\bperformance\s+testing\b",
+         r"\bload\s+testing\b",
+         r"\bregression\s+testing\b",
+         r"\binfrastructure\s+(?:setup|services?|management)\b",
+         r"\btechnical\s+(?:project|delivery|programme|program)\b",
+         r"\bapplication\s+(?:support|management|maintenance)\b",
+         r"\brelease\s+management\b",
+         r"\bsprint\b",
+     ]},
+
+    # IT/software consultancy/implementation (use when clearly IT/app).
+    # deployment removed — it belongs to S1023 project execution.
     {"purpose_code": "S0802", "nature_code": "16.21", "weight": 75,
      "patterns": [
          r"\bsoftware\s+consult\w*\b",
@@ -292,24 +320,26 @@ HIGH_SIGNAL_RULES: List[HighSignalRule] = [
          r"\bapplication\s+implementation\b",
          r"\bapp\s+development\b",
          r"\bsap\b|\boracle\b|\bsalesforce\b|\bmicrosoft\s+dyn\w*\b",
-         r"\bconfiguration\b|\bdeployment\b|\bonboarding\b|\bimplementation\b|\bintegration\b",
+         r"\bconfiguration\b|\bonboarding\b|\bimplementation\b|\bintegration\b",
      ]},
 
-    # Hosting/cloud/platform environment services
+    # Data processing / database / managed hosting — genuinely S0803.
+    # uat, prod, environment, platform, backend removed; those belong to S1023.
     {"purpose_code": "S0803", "nature_code": "16.54", "weight": 82,
      "patterns": [
-         r"\buat\b",
-         r"\bprod\b",
-         r"\benvironment\b",
          r"\bhosting\b",
-         r"\bcloud\b",
-         r"\bplatform\b",
+         r"\bcloud\s+(?:hosting|infrastructure|storage)\b",
+         r"\bdata\s+processing\b",
+         r"\bdatabase\s+services?\b",
+         r"\bdata\s+storage\b",
+         r"\bdata\s+management\b",
+         r"\bdata\s+(?:processing\s+)?charges?\b",
      ]},
     {"purpose_code": "S0803", "nature_code": "16.21", "weight": 64,
      "patterns": [
-         r"\bbackend\b",
-         r"\bbackend\s+support\b",
          r"\bcloud\s+support\b",
+         r"\bdata\s+cent(?:re|er)\b",
+         r"\bmanaged\s+hosting\b",
      ]},
 
     # Maintenance / warranty / purchase / license/subscription

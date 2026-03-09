@@ -101,7 +101,7 @@ st.markdown("""
 from pdf2image import convert_from_bytes
 
 from modules.zip_intake import parse_zip, read_excel, build_invoice_registry
-from modules.form15cb_constants import IT_ACT_RATE_DEFAULT, IT_ACT_RATES, MODE_NON_TDS, MODE_TDS
+from modules.form15cb_constants import ALL_CURRENCY_OPTIONS, IT_ACT_RATE_DEFAULT, IT_ACT_RATES, MODE_NON_TDS, MODE_TDS, SHORT_CURRENCY_OPTIONS
 from modules.invoice_state import build_invoice_state
 from modules.invoice_calculator import invoice_state_to_xml_fields, recompute_invoice
 from modules.invoice_gemini_extractor import (
@@ -147,7 +147,7 @@ def _ensure_session_state() -> None:
     """Initialise keys in ``st.session_state`` that this app relies on."""
     if "mode" not in st.session_state:
         st.session_state["mode"] = "single"
-    for mode in ["single_mode", "bulk_mode"]:
+    for mode in ["single_mode", "bulk_mode", "no_excel_mode"]:
         if mode not in st.session_state:
             st.session_state[mode] = {
                 "invoices": {},
@@ -220,7 +220,7 @@ def _validate_xml_fields(fields: Dict[str, str], mode: str = MODE_TDS, dedn_date
         if not str(fields.get("ActlAmtTdsForgn") or "").strip():
             errors.append("Actual amount remitted must be entered.")
         if not _is_valid_iso_date(dedn_date_iso):
-            errors.append("Deduction Date (Posting Date) missing in Excel; cannot generate XML")
+            errors.append("Date of Deduction of TDS is missing or invalid; cannot generate XML")
 
     return errors
 
@@ -1257,12 +1257,16 @@ from modules.zip_intake import read_excel, _normalize_reference, _to_float, pars
 
 def render_mode_switcher() -> None:
     mode = st.session_state.get("mode", "single")
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("📄 Process One Invoice", type="primary" if mode == "single" else "secondary", use_container_width=True):
             st.session_state["mode"] = "single"
             st.rerun()
     with col2:
+        if st.button("📋 Single Invoice (No Excel)", type="primary" if mode == "no_excel" else "secondary", use_container_width=True):
+            st.session_state["mode"] = "no_excel"
+            st.rerun()
+    with col3:
         if st.button("🗂 Process Many Invoices", type="primary" if mode == "bulk" else "secondary", use_container_width=True):
             st.session_state["mode"] = "bulk"
             st.rerun()
@@ -1548,12 +1552,310 @@ def render_single_invoice_page() -> None:
                         on_click=lambda: logger.info("xml_downloaded invoice_id=%s", inv_id)
                     )
 
+# -----------------------------------------------------------------------------
+# No-Excel single-invoice mode
+# -----------------------------------------------------------------------------
+
+def _nex_write_excel_proxy(inv: dict, currency: str, exchange_rate: float, dedn_date_iso: str) -> None:
+    """Write manually-entered transaction details into inv['excel'].
+
+    This makes a No-Excel invoice record structurally identical to an
+    Excel-derived one so that every downstream function that reads
+    inv['excel'] (build_invoice_state, recompute_invoice, _compute_config_sig,
+    _generate_xml_for_invoice) works without modification.
+    """
+    inv["excel"]["currency"] = currency or ""
+    inv["excel"]["exchange_rate"] = exchange_rate
+    inv["excel"]["dedn_date_tds"] = dedn_date_iso or ""
+
+
+def render_no_excel_invoice_page() -> None:
+    """Single Invoice (No Excel) mode.
+
+    The user uploads an invoice and manually provides currency, exchange
+    rate and date of deduction.  Processing starts only on an explicit
+    button click.  The existing backend pipeline is reused verbatim —
+    manual inputs are normalised into inv['excel'] via
+    _nex_write_excel_proxy() before _process_single_invoice() is called.
+    """
+    from modules.zip_intake import build_invoice_record_no_excel
+
+    state = _get_current_state()
+    epoch = state.get("ui_epoch", 0)
+
+    # ── Title + Reset ──────────────────────────────────────────────────────────
+    col_t1, col_t2 = st.columns([6, 2])
+    with col_t1:
+        st.title("📋 Single Invoice (No Excel)")
+    with col_t2:
+        st.write("")
+        if st.button("Start with a new invoice", type="secondary", use_container_width=True,
+                     key=f"nex_reset_btn_{epoch}"):
+            state["invoices"] = {}
+            state["single_context"] = None
+            state["ui_epoch"] = epoch + 1
+            # Remove all nex_ widget keys so widgets reset to defaults on next render
+            for k in list(st.session_state.keys()):
+                if k.startswith("nex_"):
+                    del st.session_state[k]
+            st.rerun()
+
+    # ── Section 1: Upload ──────────────────────────────────────────────────────
+    st.subheader("1. Upload Invoice")
+    uploaded_inv = st.file_uploader(
+        "Upload Invoice (PDF / JPG / PNG)",
+        type=["pdf", "jpg", "jpeg", "png"],
+        accept_multiple_files=False,
+        key=f"nex_inv_upload_{epoch}",
+    )
+
+    # ── Section 2: Transaction Details ────────────────────────────────────────
+    st.subheader("2. Transaction Details")
+    st.caption("Enter the values that would normally come from the Excel sheet.")
+
+    col_a, col_b, col_c = st.columns(3)
+    with col_a:
+        currency_sel = st.selectbox(
+            "Currency",
+            options=ALL_CURRENCY_OPTIONS,
+            key=f"nex_currency_{epoch}",
+        )
+        if currency_sel == "Other":
+            currency = st.text_input(
+                "Enter currency code (e.g. CHF)",
+                key=f"nex_currency_other_{epoch}",
+            ).strip().upper()
+        else:
+            currency = currency_sel
+
+    with col_b:
+        exchange_rate_str = st.text_input(
+            "Exchange Rate (1 FCY = ? INR)",
+            value="",
+            placeholder="e.g. 89.50",
+            key=f"nex_exchange_rate_{epoch}",
+        )
+        exchange_rate = 0.0
+        exchange_rate_valid = False
+        if exchange_rate_str.strip():
+            try:
+                exchange_rate = float(exchange_rate_str.replace(",", ""))
+                if exchange_rate <= 0:
+                    st.error("Exchange rate must be greater than 0.")
+                else:
+                    exchange_rate_valid = True
+            except ValueError:
+                st.error("Exchange rate must be a number.")
+
+    with col_c:
+        dedn_date_input = st.date_input(
+            "Date of Deduction of TDS",
+            value=None,
+            key=f"nex_dedn_date_{epoch}",
+        )
+        dedn_date_iso = dedn_date_input.isoformat() if dedn_date_input else ""
+
+    # ── Section 3: Tax Configuration ──────────────────────────────────────────
+    st.subheader("3. Tax Configuration")
+    _IT_RATE_LABELS = [
+        f"{r}% (Default)" if r == IT_ACT_RATE_DEFAULT else f"{r}%"
+        for r in IT_ACT_RATES
+    ]
+    _IT_RATE_MAP = dict(zip(_IT_RATE_LABELS, IT_ACT_RATES))
+
+    prev_mode = state["global_controls"].get("mode", MODE_TDS)
+    prev_gross = state["global_controls"].get("gross_up", False)
+    prev_it_rate = state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
+    _prev_label = next(
+        (lbl for lbl, val in _IT_RATE_MAP.items() if val == prev_it_rate),
+        _IT_RATE_LABELS[0],
+    )
+
+    gc1, gc2, gc3 = st.columns([2, 2, 3])
+    with gc1:
+        new_mode = st.radio(
+            "Tax Mode",
+            [MODE_TDS, MODE_NON_TDS],
+            index=0 if prev_mode == MODE_TDS else 1,
+            horizontal=True,
+            key=f"nex_mode_radio_{epoch}",
+        )
+    with gc2:
+        new_gross = st.checkbox(
+            "💰 Gross\u2011up tax (company bears tax)",
+            value=bool(prev_gross),
+            disabled=(new_mode == MODE_NON_TDS),
+            key=f"nex_gross_checkbox_{epoch}",
+        )
+        if new_mode == MODE_NON_TDS:
+            new_gross = False
+    with gc3:
+        new_it_label = st.selectbox(
+            "IT Act Rate (%)",
+            options=_IT_RATE_LABELS,
+            index=_IT_RATE_LABELS.index(_prev_label),
+            key=f"nex_it_rate_select_{epoch}",
+        )
+        new_it_rate = _IT_RATE_MAP.get(new_it_label, IT_ACT_RATE_DEFAULT)
+
+    # Apply control changes and recompute any already-processed invoice
+    if new_mode != prev_mode or new_gross != prev_gross or new_it_rate != prev_it_rate:
+        state["global_controls"]["mode"] = new_mode
+        state["global_controls"]["gross_up"] = new_gross
+        state["global_controls"]["it_act_rate"] = new_it_rate
+        _existing = state.get("invoices", {})
+        if _existing:
+            _inv_id = list(_existing.keys())[0]
+            _inv = _existing[_inv_id]
+            if _inv.get("status") == "processed" and _inv.get("state"):
+                _inv["state"]["meta"]["mode"] = new_mode
+                _inv["state"]["meta"]["is_gross_up"] = new_gross
+                _inv["state"]["meta"]["it_act_rate"] = new_it_rate
+                _inv["state"] = recompute_invoice(_inv["state"])
+                _inv["xml_bytes"] = None
+                _inv["xml_status"] = "none"
+                _inv["xml_error"] = None
+        st.rerun()
+
+    st.divider()
+
+    # ── Handle file upload — create or refresh invoice record ─────────────────
+    invoices = state.get("invoices", {})
+    inv_id = list(invoices.keys())[0] if invoices else None
+    inv = invoices.get(inv_id) if inv_id else None
+
+    if uploaded_inv is not None:
+        stem = os.path.splitext(uploaded_inv.name)[0]
+        if inv_id != stem:
+            # New or different file — create a fresh record
+            record = build_invoice_record_no_excel(uploaded_inv.name, uploaded_inv.getvalue())
+            state["invoices"] = {stem: record}
+            state["single_context"] = stem
+            inv_id = stem
+            inv = record
+        # Sync the current widget values into the excel proxy on every render
+        # so that _compute_config_sig always sees up-to-date values.
+        _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
+
+    # Refresh local references after possible state mutation above
+    invoices = state.get("invoices", {})
+    inv = invoices.get(inv_id) if inv_id else None
+
+    if not inv:
+        st.info("Upload an invoice and fill in the transaction details above, then click **Process Invoice**.")
+        return
+
+    # ── Status routing ─────────────────────────────────────────────────────────
+    status = inv.get("status", "new")
+
+    if status == "new":
+        missing = []
+        if not currency:
+            missing.append("currency")
+        if not exchange_rate_valid:
+            missing.append("a valid exchange rate (> 0)")
+        if missing:
+            st.warning(f"Please provide: {', '.join(missing)} before processing.")
+        ready = not missing
+        if st.button("Process Invoice", type="primary", disabled=not ready,
+                     key=f"nex_process_btn_{epoch}"):
+            _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
+            _process_single_invoice(inv_id)
+            st.rerun()
+
+    elif status == "processing":
+        st.info("🕒 Processing...")
+        time.sleep(1)
+        st.rerun()
+
+    elif status == "failed":
+        st.error(f"Processing failed: {inv.get('error')}")
+        if st.button("Retry", type="secondary", key=f"nex_retry_btn_{epoch}"):
+            _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
+            _process_single_invoice(inv_id)
+            st.rerun()
+
+    elif status == "processed":
+        st.subheader("Review and Generate XML")
+
+        # Show transaction details card (mirrors the Excel card in single mode)
+        ex = inv.get("excel", {})
+        ex_rate = ex.get("exchange_rate")
+        ex_rate_str = f"{float(ex_rate):.4f}" if ex_rate and float(ex_rate) > 0 else "—"
+        with st.container(border=True):
+            st.markdown(f'''
+            <div class="excel-card">
+                <div><span class="label">Currency</span> <span class="arrow">→</span>
+                     <code>{ex.get("currency") or "—"}</code></div>
+                <div><span class="label">Exchange Rate</span> <span class="arrow">→</span>
+                     <code>{ex_rate_str}</code></div>
+                <div><span class="label">Deduction Date</span> <span class="arrow">→</span>
+                     <code>{ex.get("dedn_date_tds") or "—"}</code></div>
+            </div>
+            ''', unsafe_allow_html=True)
+
+        # Render the editable form (same as single mode)
+        from modules.batch_form_ui import render_invoice_tab
+        try:
+            old_form = dict(inv["state"].get("form", {}))
+            new_state = render_invoice_tab(inv["state"], show_header=False, is_single_mode=True)
+            form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+            _snap_keys = (
+                "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
+                "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
+                "BasisDeterTax", "RateTdsADtaa",
+            )
+            before = tuple(str(form.get(k) or "") for k in _snap_keys)
+            new_state = recompute_invoice(new_state)
+            form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+            after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
+            inv["state"] = new_state
+            if after != before:
+                inv["xml_bytes"] = None
+                inv["xml_status"] = "none"
+                inv["xml_error"] = None
+            state["invoices"][inv_id] = inv
+        except Exception as exc:
+            st.error(f"Rendering form failed: {exc}")
+
+        # Action buttons
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            if st.button("Generate XML", type="primary", use_container_width=True,
+                         key=f"nex_gen_xml_{epoch}"):
+                _generate_xml_for_invoice(inv_id)
+                if inv.get("xml_status") == "ok":
+                    st.success("XML generated successfully.")
+                else:
+                    st.error(f"XML generation failed: {inv.get('xml_error')}")
+        with c2:
+            if st.button("Process invoice again", type="secondary", use_container_width=True,
+                         key=f"nex_reprocess_btn_{epoch}"):
+                _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
+                _process_single_invoice(inv_id)
+                st.rerun()
+        with c3:
+            if inv.get("xml_status") == "ok" and inv.get("xml_bytes"):
+                filename_stub = (
+                    inv.get("state", {}).get("extracted", {}).get("invoice_number") or inv_id
+                ).replace(" ", "_")
+                st.download_button(
+                    "Download XML",
+                    data=inv["xml_bytes"],
+                    file_name=f"form15cb_{filename_stub}.xml",
+                    mime="application/xml",
+                    use_container_width=True,
+                )
+
+
 def main() -> None:
     _ensure_session_state()
     render_mode_switcher()
     mode = st.session_state.get("mode", "single")
     if mode == "single":
         render_single_invoice_page()
+    elif mode == "no_excel":
+        render_no_excel_invoice_page()
     else:
         render_bulk_invoice_page()
 

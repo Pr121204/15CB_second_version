@@ -103,7 +103,16 @@ PURPOSE_MASTER = {
 RULES = [
     (["r&d", "research and development", "research", "rnd"], "S1008"),
     (["royalty", "license", "licence", "licensing", "patent", "copyright"], "S0902"),
-    (["software industrialisation", "software", "saas", "hosting", "cloud", "application development", "app development"], "S0802"),
+    # S1023 software-project keywords checked BEFORE S0802/S0803 so they win.
+    (["backend", "uat", "software project", "devops", "ci/cd", "system integration",
+      "qa services", "testing services", "performance testing", "load testing",
+      "regression testing", "infrastructure setup", "application support",
+      "application management", "technical project", "release management",
+      "platform development", "platform engineering", "environment setup",
+      "environment management", "deployment services", "go-live support",
+      "prod environment", "production environment", "sprint", "hypercare",
+      "migration services", "upgrade services"], "S1023"),
+    (["software industrialisation", "saas", "application development", "app development"], "S0802"),
     (["database", "data processing", "data program", "data programs", "data processing charges", "data analytics"], "S0803"),
     (["tax service", "tax consultancy", "tax service fee", "tax progression"], "S1004"),
     (["consulting", "consultancy", "management consultancy", "business and management", "cost sharing", "transfer price", "transfer pricing"], "S1006"),
@@ -157,7 +166,26 @@ BOSCH_DETERMINISTIC_RULES = [
         "purpose_code": "S1007",
         "purpose_group": "Other Business Services",
         "nature": "MARKETING SERVICES"
-    }
+    },
+    # Software project execution / technical delivery → S1023.
+    # Wins over Data Processing (S0803) and Software Consultancy (S0802).
+    {
+        "name": "Software Project / Technical Delivery",
+        "keywords": [
+            "backend", "uat", "prod environment", "production environment",
+            "software project", "deployment services", "platform development",
+            "platform engineering", "environment setup", "environment management",
+            "devops", "ci/cd", "system integration", "qa services",
+            "quality assurance", "testing services", "performance testing",
+            "load testing", "regression testing", "infrastructure setup",
+            "application support", "application management", "technical project",
+            "release management", "sprint", "go-live support", "hypercare",
+            "migration services", "upgrade services",
+        ],
+        "purpose_code": "S1023",
+        "purpose_group": "Other Business Services",
+        "nature": "FEES FOR TECHNICAL SERVICES",
+    },
 ]
 
 GENERIC_TOKENS = ["servicebill", "service bill", "service", "invoice", "bill", "payment", "payment note", "remark", "n/a", "-"]
@@ -219,13 +247,31 @@ def rule_based_classify(normalized_text: str, line_items: Optional[List[Dict[str
 
     # 0.1 Specialized Payroll/Social Security Detection Rule
     payroll_keywords = [
-        "social security", "payroll", "salary recharge", "employee cost", 
+        "social security", "payroll", "salary recharge", "employee cost",
         "personnel cost", "service paid for other entity - person",
         "payroll allocation", "employee contribution"
     ]
     if any(kw in normalized_text for kw in payroll_keywords):
         logger.info("payroll_remittance_detected input=%r matched=S1401", normalized_text)
         return "S1401", ["payroll_rule"]
+
+    # 0.2 Software project / technical delivery detection.
+    # These keywords indicate S1023 (Other Technical Services), NOT S0803
+    # (data processing) or S0802 (software consultancy).
+    software_project_keywords = [
+        "backend", "uat", "software project", "platform development",
+        "platform engineering", "environment setup", "environment management",
+        "devops", "ci/cd", "system integration services", "qa services",
+        "quality assurance", "testing services", "performance testing",
+        "load testing", "regression testing", "infrastructure setup",
+        "application support", "application management", "technical project",
+        "release management", "sprint", "go-live support", "hypercare",
+        "prod environment", "production environment", "deployment services",
+        "migration services", "upgrade services",
+    ]
+    if any(kw in normalized_text for kw in software_project_keywords):
+        logger.info("software_project_detected input=%r matched=S1023", normalized_text)
+        return "S1023", ["software_project_rule"]
 
     scores: Dict[str, float] = {}
     evidence: Dict[str, List[str]] = {}
