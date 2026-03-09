@@ -422,6 +422,9 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     source_short = config.get("currency_short", "") or str(extracted.get("currency_short") or "").strip().upper()
     resolved_currency = resolve_currency_selection(source_short, load_currency_exact_index())
     source_nature, source_group, source_code = "missing", "missing", "missing"
+    # User control (global_controls uses "gross_up" key; _rebuild_state_from_extracted
+    # uses "is_gross_up"). Accept either so both code paths work correctly.
+    _is_gross_up = bool(config.get("gross_up", config.get("is_gross_up", False)))
     state: Dict[str, object] = {
         "meta": {
             "invoice_id": invoice_id,
@@ -429,7 +432,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
             "mode": MODE_NON_TDS if mode == MODE_NON_TDS else MODE_TDS,
             "exchange_rate": str(config.get("exchange_rate", "")),
             "source_currency_short": source_short,
-            "is_gross_up": bool(config.get("is_gross_up", False)),
+            "is_gross_up": _is_gross_up,
             "extraction_quality": str(extracted.get("_extraction_quality") or ""),
         },
         "extracted": extracted,
@@ -441,10 +444,18 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
 
     form = state["form"]
     resolved = state["resolved"]
-    
+
     # Initialize basic form fields from config/meta
     form["TaxPayGrossSecb"] = "Y" if state["meta"]["is_gross_up"] else "N"
     form["RateTdsSecB"] = str(config.get("it_act_rate") or IT_ACT_RATE_DEFAULT)
+    logger.info(
+        "gross_up_applied invoice_id=%s "
+        "user_selection=%s gemini_suggestion=%s final=%s",
+        invoice_id,
+        config.get("gross_up"),
+        extracted.get("is_gross_up"),
+        state["meta"]["is_gross_up"],
+    )
     logger.info(
         "state_build_start invoice_id=%s file=%s mode=%s source_currency=%s extracted_summary=%s",
         invoice_id,
@@ -463,7 +474,6 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     form["CurrencySecbCode"] = resolved_currency.get("code", "")
     form["RemitteeZipCode"] = "999999"
     form["RemitteeState"] = "OUTSIDE INDIA"
-    form["TaxPayGrossSecb"] = "N"
     # Seed user-selectable IT Act rate (from config override or default)
     it_rate_cfg = config.get("it_act_rate")
     form["ItActRateSelected"] = str(it_rate_cfg) if it_rate_cfg else str(IT_ACT_RATE_DEFAULT)
@@ -489,6 +499,29 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
         normalize_single_line_text(str(extracted.get("remitter_address") or ""))
     )
     beneficiary_name = normalize_single_line_text(str(extracted.get("beneficiary_name") or ""))
+
+    # Country recovery: if Gemini returned a junk/null country (e.g. "N/A"),
+    # attempt to derive the country deterministically from the raw address text
+    # before falling back to the broader inference logic.  This is cheap and
+    # catches the common case where the address ends with an explicit country
+    # name such as "..., Yokohama-shi, Kanagawa-ken 224-8601, Japan".
+    if not beneficiary_country_text and beneficiary_address:
+        try:
+            from modules.invoice_gemini_extractor import recover_country_from_address
+            recovered = recover_country_from_address(beneficiary_address)
+            if recovered:
+                logger.info(
+                    "country_recovery_from_address invoice_id=%s raw_country=%r address=%r recovered=%r",
+                    invoice_id,
+                    extracted.get("beneficiary_country_text"),
+                    beneficiary_address,
+                    recovered,
+                )
+                beneficiary_country_text = recovered
+                extracted["beneficiary_country_text"] = recovered
+        except Exception:
+            pass
+
     extraction_core_empty = not any(
         str(extracted.get(k) or "").strip()
         for k in ("remitter_name", "beneficiary_name", "invoice_number", "amount", "currency_short")

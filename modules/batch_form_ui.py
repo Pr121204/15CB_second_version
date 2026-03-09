@@ -462,10 +462,12 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
     # Session State API" warning that fires when both are set simultaneously).
     st.session_state.pop(f"{invoice_id}_grossed_up_disp", None)
 
-    # Grossed up Tax display (Read-only status display)
+    # Grossed up Tax display (Read-only status display) — always sourced from meta
+    # so it cannot be stale even if form["TaxPayGrossSecb"] was overwritten elsewhere.
+    gross_up_display = "Y" if meta.get("is_gross_up") else "N"
     st.text_input(
         "Grossed up Tax",
-        value=str(form.get("TaxPayGrossSecb") or "N"),
+        value=gross_up_display,
         disabled=True,
         key=f"{invoice_id}_grossed_up_disp"
     )

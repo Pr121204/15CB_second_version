@@ -1051,6 +1051,62 @@ def _normalize_extracted_text(value: str) -> str:
     return _fix_address_spacing(s)
 
 
+# Values that Gemini returns when it cannot extract the country — treat as blank.
+_INVALID_COUNTRY_VALUES: frozenset = frozenset({
+    "", "N/A", "NA", "N.A.", "N.A", "NONE", "UNKNOWN",
+    "NOT AVAILABLE", "NOT_AVAILABLE", "-", "--", "NULL",
+    "UNSPECIFIED", "NOT SPECIFIED", "NOT PROVIDED",
+})
+
+
+def _sanitize_country_text(raw: str) -> str:
+    """
+    Normalise a raw country string from Gemini.
+    Returns empty string for any junk/sentinel value so that downstream
+    fallback logic is correctly triggered.
+    """
+    s = normalize_single_line_text(str(raw or "")).strip()
+    if s.upper() in _INVALID_COUNTRY_VALUES:
+        return ""
+    return s
+
+
+def recover_country_from_address(address: str) -> str:
+    """
+    Deterministically extract a country name from a raw address string.
+
+    Strategy — try each rule in order and return the first hit:
+      1. Last comma-separated token if it matches a known country name.
+      2. Last space-separated token of the whole string if it matches.
+
+    The match is case-insensitive against the address_parser country suffix
+    list so we reuse the same vocabulary.
+    """
+    if not address:
+        return ""
+
+    from modules.address_parser import _COUNTRY_SUFFIXES  # already sorted longest-first
+
+    # Build a fast lookup set (upper-cased)
+    country_set = {s.upper() for s in _COUNTRY_SUFFIXES}
+
+    # Rule 1 — last comma-token
+    parts = [p.strip(" ,.;") for p in address.split(",") if p.strip()]
+    if parts:
+        candidate = parts[-1].upper()
+        if candidate in country_set:
+            return parts[-1].strip().title()
+
+    # Rule 2 — last space-token of full string (handles "... Japan" no-comma)
+    tokens = address.strip().split()
+    if tokens:
+        candidate = tokens[-1].strip(".,;").upper()
+        if candidate in country_set:
+            return tokens[-1].strip(".,;").title()
+
+    return ""
+
+
 def _normalize_extracted_address(value: str) -> str:
     return fix_concatenated_words(_normalize_extracted_text(str(value or "")))
 
@@ -1853,7 +1909,7 @@ def extract_invoice_core_fields(text: str, invoice_id: str = "", excel_data: Opt
         )
     out["remitter_name"] = _normalize_company_name(str(parsed.get("remitter_name") or "").strip())
     out["remitter_address"] = _normalize_extracted_address(str(parsed.get("remitter_address") or "").strip())
-    out["remitter_country_text"] = _normalize_extracted_text(str(parsed.get("remitter_country") or "").strip())
+    out["remitter_country_text"] = _sanitize_country_text(str(parsed.get("remitter_country") or ""))
     # CHANGE 1: Reject email domains as beneficiary_name
     beneficiary_raw = str(parsed.get("beneficiary_name") or "").strip()
     if beneficiary_raw and _is_email_domain(beneficiary_raw):
@@ -1862,7 +1918,7 @@ def extract_invoice_core_fields(text: str, invoice_id: str = "", excel_data: Opt
     else:
         out["beneficiary_name"] = _normalize_company_name(beneficiary_raw)
     out["beneficiary_address"] = _normalize_extracted_address(str(parsed.get("beneficiary_address") or "").strip())
-    out["beneficiary_country_text"] = _normalize_extracted_text(str(parsed.get("beneficiary_country") or "").strip())
+    out["beneficiary_country_text"] = _sanitize_country_text(str(parsed.get("beneficiary_country") or ""))
     out["invoice_number"] = str(parsed.get("invoice_number") or "").strip()
     out["invoice_date_raw"] = str(parsed.get("invoice_date") or "").strip()
     # Keep Gemini as primary extraction, but recover from OCR text when it misses date/number.
@@ -2042,10 +2098,10 @@ def extract_invoice_core_fields_from_image(
         # Extract and normalize fields
         out["remitter_name"] = _normalize_company_name(str(parsed.get("remitter_name") or "").strip())
         out["remitter_address"] = _normalize_extracted_address(str(parsed.get("remitter_address") or "").strip())
-        out["remitter_country_text"] = _normalize_extracted_text(str(parsed.get("remitter_country") or "").strip())
+        out["remitter_country_text"] = _sanitize_country_text(str(parsed.get("remitter_country") or ""))
         out["beneficiary_name"] = _normalize_company_name(str(parsed.get("beneficiary_name") or "").strip())
         out["beneficiary_address"] = _normalize_extracted_address(str(parsed.get("beneficiary_address") or "").strip())
-        out["beneficiary_country_text"] = _normalize_extracted_text(str(parsed.get("beneficiary_country") or "").strip())
+        out["beneficiary_country_text"] = _sanitize_country_text(str(parsed.get("beneficiary_country") or ""))
         out["invoice_number"] = str(parsed.get("invoice_number") or "").strip()
         out["invoice_date_raw"] = str(parsed.get("invoice_date") or "").strip()
         
@@ -2233,10 +2289,10 @@ def extract_invoice_core_fields_from_multi_images(
         # Field extraction logic (same as single image but unified)
         out["remitter_name"] = _normalize_company_name(str(parsed.get("remitter_name") or "").strip())
         out["remitter_address"] = _normalize_extracted_address(str(parsed.get("remitter_address") or "").strip())
-        out["remitter_country_text"] = _normalize_extracted_text(str(parsed.get("remitter_country") or "").strip())
+        out["remitter_country_text"] = _sanitize_country_text(str(parsed.get("remitter_country") or ""))
         out["beneficiary_name"] = _normalize_company_name(str(parsed.get("beneficiary_name") or "").strip())
         out["beneficiary_address"] = _normalize_extracted_address(str(parsed.get("beneficiary_address") or "").strip())
-        out["beneficiary_country_text"] = _normalize_extracted_text(str(parsed.get("beneficiary_country") or "").strip())
+        out["beneficiary_country_text"] = _sanitize_country_text(str(parsed.get("beneficiary_country") or ""))
         out["invoice_number"] = str(parsed.get("invoice_number") or "").strip()
         out["invoice_date_raw"] = str(parsed.get("invoice_date") or "").strip()
         

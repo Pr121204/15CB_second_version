@@ -190,57 +190,74 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
 
     # --- PRIORITY 1: GROSS-UP FLOW ---
     if mode == MODE_TDS and is_gross_up:
-        effective_rate, basis_text = get_effective_it_rate(selected_it_rate)
-        # R is the percentage
-        r = Decimal(str(effective_rate))
+        it_factor, basis_text = get_effective_it_rate(selected_it_rate)
+        it_rate_dec = Decimal(str(it_factor))
 
-        if r < 100:
-            # 1. GrossINR_exact = NetINR * 100 / (100 - R)
-            gross_inr_exact = invoice_inr_exact * Decimal("100") / (Decimal("100") - r)
-            # 2. Round Gross INR to nearest rupee
+        # Use DTAA rate for gross-up when available; fall back to IT Act rate.
+        dtaa_available = dtaa_rate_percent is not None
+        gross_rate_dec = Decimal(str(dtaa_rate_percent)) if dtaa_available else it_rate_dec
+
+        if gross_rate_dec < 100:
+            # Net → Gross: gross_inr = net_inr * 100 / (100 - rate)
+            gross_inr_exact = invoice_inr_exact * Decimal("100") / (Decimal("100") - gross_rate_dec)
             gross_inr_rounded = gross_inr_exact.quantize(Decimal("1"), rounding=ROUND_HALF_UP)
 
-            # 3. TDSINR_exact = GrossINR_rounded * R / 100
-            tds_inr_exact = gross_inr_rounded * r / Decimal("100")
-            # 4. TDSINR_rounded = nearest rupee
+            # TDS at gross-up rate on grossed-up INR
+            tds_inr_exact = gross_inr_rounded * gross_rate_dec / Decimal("100")
             tds_inr_rounded = tds_inr_exact.quantize(Decimal("1"), rounding=ROUND_HALF_UP)
 
-            # 5. TDS_FCY = TDSINR_exact / FX (rounded 2dp)
+            # IT Act liability at IT rate on grossed-up INR (may differ from TDS when DTAA applies)
+            it_liab_exact = gross_inr_rounded * it_rate_dec / Decimal("100")
+            it_liab_rounded = it_liab_exact.quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+
+            # TDS in FCY: derived from tds_inr / fx (more accurate than gross_fcy * rate)
             if exchange_rate_dec > 0:
                 tds_fcy = (tds_inr_exact / exchange_rate_dec).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+                # gross_fcy = net_fcy / (1 - rate/100); actual = gross - tds = original net
+                gross_fcy_dec = invoice_fcy / (Decimal("1") - gross_rate_dec / Decimal("100"))
+                actual_fcy = max(gross_fcy_dec - tds_fcy, Decimal("0"))
             else:
                 tds_fcy = Decimal("0.00")
+                actual_fcy = invoice_fcy
 
-            # AmtIncChrgIt should align to the actual GROSSED UP INR amount.
             form["AmtIncChrgIt"] = str(int(gross_inr_rounded))
-            form["TaxLiablIt"] = str(int(tds_inr_rounded))
+            form["TaxLiablIt"] = str(int(it_liab_rounded))
             form["AmtPayIndianTds"] = str(int(tds_inr_rounded))
             form["TaxPayGrossSecb"] = "Y"
-            
-            # FCY amounts format with exactly 2 decimal places where needed
             form["AmtPayForgnTds"] = f"{tds_fcy:.2f}"
-            actual_fcy = max(invoice_fcy - tds_fcy, Decimal("0"))
             form["ActlAmtTdsForgn"] = _fmt_num(float(actual_fcy))
-            
             form["BasisDeterTax"] = basis_text
-            form["RateTdsSecB"] = "{:.2f}".format(effective_rate)
-            form.setdefault("RateTdsSecbFlg", RATE_TDS_SECB_FLG_TDS)
+            form["RateTdsSecB"] = _fmt_num(float(gross_rate_dec))
             form.setdefault("RemittanceCharIndia", "Y")
-            form["OtherRemDtaa"] = "Y"
 
-            # Clear DTAA fallback paths entirely since Gross-up implies IT Act exclusively
-            form["TaxIncDtaa"] = ""
-            form["TaxLiablDtaa"] = ""
-            form["RateTdsADtaa"] = ""
+            if dtaa_available:
+                # DTAA gross-up: populate DTAA fields with grossed-up amounts
+                form["TaxIncDtaa"] = str(int(gross_inr_rounded))
+                form["TaxLiablDtaa"] = str(int(tds_inr_rounded))
+                form["RateTdsADtaa"] = str(int(round(float(gross_rate_dec))))
+                form["OtherRemDtaa"] = "N"
+                form["RateTdsSecbFlg"] = RATE_TDS_SECB_FLG_DTAA
+            else:
+                # IT Act only gross-up: clear DTAA fields
+                form["TaxIncDtaa"] = ""
+                form["TaxLiablDtaa"] = ""
+                form["RateTdsADtaa"] = ""
+                form["OtherRemDtaa"] = "Y"
+                form.setdefault("RateTdsSecbFlg", RATE_TDS_SECB_FLG_TDS)
 
             logger.info(
-                "recompute_gross_up_done invoice_id=%s rate=%s net_inr_exact=%s gross_inr_rounded=%s tds_inr_exact=%s tds_fcy=%s",
+                "recompute_tds_done invoice_id=%s dtaa_claimed=%s values=%s",
                 invoice_id,
-                effective_rate,
-                invoice_inr_exact,
-                gross_inr_rounded,
-                tds_inr_exact,
-                tds_fcy,
+                dtaa_available,
+                {
+                    "TaxLiablIt": form.get("TaxLiablIt", ""),
+                    "TaxIncDtaa": form.get("TaxIncDtaa", ""),
+                    "TaxLiablDtaa": form.get("TaxLiablDtaa", ""),
+                    "AmtPayForgnTds": form.get("AmtPayForgnTds", ""),
+                    "AmtPayIndianTds": form.get("AmtPayIndianTds", ""),
+                    "RateTdsSecB": form.get("RateTdsSecB", ""),
+                    "ActlAmtTdsForgn": form.get("ActlAmtTdsForgn", ""),
+                },
             )
 
     elif mode == MODE_TDS and (dtaa_rate_percent is not None or form.get("dtaa_mode") == "it_act"):
@@ -470,12 +487,19 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
     out["NameAcctnt"] = str(form.get("NameAcctnt") or CA_DEFAULTS["NameAcctnt"])
 
     # Enforce canonical field relationships to match utility output.
-    out["TaxPayGrossSecb"] = "N"
-    out["AmtIncChrgIt"] = str(out.get("AmtPayIndRem") or "")
+    is_gross_up_xml = bool(meta.get("is_gross_up"))
+    out["TaxPayGrossSecb"] = "Y" if is_gross_up_xml else "N"
+    # For gross-up, AmtIncChrgIt is the grossed-up INR already set by recompute_invoice.
+    # Only override with AmtPayIndRem for the non-gross-up path.
+    if not is_gross_up_xml:
+        out["AmtIncChrgIt"] = str(out.get("AmtPayIndRem") or "")
 
     gross_fcy = _to_float(out.get("AmtPayForgnRem", ""))
     tds_fcy = _to_float(out.get("AmtPayForgnTds", ""))
-    if mode == MODE_TDS and gross_fcy is not None and tds_fcy is not None:
+    # For gross-up, ActlAmtTdsForgn is already set correctly by recompute_invoice
+    # (= gross_fcy - tds_fcy = original net). Do not recalculate here or it becomes
+    # AmtPayForgnRem(net) - tds_fcy which gives the wrong (too-low) value.
+    if mode == MODE_TDS and not is_gross_up_xml and gross_fcy is not None and tds_fcy is not None:
         net_fcy = max(gross_fcy - tds_fcy, 0.0)
         out["ActlAmtTdsForgn"] = _fmt_num(net_fcy)
 
