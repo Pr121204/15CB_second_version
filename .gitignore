@@ -6,6 +6,7 @@ data/input/
 data/output/
 data/logs/
 .streamlit/secrets.toml
+.claude/
 tests_chatgpt/
 tests_claude/
 tests/

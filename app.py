@@ -1,50 +1,10 @@
 from __future__ import annotations
 
-# """
-# Streamlit application entrypoint for the enhanced Form 15CB Batch Generator.
-
-# This version supersedes the original application by supporting batch
-# processing of invoices contained within a single ZIP archive accompanied
-# by an Excel spreadsheet.  The new workflow allows users to upload a ZIP
-# file, automatically derive the currency, exchange rate and date of
-# deduction from the spreadsheet, set global defaults for TDS/Non‑TDS
-# mode and gross‑up, and then process all invoices in one click.  Per
-# invoice overrides remain available for exceptional cases, and XML
-# generation is supported both individually and in batch.
-
-# Key enhancements:
-
-# * ZIP ingestion: the user uploads a single ZIP archive containing one
-#   Excel (.xlsx) file and one or more invoice documents (.pdf/.jpg/.png).
-#   The application reads the Excel to fetch currency, INR/FCY amounts,
-#   calculates the exchange rate and extracts the posting date for the
-#   TDS deduction.
-# * Global controls: a pair of toggles allow the CA to set the default
-#   TDS/Non‑TDS mode and whether gross‑up applies.  These values are
-#   automatically applied to all invoices but can be overridden per
-#   invoice.
-# * Per‑invoice overrides: within each invoice tab the user can change
-#   the mode and gross‑up settings if a particular invoice deviates from
-#   the batch default.  Changing the global defaults clears all
-#   overrides and recomputes derived values without re‑calling Gemini.
-# * Robust date parsing: the ``Posting Date`` column of the Excel may
-#   contain serial numbers, dates or strings in multiple formats.  The
-#   parsed date populates ``DednDateTds`` in the XML.  Proposed
-#   remittance date remains today+15 days.
-# * Partial downloads: generating XML for all invoices includes only
-#   those that have been processed successfully; invoices that failed or
-#   remain unprocessed are skipped with a summary explaining why.
-
-# Existing functionality—such as invoice text extraction via Gemini,
-# master data lookup, tax computation and XML generation—are preserved
-# and reused from the original modules.
-# """
-
 import io
 import os
 import time
 from datetime import datetime
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import streamlit as st
 
@@ -236,7 +196,7 @@ def _is_valid_iso_date(value: str) -> bool:
         return False
 
 
-def _get_invoice_dedn_date(inv: Dict[str, object]) -> str:
+def _get_invoice_dedn_date(inv: Dict[str, Any]) -> str:
     excel = inv.get("excel") or {}
     if isinstance(excel, dict):
         return str(excel.get("dedn_date_tds") or "").strip()
@@ -247,7 +207,7 @@ def _get_invoice_dedn_date(inv: Dict[str, object]) -> str:
 # Helper functions for overrides and recomputation
 # -----------------------------------------------------------------------------
 
-def _effective_mode(inv: Dict[str, object]) -> str:
+def _effective_mode(inv: Dict[str, Any]) -> str:
     """Resolve the effective mode (TDS/Non‑TDS) for an invoice.
     Overrides the global setting only if an override is explicitly set in the inv record
     (legacy support, though UI no longer sets these).
@@ -255,7 +215,7 @@ def _effective_mode(inv: Dict[str, object]) -> str:
     return inv.get("mode_override") or _get_current_state()["global_controls"].get("mode", MODE_TDS)
 
 
-def _effective_gross(inv: Dict[str, object]) -> bool:
+def _effective_gross(inv: Dict[str, Any]) -> bool:
     """Resolve the effective gross‑up flag for an invoice."""
     mode = _effective_mode(inv)
     if mode == MODE_NON_TDS:
@@ -266,7 +226,7 @@ def _effective_gross(inv: Dict[str, object]) -> bool:
     return bool(_get_current_state()["global_controls"].get("gross_up", False))
 
 
-def _effective_it_rate(inv: Dict[str, object]) -> float:
+def _effective_it_rate(inv: Dict[str, Any]) -> float:
     """Resolve the effective IT Act rate for an invoice."""
     override = inv.get("it_act_rate_override")
     if override is not None:
@@ -274,7 +234,7 @@ def _effective_it_rate(inv: Dict[str, object]) -> float:
     return float(_get_current_state()["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT))
 
 
-def _compute_config_sig(inv: Dict[str, object]) -> tuple:
+def _compute_config_sig(inv: Dict[str, Any]) -> tuple:
     """Signature of config inputs that affect state rebuild from extracted data.
 
     Includes mode, gross-up, IT rate, currency, exchange rate and deduction
@@ -302,7 +262,7 @@ def _compute_config_sig(inv: Dict[str, object]) -> tuple:
     )
 
 
-def _rebuild_state_from_extracted(inv_id: str, inv: Dict[str, object]) -> None:
+def _rebuild_state_from_extracted(inv_id: str, inv: Dict[str, Any]) -> None:
     """Rebuild invoice state from existing inv["extracted"] (NO Gemini calls).
 
     Clears XML because computed values may change.
@@ -390,7 +350,7 @@ import threading
 from streamlit.runtime.scriptrunner import add_script_run_ctx
 
 
-def _resolve_expected_billing_currency(config: Dict[str, object], extracted: Dict[str, str]) -> str:
+def _resolve_expected_billing_currency(config: Dict[str, Any], extracted: Dict[str, str]) -> str:
     source_currency = str(config.get("currency_short") or "").strip().upper()
     if source_currency:
         return source_currency
@@ -399,7 +359,7 @@ def _resolve_expected_billing_currency(config: Dict[str, object], extracted: Dic
 
 def _apply_safe_deterministic_amount_override(
     *,
-    extracted: Dict[str, str],
+    extracted: Dict[str, Any],
     pages_text: List[str],
     expected_currency: str,
     invoice_id: str,
@@ -546,14 +506,12 @@ def _apply_safe_deterministic_amount_override(
 
 def _process_invoice_worker(inv: dict, inv_id: str, file_bytes: bytes, file_name: str, config: dict) -> None:
     try:
-        extracted: Dict[str, str] = {}
+        extracted: Dict[str, Any] = {}
         if file_name.lower().endswith(".pdf"):
             try:
-                pages_text = extract_text_from_pdf(io.BytesIO(file_bytes), return_pages=True)
-                if pages_text:
-                    text = "\n".join(pages_text)
-                else:
-                    text = ""
+                _pt = extract_text_from_pdf(io.BytesIO(file_bytes), return_pages=True)
+                pages_text: List[str] = list(_pt) if isinstance(_pt, list) else []
+                text = "\n".join(pages_text) if pages_text else ""
             except Exception:
                 logger.exception("pdf_text_extraction_failed file=%s", file_name)
                 pages_text = []
@@ -690,17 +648,20 @@ def _process_invoice_worker(inv: dict, inv_id: str, file_bytes: bytes, file_name
                     inv_id, stem,
                 )
 
-        # Prefill remitter from master when Gemini returned no remitter name
-        if not extracted.get("remitter_name"):
-            from modules.master_lookups import load_bank_details
-            bank_entries = load_bank_details()
-            if len(bank_entries) == 1:
-                default_rem = bank_entries[0]
-                extracted["remitter_name"] = default_rem.get("name", "")
-                logger.info(
-                    "remitter_prefilled_from_default invoice_id=%s remitter=%s",
-                    inv_id, extracted["remitter_name"],
-                )
+        # Prefill remitter from master when Gemini returned no remitter name,
+        # or when Gemini's name doesn't match any known master entry (hallucination
+        # from scanned PDFs — e.g. "INNOVARE..." instead of the actual Bosch entity).
+        from modules.master_lookups import load_bank_details, match_remitter
+        bank_entries = load_bank_details()
+        gemini_remitter = extracted.get("remitter_name", "")
+        remitter_matched = bool(gemini_remitter and match_remitter(gemini_remitter))
+        if (not gemini_remitter or not remitter_matched) and len(bank_entries) == 1:
+            default_rem = bank_entries[0]
+            extracted["remitter_name"] = default_rem.get("name", "")
+            logger.info(
+                "remitter_prefilled_from_default invoice_id=%s gemini_name=%r remitter=%s",
+                inv_id, gemini_remitter, extracted["remitter_name"],
+            )
 
         # Build state and recompute
         state = build_invoice_state(inv_id, file_name, extracted, config)
@@ -733,8 +694,18 @@ def _process_invoice_worker(inv: dict, inv_id: str, file_bytes: bytes, file_name
 
 
 
-def _process_single_invoice(inv_id: str) -> None:
-    """Run extraction, state building and recompute for one invoice in a background thread."""
+def _process_single_invoice(inv_id: str, *, wait: bool = False) -> None:
+    """Run extraction, state building and recompute for one invoice.
+
+    When *wait=True* the function joins the worker thread before returning,
+    making it synchronous from the caller's perspective.  Use this for
+    single-invoice flows so the UI can wrap the call in st.spinner and skip
+    the time.sleep / st.rerun polling loop entirely.
+
+    When *wait=False* (default) the thread is left running in the background;
+    this is what the batch mode needs so multiple invoices are processed in
+    parallel.
+    """
     logger.info("process_single_invoice_started invoice_id=%s", inv_id)
     state = _get_current_state()
     invoices = state["invoices"]
@@ -762,6 +733,8 @@ def _process_single_invoice(inv_id: str) -> None:
     )
     add_script_run_ctx(t)
     t.start()
+    if wait:
+        t.join()
 
 
 def _generate_xml_for_invoice(inv_id: str) -> None:
@@ -911,16 +884,16 @@ def render_bulk_invoice_page() -> None:
             st.rerun()
 
         # Batch actions
-        def _is_pending(inv: Dict[str, object]) -> bool:
+        def _is_pending(inv: Dict[str, Any]) -> bool:
             return inv.get("status") not in ("processed", "failed")
 
-        def _is_processed(inv: Dict[str, object]) -> bool:
+        def _is_processed(inv: Dict[str, Any]) -> bool:
             return inv.get("status") == "processed"
 
-        def _is_xml_missing(inv: Dict[str, object]) -> bool:
+        def _is_xml_missing(inv: Dict[str, Any]) -> bool:
             return inv.get("xml_status") != "ok" or not inv.get("xml_bytes")
 
-        def _is_xml_ready(inv: Dict[str, object]) -> bool:
+        def _is_xml_ready(inv: Dict[str, Any]) -> bool:
             return inv.get("xml_status") == "ok" and bool(inv.get("xml_bytes"))
 
         action_col1, action_col2, action_col3, action_col4 = st.columns([2, 2, 2, 2])
@@ -1032,7 +1005,7 @@ def render_bulk_invoice_page() -> None:
 
         tab_ids_all = list(invoices.keys())
 
-        def _matches_filter(inv: Dict[str, object]) -> bool:
+        def _matches_filter(inv: Dict[str, Any]) -> bool:
             if filter_choice == "All":
                 return True
             if filter_choice == "Not processed":
@@ -1047,7 +1020,8 @@ def render_bulk_invoice_page() -> None:
                 if _effective_mode(inv) != MODE_TDS:
                     return False
                 ex = inv.get("excel", {}) or {}
-                state_meta = (inv.get("state", {}) or {}).get("meta", {}) if isinstance(inv.get("state"), dict) else {}
+                _inv_state = inv.get("state")
+                state_meta: Dict[str, Any] = _inv_state.get("meta", {}) if isinstance(_inv_state, dict) else {}
                 flag = bool((state_meta or {}).get("dedn_date_missing"))
                 return flag or not _is_valid_iso_date(str(ex.get("dedn_date_tds") or ""))
             return True
@@ -1158,7 +1132,8 @@ def render_bulk_invoice_page() -> None:
                 bc1, bc2, bc3 = st.columns([2, 2, 2])
                 with bc1:
                     if st.button("Process this invoice", key=f"process_{inv_id}"):
-                        _process_single_invoice(inv_id)
+                        with st.spinner("Processing..."):
+                            _process_single_invoice(inv_id, wait=True)
                         if invoices[inv_id]["status"] == "processed":
                             st.success("Processed successfully.")
                         else:
@@ -1214,14 +1189,14 @@ def render_bulk_invoice_page() -> None:
                     # Render the form using existing batch_form_ui helper
                     from modules.batch_form_ui import render_invoice_tab
                     try:
-                        old_form = dict(inv["state"].get("form", {}))
-                        new_state = render_invoice_tab(inv["state"], show_header=False)
-                        new_form = new_state.get("form", {})
+                        old_form: Dict[str, Any] = dict(inv["state"].get("form", {}))
+                        new_state: Dict[str, Any] = render_invoice_tab(inv["state"], show_header=False)
+                        new_form: Dict[str, Any] = new_state.get("form", {})
                         for k in ["CountryRemMadeSecb", "NatureRemCategory", "RevPurCategory", "RevPurCode", "RateTdsADtaa", "BasisDeterTax", "TaxPayGrossSecb"]:
                             if k in new_form and k in old_form and new_form[k] != old_form[k]:
                                 logger.info("ui_field_changed invoice_id=%s field=%s old=%r new=%r", inv_id, k, old_form[k], new_form[k])
                         # Snapshot key computed fields before recompute
-                        form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                        form: Dict[str, Any] = new_state.get("form", {}) if isinstance(new_state, dict) else {}
                         _snap_keys = (
                             "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
                             "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
@@ -1230,7 +1205,7 @@ def render_bulk_invoice_page() -> None:
                         before = tuple(str(form.get(k) or "") for k in _snap_keys)
                         # Recompute tax fields in case user edits (e.g. DTAA rate)
                         new_state = recompute_invoice(new_state)
-                        form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                        form_after: Dict[str, Any] = new_state.get("form", {}) if isinstance(new_state, dict) else {}
                         after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
                         inv["state"] = new_state
                         # Only clear XML when computed values actually changed
@@ -1466,14 +1441,11 @@ def render_single_invoice_page() -> None:
             pass # Config is now handled by the global controls at the top of the page
                 
             if st.button("Process Invoice", type="primary"):
-                logger.info("process_invoice_clicked invoice_id=%s mode=%s gross=%s it_rate=%s", 
+                logger.info("process_invoice_clicked invoice_id=%s mode=%s gross=%s it_rate=%s",
                             inv_id, state["global_controls"]["mode"], state["global_controls"]["gross_up"], state["global_controls"]["it_act_rate"])
-                _process_single_invoice(inv_id)
+                with st.spinner("Processing invoice..."):
+                    _process_single_invoice(inv_id, wait=True)
                 st.rerun()
-        elif inv["status"] == "processing":
-            st.info("🕒 Processing...")
-            time.sleep(1)
-            st.rerun()
         elif inv["status"] == "failed":
             st.error(f"Processing failed: {inv.get('error')}")
         elif inv["status"] == "processed":
@@ -1496,18 +1468,18 @@ def render_single_invoice_page() -> None:
             # Render the invoice form for editing
             from modules.batch_form_ui import render_invoice_tab
             try:
-                old_form = dict(inv["state"].get("form", {}))
-                new_state = render_invoice_tab(inv["state"], show_header=False, is_single_mode=True)
-                new_form = new_state.get("form", {})
-                
+                old_form: Dict[str, Any] = dict(inv["state"].get("form", {}))
+                new_state: Dict[str, Any] = render_invoice_tab(inv["state"], show_header=False, is_single_mode=True)
+                new_form: Dict[str, Any] = new_state.get("form", {})
+
                 # Log field changes
                 for k in ["CountryRemMadeSecb", "NatureRemCategory", "RevPurCategory", "RevPurCode", "RateTdsADtaa", "BasisDeterTax", "TaxPayGrossSecb", "AmtPayForgnRem", "AmtPayForgnTds"]:
                     if k in new_form and k in old_form and new_form[k] != old_form[k]:
                         logger.info("ui_field_edited invoice_id=%s field=%s value=%r", inv_id, k, new_form[k])
                         if k in ["AmtPayForgnRem", "AmtPayForgnTds", "RateTdsADtaa", "CountryRemMadeSecb"]:
                             logger.info("recompute_triggered_by_field_edit invoice_id=%s field=%s", inv_id, k)
-                
-                form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+
+                form: Dict[str, Any] = new_state.get("form", {}) if isinstance(new_state, dict) else {}
                 _snap_keys = (
                     "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
                     "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
@@ -1515,7 +1487,7 @@ def render_single_invoice_page() -> None:
                 )
                 before = tuple(str(form.get(k) or "") for k in _snap_keys)
                 new_state = recompute_invoice(new_state)
-                form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                form_after: Dict[str, Any] = new_state.get("form", {}) if isinstance(new_state, dict) else {}
                 after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
                 inv["state"] = new_state
                 if after != before:
@@ -1538,7 +1510,8 @@ def render_single_invoice_page() -> None:
             with c2:
                 if st.button("Process invoice again", type="secondary", use_container_width=True):
                     logger.info("button_clicked label='Process invoice again' invoice_id=%s", inv_id)
-                    _process_single_invoice(inv_id)
+                    with st.spinner("Processing invoice..."):
+                        _process_single_invoice(inv_id, wait=True)
                     st.rerun()
             with c3:
                 if inv.get("xml_status") == "ok" and inv.get("xml_bytes"):
@@ -1596,7 +1569,7 @@ def render_no_excel_invoice_page() -> None:
             state["ui_epoch"] = epoch + 1
             # Remove all nex_ widget keys so widgets reset to defaults on next render
             for k in list(st.session_state.keys()):
-                if k.startswith("nex_"):
+                if isinstance(k, str) and k.startswith("nex_"):
                     del st.session_state[k]
             st.rerun()
 
@@ -1649,9 +1622,10 @@ def render_no_excel_invoice_page() -> None:
 
     with col_c:
         dedn_date_input = st.date_input(
-            "Date of Deduction of TDS",
+            "Date of Deduction of TDS *",
             value=None,
             key=f"nex_dedn_date_{epoch}",
+            help="Required in TDS mode to generate XML.",
         )
         dedn_date_iso = dedn_date_input.isoformat() if dedn_date_input else ""
 
@@ -1735,11 +1709,14 @@ def render_no_excel_invoice_page() -> None:
             inv = record
         # Sync the current widget values into the excel proxy on every render
         # so that _compute_config_sig always sees up-to-date values.
-        _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
+        if inv is not None:
+            _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
 
     # Refresh local references after possible state mutation above
     invoices = state.get("invoices", {})
     inv = invoices.get(inv_id) if inv_id else None
+    # Narrow inv_id: if inv is not None, inv_id must be a valid str key.
+    inv_id = str(inv_id) if inv_id is not None else ""
 
     if not inv:
         st.info("Upload an invoice and fill in the transaction details above, then click **Process Invoice**.")
@@ -1754,25 +1731,24 @@ def render_no_excel_invoice_page() -> None:
             missing.append("currency")
         if not exchange_rate_valid:
             missing.append("a valid exchange rate (> 0)")
+        if new_mode == MODE_TDS and not dedn_date_iso:
+            missing.append("date of deduction of TDS")
         if missing:
             st.warning(f"Please provide: {', '.join(missing)} before processing.")
         ready = not missing
         if st.button("Process Invoice", type="primary", disabled=not ready,
                      key=f"nex_process_btn_{epoch}"):
             _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
-            _process_single_invoice(inv_id)
+            with st.spinner("Processing invoice..."):
+                _process_single_invoice(inv_id, wait=True)
             st.rerun()
-
-    elif status == "processing":
-        st.info("🕒 Processing...")
-        time.sleep(1)
-        st.rerun()
 
     elif status == "failed":
         st.error(f"Processing failed: {inv.get('error')}")
         if st.button("Retry", type="secondary", key=f"nex_retry_btn_{epoch}"):
             _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
-            _process_single_invoice(inv_id)
+            with st.spinner("Processing invoice..."):
+                _process_single_invoice(inv_id, wait=True)
             st.rerun()
 
     elif status == "processed":
@@ -1797,9 +1773,9 @@ def render_no_excel_invoice_page() -> None:
         # Render the editable form (same as single mode)
         from modules.batch_form_ui import render_invoice_tab
         try:
-            old_form = dict(inv["state"].get("form", {}))
-            new_state = render_invoice_tab(inv["state"], show_header=False, is_single_mode=True)
-            form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+            old_form: Dict[str, Any] = dict(inv["state"].get("form", {}))
+            new_state: Dict[str, Any] = render_invoice_tab(inv["state"], show_header=False, is_single_mode=True)
+            form: Dict[str, Any] = new_state.get("form", {}) if isinstance(new_state, dict) else {}
             _snap_keys = (
                 "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
                 "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
@@ -1809,14 +1785,16 @@ def render_no_excel_invoice_page() -> None:
             # Sync the current exchange rate widget value into meta so recompute
             # always uses the exact rate the user has entered (not the stale value
             # from the original processing run).
-            _cur_ex = inv.get("excel", {})
+            _cur_ex: Dict[str, Any] = inv.get("excel", {})
             _cur_rate = _cur_ex.get("exchange_rate")
             if _cur_rate and float(_cur_rate) > 0:
-                new_state["meta"]["exchange_rate"] = str(float(_cur_rate))
-                new_state["meta"]["source_currency_short"] = str(_cur_ex.get("currency") or new_state["meta"].get("source_currency_short") or "")
-                new_state["meta"]["tds_deduction_date"] = str(_cur_ex.get("dedn_date_tds") or new_state["meta"].get("tds_deduction_date") or "")
+                _meta: Dict[str, Any] = new_state.get("meta", {})
+                _meta["exchange_rate"] = str(float(_cur_rate))
+                _meta["source_currency_short"] = str(_cur_ex.get("currency") or _meta.get("source_currency_short") or "")
+                _meta["tds_deduction_date"] = str(_cur_ex.get("dedn_date_tds") or _meta.get("tds_deduction_date") or "")
+                new_state["meta"] = _meta
             new_state = recompute_invoice(new_state)
-            form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+            form_after: Dict[str, Any] = new_state.get("form", {}) if isinstance(new_state, dict) else {}
             after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
             inv["state"] = new_state
             if after != before:
@@ -1841,13 +1819,13 @@ def render_no_excel_invoice_page() -> None:
             if st.button("Process invoice again", type="secondary", use_container_width=True,
                          key=f"nex_reprocess_btn_{epoch}"):
                 _nex_write_excel_proxy(inv, currency, exchange_rate, dedn_date_iso)
-                _process_single_invoice(inv_id)
+                with st.spinner("Processing invoice..."):
+                    _process_single_invoice(inv_id, wait=True)
                 st.rerun()
         with c3:
             if inv.get("xml_status") == "ok" and inv.get("xml_bytes"):
-                filename_stub = (
-                    inv.get("state", {}).get("extracted", {}).get("invoice_number") or inv_id
-                ).replace(" ", "_")
+                _inv_no = inv.get("state", {}).get("extracted", {}).get("invoice_number") or inv_id or ""
+                filename_stub = str(_inv_no).replace(" ", "_")
                 st.download_button(
                     "Download XML",
                     data=inv["xml_bytes"],

@@ -280,6 +280,30 @@ def build_invoice_registry(df: pd.DataFrame, invoice_files: Iterable[Tuple[str, 
     return invoices
 
 
+def _extract_excel_metadata(row: dict) -> Dict[str, object]:
+    """Extract the ``excel`` sub-dict from a single Excel row dict.
+
+    Mirrors the per-row extraction logic inside ``build_invoice_registry``.
+    Used by the single-invoice re-upload flow in app.py.
+    """
+    currency = str(row.get("Document currency") or "").strip().upper()
+    if currency == "NAN":
+        currency = ""
+    fcy_amount = _to_float(row.get("Amount in doc. curr."))
+    inr_amount = _to_float(row.get("Amount in local currency"))
+    exchange_rate = abs(inr_amount / fcy_amount) if fcy_amount not in (0, 0.0) else 0.0
+    posting_raw = row.get("Posting Date")
+    dedn_date = parse_excel_date(posting_raw)
+    return {
+        "currency": currency,
+        "fcy_amount": fcy_amount,
+        "inr_amount": inr_amount,
+        "exchange_rate": exchange_rate,
+        "posting_date_raw": posting_raw,
+        "dedn_date_tds": dedn_date,
+    }
+
+
 def build_invoice_record_no_excel(filename: str, file_bytes: bytes) -> Dict[str, object]:
     """Build a single invoice record for No-Excel mode.
 

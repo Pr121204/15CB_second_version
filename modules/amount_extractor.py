@@ -6,16 +6,69 @@ logger = logging.getLogger(__name__)
 
 # Ordered from most explicit/reliable to least.
 _AMOUNT_VALUE_RE = r"([0-9]{1,3}(?:(?:[.,\s])[0-9]{3})*[.,][0-9]{2})(?![0-9])"
+
+# Patterns that look like dates — must NOT be picked up as amounts.
+# Fix 4: extended to cover German (27.02.2026), Japanese (2026年2月27日),
+# and slash-separated (27/02/2026) date formats.
+_DATE_GUARD_PATTERNS = [
+    re.compile(r"^\d{1,2}\.\d{2}$"),                    # 31.01
+    re.compile(r"^\d{1,2}\.\d{2}\.\d{4}$"),             # 31.01.2026
+    re.compile(r"^\d{4}年\d{1,2}月\d{1,2}日$"),          # 2026年2月27日
+    re.compile(r"^\d{1,2}/\d{2}/\d{4}$"),               # 27/02/2026
+]
+
+
+def _looks_like_date(s: str) -> bool:
+    """Return True if the string matches a known date pattern."""
+    v = s.strip()
+    return any(p.match(v) for p in _DATE_GUARD_PATTERNS)
+
+
 AMOUNT_PATTERNS = [
-    ("gross_value", re.compile(rf"Gross\s+value[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
-    ("net_value", re.compile(rf"Net\s+value[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
-    ("total_amount", re.compile(rf"Total\s+amount[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
-    ("invoice_total", re.compile(rf"Invoice\s+total[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
-    ("invoice_amount", re.compile(rf"Invoice\s+amount[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
-    ("amount_due", re.compile(rf"Amount\s+due[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
-    ("grand_total", re.compile(rf"Grand\s+total[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    # English — highest priority
+    ("gross_value",      re.compile(rf"Gross\s+value[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("net_value",        re.compile(rf"Net\s+value[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("total_amount",     re.compile(rf"Total\s+amount[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("invoice_total",    re.compile(rf"Invoice\s+total[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("invoice_amount",   re.compile(rf"Invoice\s+amount[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("amount_due",       re.compile(rf"Amount\s+due[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("grand_total",      re.compile(rf"Grand\s+total[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
     ("net_amount_final", re.compile(rf"Net\s+amount\s+final[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
-    ("total", re.compile(rf"Total[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("total",            re.compile(rf"Total[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    # German (Fix 1)
+    ("de_rechnungsbetrag", re.compile(rf"Rechnungsbetrag[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("de_rechnungssumme",  re.compile(rf"Rechnungssumme[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("de_gesamtbetrag",    re.compile(rf"Gesamtbetrag[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("de_nettobetrag",     re.compile(rf"Nettobetrag[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("de_bruttobetrag",    re.compile(rf"Bruttobetrag[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("de_zahlbetrag",      re.compile(rf"Zahlbetrag[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("de_summe",           re.compile(rf"Summe[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    # French (Fix 1)
+    ("fr_montant_total",   re.compile(rf"Montant\s+total[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("fr_total_ttc",       re.compile(rf"Total\s+TTC[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("fr_total_ht",        re.compile(rf"Total\s+HT[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("fr_montant_net",     re.compile(rf"Montant\s+net[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    # Japanese (Fix 1) — amount follows label; no separator expected between label and digits
+    ("ja_seikyu_kingaku",  re.compile(rf"請求金額[\s:：]*{_AMOUNT_VALUE_RE}")),
+    ("ja_gokei_kingaku",   re.compile(rf"合計金額[\s:：]*{_AMOUNT_VALUE_RE}")),
+    ("ja_gokei",           re.compile(rf"合計[\s:：]*{_AMOUNT_VALUE_RE}")),
+    ("ja_shiharai",        re.compile(rf"支払金額[\s:：]*{_AMOUNT_VALUE_RE}")),
+    # Chinese (Fix 1)
+    ("zh_jiage_hejixij",   re.compile(rf"价税合计[\s:：]*{_AMOUNT_VALUE_RE}")),
+    ("zh_heji",            re.compile(rf"合计[\s:：]*{_AMOUNT_VALUE_RE}")),
+    ("zh_yingfu",          re.compile(rf"应付金额[\s:：]*{_AMOUNT_VALUE_RE}")),
+    # Korean (Fix 1)
+    ("ko_hapgye",          re.compile(rf"합계금액[\s:：]*{_AMOUNT_VALUE_RE}")),
+    ("ko_chonggeumak",     re.compile(rf"청구금액[\s:：]*{_AMOUNT_VALUE_RE}")),
+    # Vietnamese (Fix 1)
+    ("vi_tong_cong",       re.compile(rf"Tổng\s+cộng[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("vi_tong_tien",       re.compile(rf"Tổng\s+tiền[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("vi_so_tien",         re.compile(rf"Số\s+tiền[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    # Czech/Slovak (Fix 1)
+    ("cs_celkem",          re.compile(rf"Celkem[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    ("cs_k_uhrade",        re.compile(rf"K\s+úhradě[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
+    # Malay (Fix 1)
+    ("ms_jumlah",          re.compile(rf"Jumlah[\s:]*{_AMOUNT_VALUE_RE}", re.IGNORECASE)),
 ]
 
 INFORMATIONAL_PAGE_PATTERNS = [
@@ -50,15 +103,36 @@ _KNOWN_CURRENCY_CODES = {
 
 
 def _normalize_amount(amount_str: str) -> str:
+    """Normalise an amount string to a plain decimal string (period as separator).
+
+    Fix 2: handles German format (12.347,32 → 12347.32), JPY-style
+    comma-as-thousands (1,630,798 → 1630798), and German dot-as-thousands
+    with no decimal part (12.347 → 12347).
+    """
     s = str(amount_str or "").replace(" ", "")
     if not s:
         return ""
     if "," in s and "." in s:
         if s.rfind(",") > s.rfind("."):
+            # German format: 12.347,32 — dot=thousands, comma=decimal
             return s.replace(".", "").replace(",", ".")
+        # English format: 12,347.32 — comma=thousands, dot=decimal
         return s.replace(",", "")
     if "," in s:
-        return s.replace(",", ".")
+        # Ambiguous — decide by digit count after the last comma.
+        after_last_comma = s.rsplit(",", 1)[-1]
+        if len(after_last_comma) == 2:
+            # Treat comma as decimal separator: 1,63 → 1.63
+            return s.replace(",", ".")
+        # Treat comma as thousands separator: 1,630,798 → 1630798
+        return s.replace(",", "")
+    if "." in s:
+        # Ambiguous — decide by digit count after the last dot.
+        after_last_dot = s.rsplit(".", 1)[-1]
+        if len(after_last_dot) == 3:
+            # German thousands: 12.347 → 12347 (no decimal part)
+            return s.replace(".", "")
+        # English decimal: 12.34 — keep as is
     return s
 
 
@@ -106,6 +180,9 @@ def extract_amount_candidate_from_pages(
         for pattern_index, (label, pattern) in enumerate(AMOUNT_PATTERNS):
             for match in pattern.finditer(text):
                 amount_raw = match.group(1)
+                # Fix 4: skip values that look like dates (27.02, 31.01.2026, etc.)
+                if _looks_like_date(amount_raw):
+                    continue
                 amount = _normalize_amount(amount_raw)
                 if not amount:
                     continue
@@ -137,6 +214,8 @@ def extract_amount_candidate_from_pages(
                 key=lambda m: _amount_as_float(m.group(1)),
             )
             amount_raw = best_amount_match.group(1)
+            if _looks_like_date(amount_raw):
+                continue
             amount = _normalize_amount(amount_raw)
             if not amount:
                 continue

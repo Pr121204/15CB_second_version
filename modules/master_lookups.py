@@ -279,7 +279,18 @@ def resolve_bank_code(bank_name: str) -> str:
 
 
 def resolve_country_code(country: str) -> str:
-    return load_country_code_map().get(_normalize(country), "")
+    key = _normalize(country)
+    code = load_country_code_map().get(key, "")
+    if code:
+        return code
+    # Gemini often returns ISO 2-letter codes (e.g. "MX", "JP") rather than full names.
+    # Expand via COUNTRY_ALIASES and retry.
+    expanded = COUNTRY_ALIASES.get(key, [])
+    for full_name in expanded:
+        code = load_country_code_map().get(_normalize(full_name), "")
+        if code:
+            return code
+    return ""
 
 
 def resolve_country_name(code: str) -> str:
@@ -409,6 +420,32 @@ COUNTRY_ALIASES: Dict[str, List[str]] = {
     "RUSSIAN FEDERATION": ["RUSSIA"],
     "VIET NAM": ["VIETNAM"],
     "BHARAT": ["INDIA"],
+    # ISO 2-letter codes that Gemini frequently returns instead of full country names.
+    # Priority 1 (resolve_country_code) fails on these because the country master uses
+    # full names as keys; these aliases ensure the heuristic resolves them correctly.
+    "MX": ["MEXICO"],
+    "AR": ["ARGENTINA"],
+    "BR": ["BRAZIL"],
+    "CO": ["COLOMBIA"],
+    "CL": ["CHILE"],
+    "PE": ["PERU"],
+    "JP": ["JAPAN"],
+    "CN": ["CHINA"],
+    "KR": ["SOUTH KOREA"],
+    "AU": ["AUSTRALIA"],
+    "NZ": ["NEW ZEALAND"],
+    "SG": ["SINGAPORE"],
+    "MY": ["MALAYSIA"],
+    "TH": ["THAILAND"],
+    "ID": ["INDONESIA"],
+    "PH": ["PHILIPPINES"],
+    "ZA": ["SOUTH AFRICA"],
+    "NG": ["NIGERIA"],
+    "EG": ["EGYPT"],
+    "TR": ["TURKEY"],
+    "RU": ["RUSSIA"],
+    "VN": ["VIETNAM"],
+    "TW": ["TAIWAN"],
 }
 
 # High-confidence unique invoice markers.

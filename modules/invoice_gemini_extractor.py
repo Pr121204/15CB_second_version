@@ -6,7 +6,7 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 from dotenv import load_dotenv
 
@@ -372,10 +372,17 @@ PROMPT = """You are a financial document analysis engine specialized in Form 15C
 
 Your task is to extract payer, payee, remittance nature, purpose code, and invoice details from invoice text.
 
-Accuracy is critical. 
+Accuracy is critical.
 You must never guess values.
 
 All outputs must be based on explicit evidence from the invoice text or Excel row data provided.
+
+MULTILINGUAL HANDLING
+The invoice may be written in any language (German, Japanese, French, Vietnamese, Czech, Thai, Korean, Chinese, Malay, etc.).
+Extract all fields and return them in English.
+For amounts: always use period as decimal separator in your output (e.g. 12347.32, not 12.347,32 or 12,347).
+German invoices use comma as decimal separator and period as thousands separator (12.347,32 = twelve thousand three hundred forty-seven point thirty-two).
+For dates: always return ISO format YYYY-MM-DD regardless of the source format.
 
 DEFINITIONS
 
@@ -492,6 +499,9 @@ Return ONE consolidated JSON object combining information from all pages.
 )
 MULTI_PAGE_IMAGE_EXTRACTION_PROMPT_STRONG = """IMPORTANT: A previous extraction attempt returned no data. Look extremely carefully at ALL text visible in these invoice images.
 
+The invoice may be in any language (German, Japanese, French, Vietnamese, etc.). Extract all fields and return them in English.
+For amounts use period as decimal separator (e.g. 12347.32, not 12.347,32). For dates use YYYY-MM-DD.
+
 This is a business invoice. You MUST find and extract every field that is visible:
 - Invoice number (look for "Invoice No.", "Billing Document", "Invoice #", "Folio", "Serie / Folio", "Serie/Folio", or any document reference number near the top — for Mexican CFDI invoices use the Serie/Folio value, NOT the SAT Certificate, UUID, or Cadena Original fiscal seal)
 - Invoice date (any date format near the invoice number or document header)
@@ -530,6 +540,8 @@ Excel data provided: {input_data}
 Return ONLY the JSON object, no markdown, no explanation."""
 
 PROMPT_COMPACT = """Extract invoice fields as strict JSON only (no markdown, no explanation).
+The invoice may be in any language. Extract all fields and return them in English.
+For amounts use period as decimal separator (e.g. 12347.32). For dates use YYYY-MM-DD.
 Required JSON Structure:
 {
   "remitter_name": "",
@@ -2271,7 +2283,7 @@ def extract_invoice_core_fields_from_image(
 
 
 def extract_invoice_core_fields_from_multi_images(
-    images_list: List[Union[str, bytes, Path]],
+    images_list: Sequence[Union[str, bytes, Path]],
     invoice_id: str = "",
     prompt: str = MULTI_PAGE_IMAGE_EXTRACTION_PROMPT,
     excel_data: Optional[Dict[str, str]] = None,

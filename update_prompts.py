@@ -290,6 +290,7 @@ img_start = text.find('IMAGE_EXTRACTION_PROMPT = """')
 img_end_match = re.search(r'Return ONLY valid JSON with no additional text or markdown formatting\."""(.*?)', text[img_start:], re.DOTALL)
 if not img_end_match:
     img_end_match = re.search(r'\"\"\"', text[img_start+30:])
+img_end = -1
 if img_end_match:
     img_end = img_start + (img_end_match.end() if not re.search(r'Return ONLY', text[img_start:]) else text[img_start:].find('formatting."""') + len('formatting."""'))
 
@@ -305,7 +306,7 @@ print("img:", img_start, img_end)
 print("p:", p_start, p_end)
 print("c:", c_start, c_end)
 
-if img_start != -1 and p_start != -1 and c_start != -1:
+if img_start != -1 and img_end != -1 and p_start != -1 and c_start != -1:
     text = text[:img_start] + new_image_prompt + text[img_end:p_start] + new_prompt + text[p_end:c_start] + new_compact + text[c_end:]
 
     with open('c:/Users/HP/Desktop/form15cb_final/modules/invoice_gemini_extractor.py', 'w', encoding='utf-8') as f:
