@@ -1806,6 +1806,15 @@ def render_no_excel_invoice_page() -> None:
                 "BasisDeterTax", "RateTdsADtaa",
             )
             before = tuple(str(form.get(k) or "") for k in _snap_keys)
+            # Sync the current exchange rate widget value into meta so recompute
+            # always uses the exact rate the user has entered (not the stale value
+            # from the original processing run).
+            _cur_ex = inv.get("excel", {})
+            _cur_rate = _cur_ex.get("exchange_rate")
+            if _cur_rate and float(_cur_rate) > 0:
+                new_state["meta"]["exchange_rate"] = str(float(_cur_rate))
+                new_state["meta"]["source_currency_short"] = str(_cur_ex.get("currency") or new_state["meta"].get("source_currency_short") or "")
+                new_state["meta"]["tds_deduction_date"] = str(_cur_ex.get("dedn_date_tds") or new_state["meta"].get("tds_deduction_date") or "")
             new_state = recompute_invoice(new_state)
             form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
             after = tuple(str(form_after.get(k) or "") for k in _snap_keys)

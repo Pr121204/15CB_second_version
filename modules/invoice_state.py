@@ -20,6 +20,7 @@ from modules.master_lookups import (
     load_purpose_grouped,
     match_remitter,
     resolve_bank_code,
+    resolve_country_code,
     resolve_country_name,
     resolve_dtaa,
     split_dtaa_article_text,
@@ -526,18 +527,36 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
         str(extracted.get(k) or "").strip()
         for k in ("remitter_name", "beneficiary_name", "invoice_number", "amount", "currency_short")
     )
-    country_probe = " ".join([beneficiary_country_text, beneficiary_address, beneficiary_name]).strip()
-    inferred_country_code = infer_country_from_beneficiary_name(
-        country_probe,
-        beneficiary_address,
-    )
-    logger.info(
-        "state_country_inference invoice_id=%s beneficiary=%s country_text=%s inferred_country_code=%s",
-        invoice_id,
-        beneficiary_name,
-        beneficiary_country_text,
-        inferred_country_code,
-    )
+
+    # Priority 1: if Gemini explicitly returned a country name, resolve it directly.
+    # This avoids heuristic mis-inference (e.g. "Mexico" being overridden by address
+    # artefacts that happen to match a different country's patterns).
+    inferred_country_code = ""
+    if beneficiary_country_text:
+        inferred_country_code = resolve_country_code(beneficiary_country_text)
+        if inferred_country_code:
+            logger.info(
+                "state_country_inference invoice_id=%s beneficiary=%s country_text=%s inferred_country_code=%s source=explicit_country_text",
+                invoice_id,
+                beneficiary_name,
+                beneficiary_country_text,
+                inferred_country_code,
+            )
+
+    # Priority 2: fall back to heuristic inference from name + address.
+    if not inferred_country_code:
+        country_probe = " ".join([beneficiary_country_text, beneficiary_address, beneficiary_name]).strip()
+        inferred_country_code = infer_country_from_beneficiary_name(
+            country_probe,
+            beneficiary_address,
+        )
+        logger.info(
+            "state_country_inference invoice_id=%s beneficiary=%s country_text=%s inferred_country_code=%s source=heuristic",
+            invoice_id,
+            beneficiary_name,
+            beneficiary_country_text,
+            inferred_country_code,
+        )
     india_disallowed = False
     if inferred_country_code == "91" and mode == MODE_TDS:
         # Outward remittance guard: beneficiary must be foreign for this workflow.

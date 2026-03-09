@@ -201,10 +201,14 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
             value=str(form.get("RemitterPAN") or ""),
             disabled=False,
         )
+        _addr_raw = str(form.get("RemitterAddress") or extracted.get("remitter_address") or "")
+        _name_prefix = remitter_name.upper().rstrip(". ")
+        if _name_prefix and _addr_raw.upper().lstrip().startswith(_name_prefix):
+            _addr_raw = _addr_raw[len(_name_prefix):].lstrip(" .,;:-").strip()
         form["RemitterAddress"] = st.text_input(
             "Remitter Address (as per invoice, appended to name in XML)",
             key=f"{invoice_id}_remitter_addr",
-            value=str(form.get("RemitterAddress") or extracted.get("remitter_address") or ""),
+            value=_addr_raw,
         )
     with c2:
         form["NameRemitteeInput"] = st.text_input(

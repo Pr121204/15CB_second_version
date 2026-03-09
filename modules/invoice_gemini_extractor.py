@@ -404,6 +404,13 @@ RBI remittance purpose code corresponding to the service (e.g., S0802, S0803, S1
 Purpose Group
 Higher-level category for the purpose code (e.g., Telecommunication, Computer & Information Services, Other Business Services).
 
+INVOICE NUMBER EXTRACTION POLICY
+For "invoice_number", extract the document reference number that uniquely identifies this invoice:
+- Preferred labels: "Invoice No.", "Invoice #", "Folio", "Serie / Folio", "Serie/Folio", "Folio Fiscal", "Billing Document", "Document No.", "Ref No."
+- For Mexican (CFDI) invoices: use the "Serie / Folio" or "Folio" value (e.g. "W7120004157"), NOT the SAT Certificate number, SAT UUID, Cadena Original, or any long numeric/hexadecimal fiscal seal.
+- Do NOT use: SAT Certificate numbers, UUID/GUID strings, Cadena Original codes, or any identifier described as a government seal or digital certificate.
+- If both a folio and a SAT Certificate are present, always use the folio.
+
 AMOUNT EXTRACTION POLICY
 You must determine Amount in Foreign Currency (FCY) using the following strict order:
 1. Stage 1 — Invoice totals block (preferred): Search for "Amount Due", "Balance Due", "Grand Total", "Gross Value", "Net Value", "Total Payable" near the end of the invoice.
@@ -486,7 +493,7 @@ Return ONE consolidated JSON object combining information from all pages.
 MULTI_PAGE_IMAGE_EXTRACTION_PROMPT_STRONG = """IMPORTANT: A previous extraction attempt returned no data. Look extremely carefully at ALL text visible in these invoice images.
 
 This is a business invoice. You MUST find and extract every field that is visible:
-- Invoice number (look for "Invoice No.", "Billing Document", "Invoice #", or any document reference number near the top)
+- Invoice number (look for "Invoice No.", "Billing Document", "Invoice #", "Folio", "Serie / Folio", "Serie/Folio", or any document reference number near the top — for Mexican CFDI invoices use the Serie/Folio value, NOT the SAT Certificate, UUID, or Cadena Original fiscal seal)
 - Invoice date (any date format near the invoice number or document header)
 - Supplier/seller company name (top of page, large text or letterhead — this is the beneficiary/foreign party receiving payment)
 - Customer/buyer company name ("Bill to", "Ship to", "Customer", "Client" section — this is the Indian remitter sending payment)
@@ -1181,6 +1188,41 @@ def parse_invoice_date(raw: str) -> tuple[str, str]:
     return "", text
 
 
+def _looks_like_sat_certificate(value: str) -> bool:
+    """Return True if `value` looks like a Mexican SAT fiscal certificate/UUID rather than a real invoice number.
+
+    SAT identifiers come in two forms:
+    - Long purely-numeric seals: e.g. "00001000000700047508" (16+ digits, no letters)
+    - UUID/GUID format: e.g. "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    """
+    v = value.strip()
+    # UUID / GUID pattern (8-4-4-4-12 hex groups)
+    if re.match(r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$', v):
+        return True
+    # Long purely-numeric string (16+ digits) — typical SAT certificate serial
+    if re.match(r'^\d{16,}$', v):
+        return True
+    return False
+
+
+def _recover_folio_from_text(text: str) -> str:
+    """Try to extract Serie/Folio from raw invoice text (used for Mexican CFDI invoices)."""
+    folio_patterns = [
+        r"(?im)\bserie\s*/?\s*folio\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-_\.]{1,})",
+        r"(?im)\bfolio\s*fiscal\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-_\.]{1,})",
+        r"(?im)\bfolio\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-_\.]{1,})",
+        r"(?im)\bserie\s*[:\-]?\s*([A-Z0-9]{1,4})\s+([0-9]{4,})",  # "Serie W Folio 7120004157"
+    ]
+    for pat in folio_patterns:
+        m = re.search(pat, text)
+        if m:
+            if m.lastindex and m.lastindex >= 2:
+                # Pattern with separate serie + folio groups
+                return (m.group(1).strip() + m.group(2).strip()).strip(".,;:")
+            return m.group(1).strip().strip(".,;:")
+    return ""
+
+
 def _fallback_invoice_fields_from_text(text: str) -> Dict[str, str]:
     out = {"invoice_number": "", "invoice_date_raw": ""}
     t = str(text or "")
@@ -1188,14 +1230,21 @@ def _fallback_invoice_fields_from_text(text: str) -> Dict[str, str]:
         return out
 
     number_patterns = [
+        # Serie / Folio patterns (Mexican CFDI invoices) — highest priority
+        r"(?im)\bserie\s*/?\s*folio\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-_\.]{1,})",
+        r"(?im)\bfolio\s*fiscal\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-_\.]{1,})",
+        r"(?im)\bfolio\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-_\.]{1,})",
+        # Standard invoice number patterns
         r"(?im)\b(?:invoice\s*(?:no\.?|number|#)|inv\.?\s*no\.?|reference\s*no\.?)\s*[:\-]?\s*([A-Z0-9][A-Z0-9\/\-_\.]{2,})",
         r"(?im)\binvoice\s*#\s*([A-Z0-9][A-Z0-9\/\-_\.]{2,})",
     ]
     for pat in number_patterns:
         m = re.search(pat, t)
         if m:
-            out["invoice_number"] = m.group(1).strip().strip(".,;:")
-            break
+            candidate = m.group(1).strip().strip(".,;:")
+            if not _looks_like_sat_certificate(candidate):
+                out["invoice_number"] = candidate
+                break
 
     date_patterns = [
         r"(?im)\b(?:invoice\s*date|date)\s*[:\-]?\s*([0-3]?\d[./-][01]?\d[./-](?:19|20)?\d{2})",
@@ -1919,7 +1968,15 @@ def extract_invoice_core_fields(text: str, invoice_id: str = "", excel_data: Opt
         out["beneficiary_name"] = _normalize_company_name(beneficiary_raw)
     out["beneficiary_address"] = _normalize_extracted_address(str(parsed.get("beneficiary_address") or "").strip())
     out["beneficiary_country_text"] = _sanitize_country_text(str(parsed.get("beneficiary_country") or ""))
-    out["invoice_number"] = str(parsed.get("invoice_number") or "").strip()
+    gemini_inv_num = str(parsed.get("invoice_number") or "").strip()
+    # Reject SAT Certificate / UUID values that Gemini may mistake for an invoice number
+    if gemini_inv_num and _looks_like_sat_certificate(gemini_inv_num):
+        logger.info(
+            "invoice_number_sat_rejected raw=%r — attempting folio recovery from text",
+            gemini_inv_num,
+        )
+        gemini_inv_num = _recover_folio_from_text(text)
+    out["invoice_number"] = gemini_inv_num
     out["invoice_date_raw"] = str(parsed.get("invoice_date") or "").strip()
     # Keep Gemini as primary extraction, but recover from OCR text when it misses date/number.
     fallback_fields = _fallback_invoice_fields_from_text(text)

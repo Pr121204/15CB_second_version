@@ -71,7 +71,13 @@ def format_dotted_date(raw: str) -> str:
 def _fmt_num(n: Optional[float]) -> str:
     if n is None:
         return ""
-    return str(int(n)) if float(n).is_integer() else f"{n:.2f}".rstrip("0").rstrip(".")
+    f = float(n)
+    if f.is_integer():
+        return str(int(f))
+    # Use up to 10 significant figures via 'g' format (strips trailing zeros
+    # automatically).  This preserves exchange-rate precision (e.g. 84.5678)
+    # while still displaying currency amounts cleanly (e.g. 12.57 stays 12.57).
+    return f"{f:.10g}"
 
 
 def _round_to_int(value: float) -> int:
@@ -392,7 +398,11 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
     mode = str(meta.get("mode") or MODE_TDS)
 
     remitter_name = str(form.get("NameRemitterInput") or extracted.get("remitter_name") or form.get("NameRemitter", "")).strip()
-    remitter_address = str(extracted.get("remitter_address") or form.get("RemitterAddress", "")).strip().upper()
+    remitter_address = str(form.get("RemitterAddress") or extracted.get("remitter_address") or "").strip().upper()
+    # Strip company name if Gemini prepended it to the address (e.g. "Bosch Ltd. Adogodi, Hosur..." → "Adogodi, Hosur...")
+    _name_prefix = remitter_name.upper().rstrip(". ")
+    if _name_prefix and remitter_address.startswith(_name_prefix):
+        remitter_address = remitter_address[len(_name_prefix):].lstrip(" .,;:-").strip()
     beneficiary = str(form.get("NameRemitteeInput") or extracted.get("beneficiary_name") or form.get("NameRemittee", "")).strip()
     # Read invoice number and date from form (user-editable), with fallback to extracted
     invoice_no = str(form.get("InvoiceNumber") or extracted.get("invoice_number") or "").strip()

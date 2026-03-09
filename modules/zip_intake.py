@@ -162,12 +162,17 @@ def parse_excel_date(value: object) -> str:
 
 def _normalize_reference(value: object) -> str:
     """Normalizes a reference value for robust matching.
-    
+
     Steps:
+    - If value is a whole-number float (e.g. 4500123456.0 from Excel numeric cell),
+      convert to int first to avoid a spurious trailing ".0" in the string.
     - Uppercase
     - Remove all internal/leading/trailing spaces
     - Replace '/' with '-'
     """
+    # Excel stores numeric document numbers as floats; strip the ".0" suffix.
+    if isinstance(value, float) and not pd.isna(value) and value == int(value):
+        value = int(value)
     s = str(value or "").strip().upper()
     if not s:
         return ""
