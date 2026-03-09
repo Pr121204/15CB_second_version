@@ -392,7 +392,7 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
     mode = str(meta.get("mode") or MODE_TDS)
 
     remitter_name = str(form.get("NameRemitterInput") or extracted.get("remitter_name") or form.get("NameRemitter", "")).strip()
-    remitter_address = str(extracted.get("remitter_address") or form.get("RemitterAddress", "")).strip()
+    remitter_address = str(extracted.get("remitter_address") or form.get("RemitterAddress", "")).strip().upper()
     beneficiary = str(form.get("NameRemitteeInput") or extracted.get("beneficiary_name") or form.get("NameRemittee", "")).strip()
     # Read invoice number and date from form (user-editable), with fallback to extracted
     invoice_no = str(form.get("InvoiceNumber") or extracted.get("invoice_number") or "").strip()

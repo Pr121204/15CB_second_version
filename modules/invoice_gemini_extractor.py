@@ -1108,7 +1108,7 @@ def recover_country_from_address(address: str) -> str:
 
 
 def _normalize_extracted_address(value: str) -> str:
-    return fix_concatenated_words(_normalize_extracted_text(str(value or "")))
+    return fix_concatenated_words(_normalize_extracted_text(str(value or ""))).upper()
 
 
 def _detect_country_signals_from_text(text: str) -> str:

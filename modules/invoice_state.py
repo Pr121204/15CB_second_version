@@ -494,10 +494,10 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     beneficiary_country_text = normalize_single_line_text(str(extracted.get("beneficiary_country_text") or ""))
     beneficiary_address = fix_concatenated_words(
         normalize_single_line_text(str(extracted.get("beneficiary_address") or ""))
-    )
+    ).upper()
     remitter_address = fix_concatenated_words(
         normalize_single_line_text(str(extracted.get("remitter_address") or ""))
-    )
+    ).upper()
     beneficiary_name = normalize_single_line_text(str(extracted.get("beneficiary_name") or ""))
 
     # Country recovery: if Gemini returned a junk/null country (e.g. "N/A"),
