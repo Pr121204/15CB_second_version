@@ -419,7 +419,7 @@ def _split_beneficiary_address(address: str) -> tuple[str, str, str]:
 
 def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, str], config: Dict[str, str]) -> Dict[str, object]:
     mode = config.get("mode", MODE_TDS)
-    source_short = config.get("currency_short", "")
+    source_short = config.get("currency_short", "") or str(extracted.get("currency_short") or "").strip().upper()
     resolved_currency = resolve_currency_selection(source_short, load_currency_exact_index())
     source_nature, source_group, source_code = "missing", "missing", "missing"
     state: Dict[str, object] = {
@@ -430,6 +430,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
             "exchange_rate": str(config.get("exchange_rate", "")),
             "source_currency_short": source_short,
             "is_gross_up": bool(config.get("is_gross_up", False)),
+            "extraction_quality": str(extracted.get("_extraction_quality") or ""),
         },
         "extracted": extracted,
         "resolved": {},
@@ -440,6 +441,10 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
 
     form = state["form"]
     resolved = state["resolved"]
+    
+    # Initialize basic form fields from config/meta
+    form["TaxPayGrossSecb"] = "Y" if state["meta"]["is_gross_up"] else "N"
+    form["RateTdsSecB"] = str(config.get("it_act_rate") or IT_ACT_RATE_DEFAULT)
     logger.info(
         "state_build_start invoice_id=%s file=%s mode=%s source_currency=%s extracted_summary=%s",
         invoice_id,
@@ -550,31 +555,24 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
                 dtaa_without_article, dtaa_with_article = split_dtaa_article_text(str(dtaa.get("dtaa_applicable") or ""))
                 form["RelevantDtaa"] = dtaa_without_article
                 form["RelevantArtDtaa"] = dtaa_with_article
-                try:
-                    resolved["dtaa_rate_percent"] = str(float(str(dtaa.get("percentage"))) * 100).rstrip("0").rstrip(".")
-                    form["RateTdsADtaa"] = resolved["dtaa_rate_percent"]
+                raw_pct = str(dtaa.get("percentage") or "").strip()
+                if raw_pct and "i.t act" in raw_pct.lower():
+                    # Handle countries like Thailand where DTAA exists but does not reduce the rate.
+                    form["dtaa_mode"] = "it_act"
                     form["ArtDtaa"] = dtaa_with_article
-                except Exception:
-                    pass
+                    logger.info("state_dtaa_it_act_mode_detected invoice_id=%s country=%s", invoice_id, country_hint)
+                else:
+                    try:
+                        resolved["dtaa_rate_percent"] = str(float(raw_pct) * 100).rstrip("0").rstrip(".")
+                        form["RateTdsADtaa"] = resolved["dtaa_rate_percent"]
+                        form["ArtDtaa"] = dtaa_with_article
+                    except Exception:
+                        pass
             else:
                 logger.warning("state_dtaa_not_found invoice_id=%s country_hint=%s", invoice_id, country_hint)
     else:
         # CHANGE 2: Before falling back, try phone prefix inference on the full invoice text.
         # IMPORTANT: Use the full raw invoice text when available so phone numbers like "+49..."
-        # that appear outside the extracted address fields can still be detected.
-        raw_invoice_text = str(extracted.get("_raw_invoice_text") or "")
-        phone_probe = raw_invoice_text or f"{beneficiary_address} {beneficiary_country_text} {beneficiary_name}"
-        phone_country = _infer_country_from_phone_prefix(phone_probe)
-        if phone_country:
-            form["RemitteeCountryCode"] = phone_country
-            form["CountryRemMadeSecb"] = phone_country
-            form["_country_inference_confidence"] = "low"
-            logger.info(
-                "state_country_inferred_from_phone invoice_id=%s country_code=%s confidence=low",
-                invoice_id,
-                phone_country,
-            )
-        else:
             # If India was explicitly disallowed for outward remittance, keep prior behaviour and
             # fall back to 'OTHERS' (9999). Otherwise, leave the country blank so the user must pick.
             if india_disallowed:
@@ -684,16 +682,25 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
         cls = classify_remittance(raw_text, extracted)
         if cls:
             logger.info(
-                "classification_classifier_output invoice_id=%s nature_code=%r purpose_code=%r confidence=%s review=%s evidence=%r",
-                invoice_id, cls.nature.code, cls.purpose.purpose_code, cls.confidence, cls.needs_review, cls.evidence
+                "classification_classifier_output invoice_id=%s nature_code=%r purpose_code=%r confidence=%s review=%s high_signal=%s evidence=%r",
+                invoice_id, cls.nature.code, cls.purpose.purpose_code, cls.confidence, cls.needs_review, cls.high_signal_hit, cls.evidence
             )
-            # We want to preserve Gemini's values if they exist, else fallback to classifier
+            # Classifier can override only when confidence is strong or a high-signal rule fired.
             gemini_code = str(extracted.get("purpose_code") or "").strip()
             gemini_group = str(extracted.get("purpose_group") or "").strip()
             gemini_nature = str(extracted.get("nature_of_remittance") or "").strip()
+            strong_classifier = bool(cls.high_signal_hit) or cls.confidence >= 0.75
 
-            if not gemini_code:
-                # Fallback to classifier for purpose
+            use_classifier_for_purpose = bool(cls.purpose.purpose_code) and strong_classifier
+
+            if use_classifier_for_purpose:
+                if gemini_code:
+                    logger.info(
+                        "classification_priority_override invoice_id=%s reason=strong_classifier confidence=%.2f high_signal=%s",
+                        invoice_id,
+                        cls.confidence,
+                        cls.high_signal_hit,
+                    )
                 source_group = "classifier"
                 source_code = "classifier"
                 form["_purpose_group"] = cls.purpose.group_name
@@ -705,42 +712,63 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
                 extracted["purpose_code"] = cls.purpose.purpose_code
                 extracted["purpose_group"] = cls.purpose.group_name
             else:
-                # Keep Gemini's purpose
-                source_group = "gemini"
-                source_code = "gemini"
-                form["_purpose_group"] = gemini_group
-                form["_purpose_code"] = gemini_code
-                
-                # We need to compute RevPurCategory and RevPurCode from gemini_code
-                purpose_grouped = load_purpose_grouped()
-                gr_no = "00"
-                for gn, codes in purpose_grouped.items():
-                    for cr in codes:
-                        if str(cr.get("purpose_code") or "").strip().upper() == gemini_code.upper():
-                            gr_no = str(cr.get("gr_no") or "00").strip()
-                            break
-                gr_no_norm = str(int(gr_no)) if gr_no.isdigit() else gr_no
-                form["RevPurCategory"] = f"RB-{gr_no_norm}.1"
-                form["RevPurCode"] = f"RB-{gr_no_norm}.1-{gemini_code}"
+                if gemini_code:
+                    source_group = "gemini"
+                    source_code = "gemini"
+                    form["_purpose_group"] = gemini_group
+                    form["_purpose_code"] = gemini_code
 
-            if not gemini_nature:
-                # Fallback to classifier for nature
+                    # Compute RevPurCategory and RevPurCode from Gemini code.
+                    purpose_grouped = load_purpose_grouped()
+                    gr_no = "00"
+                    for gn, codes in purpose_grouped.items():
+                        for cr in codes:
+                            if str(cr.get("purpose_code") or "").strip().upper() == gemini_code.upper():
+                                gr_no = str(cr.get("gr_no") or "00").strip()
+                                break
+                    gr_no_norm = str(int(gr_no)) if gr_no.isdigit() else gr_no
+                    form["RevPurCategory"] = f"RB-{gr_no_norm}.1"
+                    form["RevPurCode"] = f"RB-{gr_no_norm}.1-{gemini_code}"
+                else:
+                    # Weak classifier + empty Gemini purpose: keep blank and force review.
+                    source_group = "missing"
+                    source_code = "missing"
+                    form["_purpose_group"] = ""
+                    form["_purpose_code"] = ""
+                    form["RevPurCategory"] = ""
+                    form["RevPurCode"] = ""
+                    extracted["purpose_code"] = ""
+                    extracted["purpose_group"] = ""
+                    logger.warning(
+                        "classification_purpose_left_blank invoice_id=%s reason=weak_classifier_no_gemini confidence=%.2f high_signal=%s",
+                        invoice_id,
+                        cls.confidence,
+                        cls.high_signal_hit,
+                    )
+
+            use_classifier_for_nature = strong_classifier and (use_classifier_for_purpose or not gemini_nature)
+            if use_classifier_for_nature:
                 source_nature = "classifier"
                 form["NatureRemCategory"] = cls.nature.code
                 extracted["nature_of_remittance"] = cls.nature.label
             else:
-                # Keep Gemini's nature. Find its code from options
-                source_nature = "gemini"
-                nature_opts = load_nature_options()
-                ncode = ""
-                for opt in nature_opts:
-                    if str(opt.get("label") or "").strip() == gemini_nature:
-                        ncode = str(opt.get("code") or "")
-                        break
-                form["NatureRemCategory"] = ncode or cls.nature.code
+                if gemini_nature:
+                    source_nature = "gemini"
+                    nature_opts = load_nature_options()
+                    ncode = ""
+                    for opt in nature_opts:
+                        if str(opt.get("label") or "").strip() == gemini_nature:
+                            ncode = str(opt.get("code") or "")
+                            break
+                    form["NatureRemCategory"] = ncode
+                else:
+                    source_nature = "missing"
+                    form["NatureRemCategory"] = ""
+                    extracted["nature_of_remittance"] = ""
 
+            needs_review = bool(cls.needs_review) or (not strong_classifier and not gemini_code)
             resolved["remittance_confidence"] = str(cls.confidence)
-            resolved["remittance_needs_review"] = "1" if cls.needs_review else "0"
+            resolved["remittance_needs_review"] = "1" if needs_review else "0"
             resolved["remittance_evidence"] = " | ".join(cls.evidence[:2])
 
             logger.info(
@@ -843,7 +871,7 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
                 invoice_id, cls.nature.code, final_nature
             )
 
-    state = recompute_invoice(state)
+    # state = recompute_invoice(state) -> Removed redundant call; already done in worker.
     logger.info(
         "state_build_done invoice_id=%s form_snapshot=%s",
         invoice_id,

@@ -108,7 +108,6 @@ def _remove_tag_block(xml_text: str, tag: str) -> str:
 def _remove_empty_optional_tags(xml_text: str) -> str:
     optional_tags = [
         "ReasonNot",
-        "NatureRemCode",
         "NatureRemDtaa",
         "RelevantDtaa",
         "RelevantArtDtaa",

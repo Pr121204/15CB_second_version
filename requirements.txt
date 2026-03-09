@@ -10,3 +10,5 @@ python-dateutil
 streamlit-google-auth
 openpyxl
 pandas
+sentence-transformers
+torch

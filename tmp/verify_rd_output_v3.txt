@@ -1,0 +1,11 @@
+﻿Testing R&D Detection Rule...
+Text Classifier Result: S1008, Source: rd_rule, Nature: FEES FOR TECHNICAL SERVICES / R&D SERVICES
+Text Classifier Test PASSED!
+
+Testing Nature Normalization Fix...
+Nature Normalization: 'Charging of R&D services based on hours' -> 'FEES FOR TECHNICAL SERVICES'
+Nature Normalization Test PASSED!
+
+Testing Classifier Confidence Fallback (0.7 threshold)...
+
+Test FAILED: classify_remittance() got multiple values for argument 'invoice_text'

@@ -121,6 +121,7 @@ from modules.xml_generator import (
 from modules.master_data import validate_bsr_code, validate_dtaa_rate, validate_pan
 from modules.currency_mapping import is_currency_code_valid_for_xml
 from modules.logger import get_logger
+from modules.amount_extractor import extract_amount_candidate_from_pages
 
 
 # -----------------------------------------------------------------------------
@@ -344,7 +345,9 @@ def _reset_invoice_states() -> None:
     IT Act rate override is cleared because there is no per-invoice IT
     rate UI yet.  No Gemini calls occur during this function.
     """
-    invoices = _get_current_state()["invoices"]
+    state_ref = _get_current_state()
+    logger.info("reset_invoice_states_started mode=%s", st.session_state.get("mode"))
+    invoices = state_ref["invoices"]
     for inv_id, inv in invoices.items():
         # Per-invoice mode_override and gross_override are intentionally
         # preserved so that individual invoice customisations survive
@@ -358,8 +361,10 @@ def _reset_invoice_states() -> None:
             old_sig = inv.get("config_sig")
             if new_sig != old_sig:
                 try:
+                    logger.info("rebuilding_state invoice_id=%s", inv_id)
                     _rebuild_state_from_extracted(inv_id, inv)
                 except Exception as exc:
+                    logger.exception("rebuild_failed invoice_id=%s", inv_id)
                     inv["state"] = None
                     inv["status"] = "failed"
                     inv["error"] = str(exc)
@@ -381,152 +386,393 @@ def _reset_invoice_states() -> None:
             inv["xml_error"] = None
 
 
-def _process_single_invoice(inv_id: str) -> None:
-    """Run extraction, state building and recompute for one invoice.
+import threading
+from streamlit.runtime.scriptrunner import add_script_run_ctx
 
-    Updates the invoice record in place with extracted data, state and
-    status.  Uses the current effective mode and gross‑up settings.
-    """
-    inv = _get_current_state()["invoices"][inv_id]
-    if inv.get("status") == "processing":
+
+def _resolve_expected_billing_currency(config: Dict[str, object], extracted: Dict[str, str]) -> str:
+    source_currency = str(config.get("currency_short") or "").strip().upper()
+    if source_currency:
+        return source_currency
+    return str(extracted.get("currency_short") or "").strip().upper()
+
+
+def _apply_safe_deterministic_amount_override(
+    *,
+    extracted: Dict[str, str],
+    pages_text: List[str],
+    expected_currency: str,
+    invoice_id: str,
+    file_name: str,
+    source_mode: str,
+) -> None:
+    candidate = extract_amount_candidate_from_pages(
+        pages_text,
+        expected_currency=expected_currency,
+    )
+    if not candidate:
         return
-    file_bytes = inv["file_bytes"]
-    file_name = inv["file_name"]
-    inv["status"] = "processing"
-    inv["error"] = None
-    # Guard: skip extremely large files
-    if len(file_bytes) > MAX_FILE_SIZE:
-        inv["status"] = "failed"
-        inv["error"] = f"{file_name}: file too large."
+
+    candidate_amount = str(candidate.get("amount") or "").strip()
+    if not candidate_amount:
         return
-    # Determine effective config
-    mode = _effective_mode(inv)
-    gross_up = _effective_gross(inv)
-    config = {
-        "currency_short": inv["excel"].get("currency", ""),
-        "exchange_rate": inv["excel"].get("exchange_rate", 0),
-        "mode": mode,
-        "is_gross_up": gross_up,
-        "tds_deduction_date": _get_invoice_dedn_date(inv),
-        "it_act_rate": _effective_it_rate(inv),
-    }
-    # Extract core fields
-    extracted: Dict[str, str] = {}
-    # Use a spinner so users know work is in progress
-    with st.spinner(f"Processing {file_name}…"):
+
+    gemini_amount = str(extracted.get("amount") or "").strip()
+    gemini_currency = str(extracted.get("currency_short") or "").strip().upper()
+    billing_currency = str(expected_currency or gemini_currency).strip().upper()
+    candidate_currency = str(candidate.get("currency") or "").strip().upper()
+    
+    if not billing_currency and candidate_currency:
+        billing_currency = candidate_currency
+        
+    informational = bool(candidate.get("is_informational"))
+    currency_mismatch = bool(billing_currency and candidate_currency and billing_currency != candidate_currency)
+    
+    # --- GUARD 1: Date pattern rejection ---
+    date_patterns = [
+        r'^\d{1,2}\.\d{2}$',          # e.g. "31.01"
+        r'^\d{1,2}\.\d{2}\.\d{4}$',  # e.g. "31.01.2026"
+        r'^\d{1,2}/\d{2}/\d{4}$'     # e.g. "31/01/2026"
+    ]
+    is_date_like = any(re.match(pat, candidate_amount) for pat in date_patterns)
+    if is_date_like:
+        logger.warning(
+            "amount_override_rejected invoice_id=%s file=%s reason=date_pattern_match gemini_amount=%s candidate=%s label=%s",
+            invoice_id, file_name, gemini_amount, candidate_amount, candidate.get("label", "")
+        )
+        return
+
+    # --- GUARD 2: Minimum plausibility by currency ---
+    try:
+        val_float = float(candidate_amount)
+        if billing_currency == 'JPY' and val_float < 1000:
+            logger.warning(
+                "amount_override_rejected invoice_id=%s file=%s reason=jpy_below_1000 gemini_amount=%s candidate=%s label=%s",
+                invoice_id, file_name, gemini_amount, candidate_amount, candidate.get("label", "")
+            )
+            return
+        if billing_currency in ('USD', 'EUR', 'GBP', 'SGD') and val_float < 10:
+            logger.warning(
+                "amount_override_rejected invoice_id=%s file=%s reason=major_ccy_below_10 gemini_amount=%s candidate=%s label=%s",
+                invoice_id, file_name, gemini_amount, candidate_amount, candidate.get("label", "")
+            )
+            return
+        if billing_currency == 'INR' and val_float < 100:
+            logger.warning(
+                "amount_override_rejected invoice_id=%s file=%s reason=inr_below_100 gemini_amount=%s candidate=%s label=%s",
+                invoice_id, file_name, gemini_amount, candidate_amount, candidate.get("label", "")
+            )
+            return
+    except (ValueError, TypeError):
+        pass
+
+    # --- PLOTTING GUARD CONTEXT ---
+    try:
+        g_float = float(gemini_amount) if gemini_amount and str(gemini_amount).strip() else 0.0
+    except (ValueError, TypeError):
+        g_float = 0.0
+    
+    gemini_has_value = g_float > 0
+
+    # --- GUARD 3: Don't downgrade a large Gemini amount ---
+    if gemini_has_value:
         try:
-            if file_name.lower().endswith(".pdf"):
-                try:
-                    text = extract_text_from_pdf(io.BytesIO(file_bytes)) or ""
-                except Exception:
-                    logger.exception("pdf_text_extraction_failed file=%s", file_name)
-                    text = ""
-                if text and len(text.strip()) >= 20:
-                    extracted = extract_invoice_core_fields(text, invoice_id=inv_id)
+            c_float = float(candidate_amount)
+            if c_float < (g_float * 0.01):
+                logger.warning(
+                    "amount_override_rejected invoice_id=%s file=%s reason=candidate_too_small_vs_gemini gemini=%s candidate=%s label=%s",
+                    invoice_id, file_name, gemini_amount, candidate_amount, candidate.get("label", "")
+                )
+                return
+        except (ValueError, TypeError):
+            pass
+
+    # --- GUARD 4: Source label trust hierarchy ---
+    if gemini_has_value:
+        trusted_labels = {'invoice_total', 'grand_total', 'net_amount_final'}
+        current_label = candidate.get("label", "")
+        if current_label not in trusted_labels:
+            logger.warning(
+                "amount_override_rejected invoice_id=%s file=%s reason=untrusted_label gemini_amount=%s candidate=%s label=%s",
+                invoice_id, file_name, gemini_amount, candidate_amount, current_label
+            )
+            return
+
+    safe_override = (not informational) and (not currency_mismatch)
+
+    if safe_override:
+        if gemini_amount != candidate_amount:
+            logger.info(
+                "amount_override_applied invoice_id=%s file=%s mode=%s old=%s new=%s candidate_currency=%s billing_currency=%s label=%s page=%s",
+                invoice_id,
+                file_name,
+                source_mode,
+                gemini_amount,
+                candidate_amount,
+                candidate_currency,
+                billing_currency,
+                candidate.get("label", ""),
+                candidate.get("page_number", 0),
+            )
+        extracted["amount"] = candidate_amount
+        if candidate_currency and not extracted.get("currency_short"):
+            extracted["currency_short"] = candidate_currency
+        elif billing_currency and not extracted.get("currency_short"):
+            extracted["currency_short"] = billing_currency
+            logger.info(
+                "currency_propagated_from_override invoice_id=%s currency=%s",
+                invoice_id, billing_currency,
+            )
+        extracted["amount_source"] = "deterministic_total"
+        extracted["_deterministic_amount_page"] = str(candidate.get("page_number") or "")
+        return
+
+    reason = "informational_amount" if informational else "currency_mismatch"
+    logger.warning(
+        "amount_override_skipped invoice_id=%s file=%s mode=%s reason=%s gemini_amount=%s candidate_amount=%s candidate_currency=%s billing_currency=%s label=%s page=%s",
+        invoice_id,
+        file_name,
+        source_mode,
+        reason,
+        gemini_amount,
+        candidate_amount,
+        candidate_currency,
+        billing_currency,
+        candidate.get("label", ""),
+        candidate.get("page_number", 0),
+    )
+    extracted["requires_review_ai"] = True
+
+
+def _process_invoice_worker(inv: dict, inv_id: str, file_bytes: bytes, file_name: str, config: dict) -> None:
+    try:
+        extracted: Dict[str, str] = {}
+        if file_name.lower().endswith(".pdf"):
+            try:
+                pages_text = extract_text_from_pdf(io.BytesIO(file_bytes), return_pages=True)
+                if pages_text:
+                    text = "\n".join(pages_text)
                 else:
-                    # Attempt page-by-page OCR
-                    try:
-                        images = convert_from_bytes(file_bytes, dpi=300)
-                    except Exception as exc:
-                        logger.exception("pdf_to_image_failed file=%s", file_name)
-                        images = []
-                    if images:
-                        selected_pages = images[:MAX_SCANNED_PDF_PAGES]
-                        page_results: List[Dict[str, str]] = []
-                        page_ocr_texts: List[str] = []
-                        for page_idx, page_img in enumerate(selected_pages, start=1):
-                            buf = io.BytesIO()
-                            page_img.save(buf, format="JPEG", quality=90)
-                            image_bytes = buf.getvalue()
-                            page_extracted = extract_invoice_core_fields_from_image(image_bytes, invoice_id=inv_id)
-                            # Free OCR for fallback
-                            try:
-                                page_ocr = extract_text_from_image_file(image_bytes) or ""
-                            except Exception:
-                                logger.exception("image_ocr_fallback_failed file=%s page=%s", file_name, page_idx)
-                                page_ocr = ""
-                            text_extracted: Dict[str, str] = {}
-                            # Fallback: if Gemini extracted nothing, try text extraction on OCR text
-                            if (
-                                (not page_extracted or not any((page_extracted.get(k) or "").strip() for k in ("invoice_number", "amount", "currency_short", "beneficiary_name")))
-                                and len(page_ocr.strip()) >= 50
-                            ):
-                                try:
-                                    text_extracted = extract_invoice_core_fields(page_ocr, invoice_id=inv_id)
-                                except Exception:
-                                    logger.exception("pdf_image_page_text_fallback_failed file=%s page=%s", file_name, page_idx)
-                            merged_page = dict(text_extracted)
-                            # Overwrite with non-empty vision outputs
-                            merged_page.update({k: v for k, v in page_extracted.items() if v})
-                            merged_page["_raw_invoice_text"] = page_ocr
-                            page_results.append(merged_page)
-                            page_ocr_texts.append(page_ocr)
-                        if len(page_results) == 1:
-                            extracted = page_results[0]
-                        else:
-                            extracted, _ = merge_multi_page_image_extractions(page_results)
-                        # Combine OCR text from all pages
-                        raw_text = "\n".join(t for t in page_ocr_texts if t.strip())
-                        if not extracted.get("_raw_invoice_text"):
-                            extracted["_raw_invoice_text"] = raw_text
-                    else:
-                        # Final fallback: treat as plain image
-                        try:
-                            extracted = extract_invoice_core_fields_from_image(file_bytes, invoice_id=inv_id)
-                            text = extract_text_from_image_file(file_bytes) or ""
-                        except Exception:
-                            logger.exception("pdf_image_ocr_fallback_failed file=%s", file_name)
-                            extracted = {}
-                            text = ""
-                        if not extracted.get("_raw_invoice_text"):
-                            extracted["_raw_invoice_text"] = text
+                    text = ""
+            except Exception:
+                logger.exception("pdf_text_extraction_failed file=%s", file_name)
+                pages_text = []
+                text = ""
+            text_len = len(text.strip())
+            route_mode = "text" if text_len >= TEXT_EXTRACTION_MIN_THRESHOLD else "image_multi"
+            logger.info(
+                "pdf_extraction_route invoice_id=%s file=%s text_len=%s threshold=%s mode=%s",
+                inv_id,
+                file_name,
+                text_len,
+                TEXT_EXTRACTION_MIN_THRESHOLD,
+                route_mode,
+            )
+            if route_mode == "text":
+                extracted = extract_invoice_core_fields(text, invoice_id=inv_id, excel_data=inv.get("excel", {}))
+                extracted["_raw_invoice_text"] = text
+                _apply_safe_deterministic_amount_override(
+                    extracted=extracted,
+                    pages_text=pages_text,
+                    expected_currency=_resolve_expected_billing_currency(config, extracted),
+                    invoice_id=inv_id,
+                    file_name=file_name,
+                    source_mode="pdf_text",
+                )
             else:
-                # Image uploads (jpg/png)
-                extracted = extract_invoice_core_fields_from_image(file_bytes, invoice_id=inv_id)
+                # Attempt consolidated multi-page Gemini extraction
                 try:
-                    raw_text = extract_text_from_image_file(file_bytes) or ""
-                except Exception:
-                    logger.exception("image_ocr_fallback_failed file=%s", file_name)
-                    raw_text = ""
-                if not extracted.get("_raw_invoice_text"):
+                    images = convert_from_bytes(file_bytes, dpi=300)
+                except Exception as exc:
+                    logger.exception("pdf_to_image_failed file=%s", file_name)
+                    images = []
+
+                if images:
+                    selected_pages = images[:MAX_SCANNED_PDF_PAGES]
+                    page_image_bytes_list: List[bytes] = []
+                    page_ocr_texts: List[str] = []
+                    
+                    for page_img in selected_pages:
+                        buf = io.BytesIO()
+                        page_img.save(buf, format="JPEG", quality=90)
+                        img_bytes = buf.getvalue()
+                        page_image_bytes_list.append(img_bytes)
+                        
+                        # Background OCR for fallback text
+                        try:
+                            page_ocr = extract_text_from_image_file(img_bytes) or ""
+                            page_ocr_texts.append(page_ocr)
+                        except Exception:
+                            logger.exception("image_ocr_fallback_failed file=%s", file_name)
+                    
+                    from modules.invoice_gemini_extractor import extract_invoice_core_fields_from_multi_images
+                    extracted = extract_invoice_core_fields_from_multi_images(
+                        page_image_bytes_list, 
+                        invoice_id=inv_id, 
+                        excel_data=inv.get("excel", {})
+                    )
+                    
+                    # Combine OCR text from all pages
+                    raw_text = "\n".join(t for t in page_ocr_texts if t.strip())
                     extracted["_raw_invoice_text"] = raw_text
-            # Always ensure raw text exists
-            extracted.setdefault("_raw_invoice_text", "")
-            # Build state and recompute
-            state = build_invoice_state(inv_id, file_name, extracted, config)
-            state = recompute_invoice(state)
-            inv["extracted"] = extracted
-            inv["state"] = state
-            inv["status"] = "processed"
-            inv["error"] = None
-            # Set config signature so per-tab memoization doesn't re-rebuild
-            inv["config_sig"] = _compute_config_sig(inv)
-            # Clear previous XML
-            inv["xml_bytes"] = None
-            inv["xml_status"] = "none"
-            inv["xml_error"] = None
-        except Exception as exc:
-            logger.exception("invoice_processing_failed file=%s", file_name)
-            inv["extracted"] = None
-            inv["state"] = None
-            inv["status"] = "failed"
-            inv["error"] = str(exc)
-            inv["xml_bytes"] = None
-            inv["xml_status"] = "none"
-            inv["xml_error"] = None
+
+                    # OCR-text fallback: if vision returned nothing but OCR produced text,
+                    # run the standard text-based Gemini extractor on the OCR output.
+                    if extracted.get("_extraction_quality") == "failed" and len(raw_text.strip()) >= TEXT_EXTRACTION_MIN_THRESHOLD:
+                        logger.info(
+                            "ocr_text_fallback_start invoice_id=%s ocr_text_len=%s",
+                            inv_id, len(raw_text.strip()),
+                        )
+                        ocr_extracted = extract_invoice_core_fields(
+                            raw_text, invoice_id=inv_id, excel_data=inv.get("excel", {})
+                        )
+                        _CORE_FIELDS = [
+                            "remitter_name", "remitter_address", "remitter_country_text",
+                            "beneficiary_name", "beneficiary_address", "beneficiary_country_text",
+                            "invoice_number", "invoice_date_raw", "invoice_date_iso",
+                            "invoice_date_display", "amount", "currency_short",
+                            "nature_of_remittance", "purpose_group", "purpose_code",
+                        ]
+                        filled = [f for f in _CORE_FIELDS if ocr_extracted.get(f) and not extracted.get(f)]
+                        for field in filled:
+                            extracted[field] = ocr_extracted[field]
+                        if filled:
+                            extracted.pop("_extraction_quality", None)
+                            logger.info(
+                                "ocr_text_fallback_applied invoice_id=%s filled_fields=%s",
+                                inv_id, filled,
+                            )
+                        else:
+                            logger.warning(
+                                "ocr_text_fallback_empty invoice_id=%s reason=no_fields_from_ocr_text",
+                                inv_id,
+                            )
+
+                    _apply_safe_deterministic_amount_override(
+                        extracted=extracted,
+                        pages_text=page_ocr_texts,
+                        expected_currency=_resolve_expected_billing_currency(config, extracted),
+                        invoice_id=inv_id,
+                        file_name=file_name,
+                        source_mode="pdf_image_multi",
+                    )
+                else:
+                    # Final fallback: treat as plain image
+                    try:
+                        extracted = extract_invoice_core_fields_from_image(file_bytes, invoice_id=inv_id, excel_data=inv.get("excel", {}))
+                        text = extract_text_from_image_file(file_bytes) or ""
+                    except Exception:
+                        logger.exception("pdf_image_ocr_fallback_failed file=%s", file_name)
+                        extracted = {}
+                        text = ""
+                    if not extracted.get("_raw_invoice_text"):
+                        extracted["_raw_invoice_text"] = text
+        else:
+            # Image uploads (jpg/png)
+            extracted = extract_invoice_core_fields_from_image(file_bytes, invoice_id=inv_id, excel_data=inv.get("excel", {}))
+            try:
+                raw_text = extract_text_from_image_file(file_bytes) or ""
+            except Exception:
+                logger.exception("image_ocr_fallback_failed file=%s", file_name)
+                raw_text = ""
+            if not extracted.get("_raw_invoice_text"):
+                extracted["_raw_invoice_text"] = raw_text
+        # Always ensure raw text exists
+        extracted.setdefault("_raw_invoice_text", "")
+
+        # Prefill invoice number from filename when Gemini extraction failed
+        if not extracted.get("invoice_number"):
+            stem = os.path.splitext(file_name)[0]
+            if re.match(r'^[\w\-\.]+$', stem) and len(stem) >= 5:
+                extracted["invoice_number"] = stem
+                logger.info(
+                    "prefill_invoice_number_from_filename invoice_id=%s value=%s",
+                    inv_id, stem,
+                )
+
+        # Prefill remitter from master when Gemini returned no remitter name
+        if not extracted.get("remitter_name"):
+            from modules.master_lookups import load_bank_details
+            bank_entries = load_bank_details()
+            if len(bank_entries) == 1:
+                default_rem = bank_entries[0]
+                extracted["remitter_name"] = default_rem.get("name", "")
+                logger.info(
+                    "remitter_prefilled_from_default invoice_id=%s remitter=%s",
+                    inv_id, extracted["remitter_name"],
+                )
+
+        # Build state and recompute
+        state = build_invoice_state(inv_id, file_name, extracted, config)
+        state = recompute_invoice(state)
+        inv["extracted"] = extracted
+        inv["state"] = state
+        inv["status"] = "processed"
+        inv["error"] = None
+        # Set config signature so per-tab memoization doesn't re-rebuild
+        inv["config_sig"] = _compute_config_sig(inv)
+        # Clear previous XML
+        inv["xml_bytes"] = None
+        inv["xml_status"] = "none"
+        inv["xml_error"] = None
+    except Exception as exc:
+        logger.exception("invoice_processing_failed file=%s", file_name)
+        inv["extracted"] = None
+        inv["state"] = None
+        inv["status"] = "failed"
+        inv["error"] = str(exc)
+        inv["xml_bytes"] = None
+        inv["xml_status"] = "none"
+        inv["xml_error"] = None
+    finally:
+        if inv["status"] == "processing":
+             inv["status"] = "failed"
+             inv["error"] = "Process exited unexpectedly."
+        logger.info("invoice_processing_done file=%s status=%s", file_name, inv["status"])
+
+
+
+
+def _process_single_invoice(inv_id: str) -> None:
+    """Run extraction, state building and recompute for one invoice in a background thread."""
+    logger.info("process_single_invoice_started invoice_id=%s", inv_id)
+    state = _get_current_state()
+    invoices = state["invoices"]
+    if inv_id not in invoices:
+        logger.error("process_single_invoice_failed inv_id_missing=%s", inv_id)
+        return
+
+    inv = invoices[inv_id]
+    inv["status"] = "processing"
+
+    # Build full config merging global controls with per-invoice Excel data
+    ex = inv.get("excel") or {}
+    config = dict(state["global_controls"])
+    config["currency_short"] = str(ex.get("currency") or "").strip()
+    try:
+        config["exchange_rate"] = float(ex.get("exchange_rate") or 0)
+    except (TypeError, ValueError):
+        config["exchange_rate"] = 0.0
+    config["tds_deduction_date"] = _get_invoice_dedn_date(inv)
+
+    # Start the worker in a background thread to keep UI responsive
+    t = threading.Thread(
+        target=_process_invoice_worker,
+        args=(inv, inv_id, inv["file_bytes"], inv["file_name"], config),
+    )
+    add_script_run_ctx(t)
+    t.start()
 
 
 def _generate_xml_for_invoice(inv_id: str) -> None:
-    """Generate XML for a single invoice record.
-
-    Performs validation and generation.  Updates the invoice record
-    ``xml_status`` and ``xml_bytes`` accordingly.
-    """
-    inv = _get_current_state()["invoices"][inv_id]
-    if inv.get("state") is None:
-        inv["xml_status"] = "failed"
-        inv["xml_error"] = "Invoice has not been processed."
+    """Validate and generate XML for one invoice."""
+    logger.info("generate_xml_started invoice_id=%s", inv_id)
+    state = _get_current_state()
+    inv = state["invoices"].get(inv_id)
+    if not inv or not inv.get("state"):
+        logger.error("generate_xml_failed source=missing_state invoice_id=%s", inv_id)
         return
+
     # Determine current mode (should match build state)
     mode = _effective_mode(inv)
     xml_fields = invoice_state_to_xml_fields(inv["state"])
@@ -558,7 +804,7 @@ def render_bulk_invoice_page() -> None:
     state = _get_current_state()
 
     # Step 1 – Upload ZIP
-    st.subheader("Step 1 – Upload ZIP of invoices and Excel")
+    st.subheader("Upload ZIP of invoices and Excel")
     uploaded_zip = st.file_uploader(
         "Upload a ZIP file containing an Excel spreadsheet and one or more invoices (PDF/JPG/PNG)",
         type=["zip"],
@@ -613,7 +859,7 @@ def render_bulk_invoice_page() -> None:
     invoices = state.get("invoices", {})
     if invoices:
         # Global controls
-        st.subheader("Step 2 – Configure Defaults and Process")
+        st.subheader("Configure Defaults and Process")
         prev_mode = state["global_controls"].get("mode", MODE_TDS)
         prev_gross = state["global_controls"].get("gross_up", False)
         prev_it_rate = state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
@@ -680,37 +926,21 @@ def render_bulk_invoice_page() -> None:
         action_col1, action_col2, action_col3, action_col4 = st.columns([2, 2, 2, 2])
         with action_col1:
             if st.button("Process Pending Only", type="primary"):
-                processed_n = 0
-                failed_n = 0
                 pending_ids = [inv_id for inv_id, inv in invoices.items() if _is_pending(inv)]
                 if not pending_ids:
                     st.info("No pending invoices.")
                 else:
                     for inv_id in pending_ids:
                         _process_single_invoice(inv_id)
-                        if invoices[inv_id]["status"] == "processed":
-                            processed_n += 1
-                        else:
-                            failed_n += 1
-                    if failed_n == 0:
-                        st.success(f"Processed {processed_n} pending invoices.")
-                    else:
-                        st.warning(f"Processed {processed_n} pending invoices. {failed_n} failed.")
+                    st.success(f"Started processing {len(pending_ids)} pending invoices.")
+                    st.rerun()
 
         with action_col2:
             if st.button("Process All Invoices"):
-                processed_n = 0
-                failed_n = 0
                 for inv_id in invoices.keys():
                     _process_single_invoice(inv_id)
-                    if invoices[inv_id]["status"] == "processed":
-                        processed_n += 1
-                    else:
-                        failed_n += 1
-                if failed_n == 0:
-                    st.success(f"All {processed_n} invoices processed successfully.")
-                else:
-                    st.warning(f"Processed {processed_n} invoices with {failed_n} failures.")
+                st.success(f"Started processing {len(invoices)} invoices.")
+                st.rerun()
 
         with action_col3:
             if st.button(
@@ -765,7 +995,7 @@ def render_bulk_invoice_page() -> None:
 
         # Divider before invoice tabs
         st.divider()
-        st.subheader("Step 3 – Review and Edit Invoices")
+        st.subheader("Review and Edit Invoices")
 
         # --- Batch summary + filter (CA-friendly) ---
         total = len(invoices)
@@ -837,6 +1067,10 @@ def render_bulk_invoice_page() -> None:
                     st.success("✅ Invoice processed successfully")
                 elif status == "failed":
                     st.error(f"❌ Processing failed: {inv.get('error')}")
+                elif status == "processing":
+                    st.info("⏳ Processing...")
+                    time.sleep(1)
+                    st.rerun()
                 else:
                     st.info("⏳ Invoice not processed yet")
                 # Excel metadata block
@@ -1034,159 +1268,285 @@ def render_mode_switcher() -> None:
             st.rerun()
 
 def render_single_invoice_page() -> None:
-    st.title("Form 15CB - Single Invoice")
     state = _get_current_state()
-    invoices = state["invoices"]
     
-    st.subheader("Step 1 – Upload Invoice & Excel")
+    # 1. Start with a new invoice button
+    col_t1, col_t2 = st.columns([6, 2])
+    with col_t1:
+        st.title("📄 Process One Invoice")
+    with col_t2:
+        st.write("") # vertical alignment
+        if st.button("Start with a new invoice", type="secondary", use_container_width=True):
+            logger.info("button_clicked label='Start with a new invoice'")
+            state["invoices"] = {}
+            state["single_context"] = None
+            state["ui_epoch"] = state.get("ui_epoch", 0) + 1
+            st.rerun()
+
+    # 2. Upload Invoice & Excel (MOVED TO TOP for better stability during reruns)
+    # 2. Upload Invoice & Excel
+    st.subheader("Upload Invoice & Excel")
     col1, col2 = st.columns(2)
     with col1:
-        uploaded_inv = st.file_uploader("Upload Invoice", type=["pdf", "jpg", "jpeg", "png"], key="single_inv_upload")
+        uploaded_inv = st.file_uploader("Upload Invoice", type=["pdf", "jpg", "jpeg", "png"], key=f"single_inv_upload_{state.get('ui_epoch', 0)}")
     with col2:
-        uploaded_excel = st.file_uploader("Upload Excel", type=["xlsx"], key="single_excel_upload")
-        
+        uploaded_excel = st.file_uploader("Upload Excel", type=["xlsx"], key=f"single_excel_upload_{state.get('ui_epoch', 0)}")
+    
+    # Audit logging for file upload received
+    if uploaded_inv and not state.get("_last_uploaded_inv_name"):
+        logger.info("file_upload_received type=invoice filename=%s size_kb=%d", uploaded_inv.name, len(uploaded_inv.getvalue()) // 1024)
+        state["_last_uploaded_inv_name"] = uploaded_inv.name
+    if uploaded_excel and not state.get("_last_uploaded_excel_name"):
+        logger.info("file_upload_received type=excel filename=%s size_kb=%d", uploaded_excel.name, len(uploaded_excel.getvalue()) // 1024)
+        state["_last_uploaded_excel_name"] = uploaded_excel.name
+
     if uploaded_inv and uploaded_excel:
-        if state.get("single_context") != uploaded_inv.name + "|" + uploaded_excel.name:
+        current_context = uploaded_inv.name + "|" + uploaded_excel.name
+        if state.get("single_context") != current_context:
             try:
-                df = read_excel(uploaded_excel.getvalue())
+                # Detect if it's a new invoice file or just a new excel
+                old_context = state.get("single_context") or "|"
+                old_inv_name = old_context.split("|")[0]
+                is_new_invoice = uploaded_inv.name != old_inv_name
                 
+                if is_new_invoice:
+                    logger.info("files_uploaded inv=%s excel=%s", uploaded_inv.name, uploaded_excel.name)
+                else:
+                    logger.info("excel_updated filename=%s", uploaded_excel.name)
+
+                df = read_excel(uploaded_excel.getvalue())
                 stem = os.path.splitext(uploaded_inv.name)[0]
                 norm_stem = _normalize_reference(stem)
                 
-                # Check matches
                 matches = 0
+                excel_row = {}
                 if not df.empty:
                     for _, row in df.fillna("").iterrows():
                         if _normalize_reference(row.get("Reference")) == norm_stem:
                             matches += 1
+                            if matches == 1:
+                                excel_row = row.to_dict()
                 
                 if matches == 0:
                     st.error(f"Could not find matching row in Excel for invoice reference: {stem}")
                     return
-                elif matches > 1:
-                    st.warning(f"Multiple rows found in Excel for reference {stem}. Using the first one.")
                 
-                from modules.zip_intake import build_invoice_registry
-                invoices_dict = build_invoice_registry(df, [(uploaded_inv.name, uploaded_inv.getvalue())])
+                # If it's the same invoice, we only want to update the excel metadata and recompute
+                if not is_new_invoice and state["invoices"].get(stem):
+                    inv = state["invoices"][stem]
+                    old_fx = inv.get("excel", {}).get("exchange_rate")
+                    
+                    # Update excel info
+                    from modules.zip_intake import _extract_excel_metadata
+                    new_excel_meta = _extract_excel_metadata(excel_row)
+                    inv["excel"] = new_excel_meta
+                    
+                    new_fx = new_excel_meta.get("exchange_rate")
+                    if old_fx != new_fx:
+                        logger.info("excel_rate_updated invoice_id=%s old_fx=%s new_fx=%s", stem, old_fx, new_fx)
+                    
+                    # Trigger recompute if processed
+                    if inv["status"] == "processed" and inv.get("state"):
+                        logger.info("recompute_triggered_by_excel_update invoice_id=%s", stem)
+                        inv["state"]["meta"]["exchange_rate"] = str(new_fx)
+                        inv["state"]["meta"]["tds_deduction_date"] = new_excel_meta.get("dedn_date_tds")
+                        inv["state"]["meta"]["currency_short"] = new_excel_meta.get("currency")
+                        inv["state"] = recompute_invoice(inv["state"])
+                        inv["config_sig"] = _compute_config_sig(inv)
+                        inv["xml_bytes"] = None
+                        inv["xml_status"] = "none"
+                else:
+                    # New invoice or first time
+                    from modules.zip_intake import build_invoice_registry
+                    invoices_dict = build_invoice_registry(df, [(uploaded_inv.name, uploaded_inv.getvalue())])
+                    state["invoices"] = {stem: invoices_dict[stem]}
                 
-                if stem not in invoices_dict:
-                    st.error(f"Process failed. Could not prepare invoice state for {stem}.")
-                    return
-                
-                state["invoices"] = {stem: invoices_dict[stem]}
-                state["single_context"] = uploaded_inv.name + "|" + uploaded_excel.name
-                state["global_controls"] = {
-                    "mode": MODE_TDS,
-                    "gross_up": False,
-                    "it_act_rate": IT_ACT_RATE_DEFAULT,
-                }
+                state["single_context"] = current_context
                 st.success("Files loaded and matched successfully.")
                 st.rerun()
             except Exception as e:
-                import traceback
-                st.error(f"Error processing files: {e}\n{traceback.format_exc()}")
+                logger.exception("file_processing_failed")
+                st.error(f"Error processing files: {e}")
                 return
 
+    # 3. Configure Defaults (MOVED BELOW UPLOAD)
+    st.divider()
+    st.subheader("Configure Defaults")
+    prev_mode = state["global_controls"].get("mode", MODE_TDS)
+    prev_gross = state["global_controls"].get("gross_up", False)
+    prev_it_rate = state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
+
+    # Build display labels for IT Act Rate selectbox
+    _IT_RATE_LABELS = [
+        f"{r}% (Default)" if r == IT_ACT_RATE_DEFAULT else f"{r}%"
+        for r in IT_ACT_RATES
+    ]
+    _IT_RATE_MAP = dict(zip(_IT_RATE_LABELS, IT_ACT_RATES))
+    _prev_label = next(
+        (lbl for lbl, val in _IT_RATE_MAP.items() if val == prev_it_rate),
+        _IT_RATE_LABELS[0],
+    )
+    
+    gc1, gc2, gc3 = st.columns([2, 2, 3])
+    with gc1:
+        new_mode = st.radio(
+            "Tax Mode",
+            [MODE_TDS, MODE_NON_TDS],
+            index=0 if prev_mode == MODE_TDS else 1,
+            horizontal=True,
+            key="single_mode_radio",
+        )
+    with gc2:
+        new_gross = st.checkbox(
+            "💰 Gross\u2011up tax (company bears tax)",
+            value=bool(prev_gross),
+            disabled=(new_mode == MODE_NON_TDS),
+            key="single_gross_checkbox",
+        )
+        if new_mode == MODE_NON_TDS:
+            new_gross = False
+    with gc3:
+        new_it_label = st.selectbox(
+            "IT Act Rate (%)",
+            options=_IT_RATE_LABELS,
+            index=_IT_RATE_LABELS.index(_prev_label),
+            key="single_it_rate_select",
+        )
+        new_it_rate = _IT_RATE_MAP.get(new_it_label, IT_ACT_RATE_DEFAULT)
+    
+    if new_mode != prev_mode or new_gross != prev_gross or new_it_rate != prev_it_rate:
+        field_changed = "mode" if new_mode != prev_mode else ("gross_up" if new_gross != prev_gross else "it_rate")
+        old_val = prev_mode if field_changed == "mode" else (prev_gross if field_changed == "gross_up" else prev_it_rate)
+        new_val = new_mode if field_changed == "mode" else (new_gross if field_changed == "gross_up" else new_it_rate)
+        
         invoices = state.get("invoices", {})
-        if invoices:
-            inv_id = list(invoices.keys())[0]
+        inv_id = list(invoices.keys())[0] if invoices else None
+        is_processed = bool(inv_id and invoices[inv_id].get("status") == "processed")
+        
+        logger.info("ui_control_changed invoice_id=%s field=%s old=%s new=%s invoice_loaded=%s invoice_processed=%s", 
+                    inv_id or "none", field_changed, old_val, new_val, bool(inv_id), is_processed)
+        
+        state["global_controls"]["mode"] = new_mode
+        state["global_controls"]["gross_up"] = new_gross
+        state["global_controls"]["it_act_rate"] = new_it_rate
+        
+        if is_processed and inv_id:
+            logger.info("ui_control_recompute_start invoice_id=%s field=%s", inv_id, field_changed)
             inv = invoices[inv_id]
+            # Update meta in the state
+            inv["state"]["meta"]["mode"] = new_mode
+            inv["state"]["meta"]["is_gross_up"] = new_gross
+            inv["state"]["meta"]["it_act_rate"] = new_it_rate
+            # Recompute
+            inv["state"] = recompute_invoice(inv["state"])
+            inv["config_sig"] = _compute_config_sig(inv)
+            inv["xml_bytes"] = None
+            inv["xml_status"] = "none"
             
-            if inv["status"] == "new":
-                st.subheader("Step 2 – Configure and Process")
+            form = inv["state"].get("form", {})
+            snap = {k: form.get(k) for k in ["TaxLiablIt", "TaxLiablDtaa", "AmtPayForgnTds", "AmtPayIndianTds"]}
+            logger.info("ui_control_recompute_done invoice_id=%s values=%s", inv_id, snap)
+        else:
+            if inv_id:
+                logger.info("ui_control_applied_pending invoice_id=%s", inv_id)
+        
+        st.rerun()
+
+    # 4. Invoices display logic (independent of uploaded_inv/uploaded_excel objects)
+    invoices = state.get("invoices", {})
+    if invoices:
+        inv_id = list(invoices.keys())[0]
+        inv = invoices[inv_id]
+        
+        if inv["status"] == "new":
+            pass # Config is now handled by the global controls at the top of the page
                 
-                prev_mode = state["global_controls"].get("mode", MODE_TDS)
-                prev_gross = state["global_controls"].get("gross_up", False)
+            if st.button("Process Invoice", type="primary"):
+                logger.info("process_invoice_clicked invoice_id=%s mode=%s gross=%s it_rate=%s", 
+                            inv_id, state["global_controls"]["mode"], state["global_controls"]["gross_up"], state["global_controls"]["it_act_rate"])
+                _process_single_invoice(inv_id)
+                st.rerun()
+        elif inv["status"] == "processing":
+            st.info("🕒 Processing...")
+            time.sleep(1)
+            st.rerun()
+        elif inv["status"] == "failed":
+            st.error(f"Processing failed: {inv.get('error')}")
+        elif inv["status"] == "processed":
+            st.subheader("Review and Generate XML")
+            
+            ex = inv.get("excel", {})
+            currency = ex.get("currency") or "—"
+            exchange_rate = ex.get("exchange_rate")
+            exchange_rate_str = f"{float(exchange_rate):.4f}" if exchange_rate and float(exchange_rate) > 0 else "—"
+            dedn_date = ex.get("dedn_date_tds") or "—"
+            with st.container(border=True):
+                st.markdown(f'''
+                <div class="excel-card">
+                    <div><span class="label">Currency</span> <span class="arrow">→</span> <code>{currency}</code></div>
+                    <div><span class="label">Exchange Rate</span> <span class="arrow">→</span> <code>{exchange_rate_str}</code></div>
+                    <div><span class="label">Deduction Date</span> <span class="arrow">→</span> <code>{dedn_date}</code></div>
+                </div>
+                ''', unsafe_allow_html=True)
+            
+            # Render the invoice form for editing
+            from modules.batch_form_ui import render_invoice_tab
+            try:
+                old_form = dict(inv["state"].get("form", {}))
+                new_state = render_invoice_tab(inv["state"], show_header=False, is_single_mode=True)
+                new_form = new_state.get("form", {})
                 
-                gc1, gc2 = st.columns(2)
-                with gc1:
-                    new_mode = st.radio(
-                        "Tax Mode",
-                        [MODE_TDS, MODE_NON_TDS],
-                        index=0 if prev_mode == MODE_TDS else 1,
-                        horizontal=True,
-                        key="single_mode_radio",
-                    )
-                with gc2:
-                    new_gross = st.checkbox(
-                        "💰 Gross\u2011up tax (company bears tax)",
-                        value=bool(prev_gross),
-                        disabled=(new_mode == MODE_NON_TDS),
-                        key="single_gross_checkbox",
-                    )
-                    if new_mode == MODE_NON_TDS:
-                        new_gross = False
+                # Log field changes
+                for k in ["CountryRemMadeSecb", "NatureRemCategory", "RevPurCategory", "RevPurCode", "RateTdsADtaa", "BasisDeterTax", "TaxPayGrossSecb", "AmtPayForgnRem", "AmtPayForgnTds"]:
+                    if k in new_form and k in old_form and new_form[k] != old_form[k]:
+                        logger.info("ui_field_edited invoice_id=%s field=%s value=%r", inv_id, k, new_form[k])
+                        if k in ["AmtPayForgnRem", "AmtPayForgnTds", "RateTdsADtaa", "CountryRemMadeSecb"]:
+                            logger.info("recompute_triggered_by_field_edit invoice_id=%s field=%s", inv_id, k)
                 
-                if new_mode != prev_mode or new_gross != prev_gross:
-                    state["global_controls"]["mode"] = new_mode
-                    state["global_controls"]["gross_up"] = new_gross
-                    
-                if st.button("Process Invoice", type="primary"):
+                form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                _snap_keys = (
+                    "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
+                    "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
+                    "BasisDeterTax", "RateTdsADtaa",
+                )
+                before = tuple(str(form.get(k) or "") for k in _snap_keys)
+                new_state = recompute_invoice(new_state)
+                form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
+                after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
+                inv["state"] = new_state
+                if after != before:
+                    inv["xml_bytes"] = None
+                    inv["xml_status"] = "none"
+                    inv["xml_error"] = None
+                state["invoices"][inv_id] = inv
+            except Exception as exc:
+                st.error(f"Rendering form failed: {exc}")
+
+            c1, c2, c3 = st.columns(3)
+            with c1:
+                if st.button("Generate XML", type="primary", use_container_width=True):
+                    logger.info("generate_xml_clicked invoice_id=%s", inv_id)
+                    _generate_xml_for_invoice(inv_id)
+                    if inv.get("xml_status") == "ok":
+                        st.success("XML generated successfully.")
+                    else:
+                        st.error(f"XML generation failed: {inv.get('xml_error')}")
+            with c2:
+                if st.button("Process invoice again", type="secondary", use_container_width=True):
+                    logger.info("button_clicked label='Process invoice again' invoice_id=%s", inv_id)
                     _process_single_invoice(inv_id)
                     st.rerun()
-                st.info("Processing...")
-            elif inv["status"] == "failed":
-                st.error(f"Processing failed: {inv.get('error')}")
-            elif inv["status"] == "processed":
-                st.subheader("Step 3 – Review and Generate XML")
-                
-                ex = inv.get("excel", {})
-                currency = ex.get("currency") or "—"
-                exchange_rate = ex.get("exchange_rate")
-                exchange_rate_str = f"{float(exchange_rate):.4f}" if exchange_rate and float(exchange_rate) > 0 else "—"
-                dedn_date = ex.get("dedn_date_tds") or "—"
-                with st.container(border=True):
-                    st.markdown(f'''
-                    <div class="excel-card">
-                        <div><span class="label">Currency</span> <span class="arrow">→</span> <code>{currency}</code></div>
-                        <div><span class="label">Exchange Rate</span> <span class="arrow">→</span> <code>{exchange_rate_str}</code></div>
-                        <div><span class="label">Deduction Date</span> <span class="arrow">→</span> <code>{dedn_date}</code></div>
-                    </div>
-                    ''', unsafe_allow_html=True)
-                
-                # Render the invoice form for editing
-                from modules.batch_form_ui import render_invoice_tab
-                try:
-                    old_form = dict(inv["state"].get("form", {}))
-                    new_state = render_invoice_tab(inv["state"], show_header=False)
-                    new_form = new_state.get("form", {})
-                    
-                    form = new_state.get("form", {}) if isinstance(new_state, dict) else {}
-                    _snap_keys = (
-                        "RateTdsSecB", "TaxLiablIt", "TaxLiablDtaa",
-                        "AmtPayForgnTds", "AmtPayIndianTds", "ActlAmtTdsForgn",
-                        "BasisDeterTax", "RateTdsADtaa",
+            with c3:
+                if inv.get("xml_status") == "ok" and inv.get("xml_bytes"):
+                    filename_stub = (inv.get("state", {}).get("extracted", {}).get("invoice_number") or inv_id).replace(" ", "_")
+                    st.download_button(
+                        "Download XML",
+                        data=inv["xml_bytes"],
+                        file_name=f"form15cb_{filename_stub}.xml",
+                        mime="application/xml",
+                        use_container_width=True,
+                        on_click=lambda: logger.info("xml_downloaded invoice_id=%s", inv_id)
                     )
-                    before = tuple(str(form.get(k) or "") for k in _snap_keys)
-                    new_state = recompute_invoice(new_state)
-                    form_after = new_state.get("form", {}) if isinstance(new_state, dict) else {}
-                    after = tuple(str(form_after.get(k) or "") for k in _snap_keys)
-                    inv["state"] = new_state
-                    if after != before:
-                        inv["xml_bytes"] = None
-                        inv["xml_status"] = "none"
-                        inv["xml_error"] = None
-                    state["invoices"][inv_id] = inv
-                except Exception as exc:
-                    st.error(f"Rendering form failed: {exc}")
-
-                c1, c2 = st.columns(2)
-                with c1:
-                    if st.button("Generate XML", type="primary"):
-                        _generate_xml_for_invoice(inv_id)
-                        if inv.get("xml_status") == "ok":
-                            st.success("XML generated successfully.")
-                        else:
-                            st.error(f"XML generation failed: {inv.get('xml_error')}")
-                with c2:
-                    if inv.get("xml_status") == "ok" and inv.get("xml_bytes"):
-                        filename_stub = (inv.get("state", {}).get("extracted", {}).get("invoice_number") or inv_id).replace(" ", "_")
-                        st.download_button(
-                            "Download XML",
-                            data=inv["xml_bytes"],
-                            file_name=f"form15cb_{filename_stub}.xml",
-                            mime="application/xml"
-                        )
 
 def main() -> None:
     _ensure_session_state()

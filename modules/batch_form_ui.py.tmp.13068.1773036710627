@@ -452,16 +452,6 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
     else:
         form["_purpose_code"] = ""
 
-    # In single mode the global control drives the value — sync form field here
-    # so the display always reflects meta["is_gross_up"].
-    if is_single_mode:
-        form["TaxPayGrossSecb"] = "Y" if meta.get("is_gross_up") else "N"
-
-    # Clear any stale session-state so the value= parameter takes effect cleanly
-    # (avoids "created with a default value but also had its value set via the
-    # Session State API" warning that fires when both are set simultaneously).
-    st.session_state.pop(f"{invoice_id}_grossed_up_disp", None)
-
     # Grossed up Tax display (Read-only status display)
     st.text_input(
         "Grossed up Tax",

@@ -1,0 +1,13 @@
+﻿Testing R&D Detection Rule...
+Text Classifier Result: S1008, Source: rd_rule, Nature: FEES FOR TECHNICAL SERVICES / R&D SERVICES
+Text Classifier Test PASSED!
+
+Testing Nature Normalization Fix...
+Nature Normalization: 'Charging of R&D services based on hours' -> 'FEES FOR TECHNICAL SERVICES'
+Nature Normalization Test PASSED!
+
+Testing Classifier Confidence Fallback (0.7 threshold)...
+2026-03-08 14:49:31,765 INFO classification_excel_text_priority invoice_id=TEST_INV_001 code=S1099 conf=MEDIUM
+Final Classification: Code=S1099, Confidence=0.80
+
+Test FAILED: 

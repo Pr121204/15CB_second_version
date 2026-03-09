@@ -44,7 +44,6 @@
         <FORM15CB:BsrCode>{{BsrCode}}</FORM15CB:BsrCode>
         <FORM15CB:PropDateRem>{{PropDateRem}}</FORM15CB:PropDateRem>
         <FORM15CB:NatureRemCategory>{{NatureRemCategory}}</FORM15CB:NatureRemCategory>
-        <FORM15CB:NatureRemCode>{{NatureRemCode}}</FORM15CB:NatureRemCode>
         <FORM15CB:RevPurCategory>{{RevPurCategory}}</FORM15CB:RevPurCategory>
         <FORM15CB:RevPurCode>{{RevPurCode}}</FORM15CB:RevPurCode>
         <FORM15CB:TaxPayGrossSecb>{{TaxPayGrossSecb}}</FORM15CB:TaxPayGrossSecb>

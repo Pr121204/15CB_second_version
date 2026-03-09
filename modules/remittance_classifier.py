@@ -9,6 +9,7 @@ from typing import Dict, List, Optional, Tuple, TypedDict, cast
 
 from modules.logger import get_logger
 from modules.master_lookups import load_nature_options, load_purpose_grouped
+from modules.text_remittance_ai_helper import classify_text_field
 
 logger = get_logger()
 
@@ -72,6 +73,7 @@ class Classification:
     confidence: float
     needs_review: bool
     evidence: List[str]
+    high_signal_hit: bool = False
 
 # -----------------------------
 # Load + indexes
@@ -213,6 +215,13 @@ PRIOR_MIN_NATURE_SCORE = 45.0
 # - Keep patterns specific. Avoid single-word broad matches that appear in boilerplate.
 # - Prefer “dominant intent” triggers.
 HIGH_SIGNAL_RULES: List[HighSignalRule] = [
+    # Explicit Bosch-style R&D wording should map to technical services (S1023).
+    {"purpose_code": "S1023", "nature_code": "16.21", "weight": 130,
+     "patterns": [
+         r"\bcharging\s+of\s+r\s*&\s*d\s+services?\s+based\s+on\s+hours?\b",
+         r"\br\s*&\s*d\s+services?\s+based\s+on\s+hours?\b",
+         r"\bcharging\s+of\s+research\s+and\s+development\s+services?\s+based\s+on\s+hours?\b",
+     ]},
     # Advertising / marketing
     {"purpose_code": "S1007", "nature_code": "16.1", "weight": 60,
      "patterns": [r"\bgoogle\s+ads\b", r"\bfacebook\s+ads\b", r"\blinkedin\s+ads\b",
@@ -247,6 +256,15 @@ HIGH_SIGNAL_RULES: List[HighSignalRule] = [
      "patterns": [r"\bengineering\s+services?\b", r"\bcad\b", r"\bcae\b", r"\bdesign\s+engineering\b"]},
     {"purpose_code": "S1008", "nature_code": "16.42", "weight": 65,
      "patterns": [r"\br&d\b", r"\bresearch\s+and\s+development\b", r"\bprototype\b", r"\blab\b", r"\bexperiment\w*\b"]},
+
+    # Payroll / Social Security / Compensation
+    {"purpose_code": "S1401", "nature_code": "16.99", "weight": 80,
+     "patterns": [
+         r"\bsocial\s+security\b", r"\bpayroll\b", r"\bsalary\s+recharge\b", 
+         r"\bemployee\s+cost\b", r"\bpersonnel\s+cost\b", 
+         r"\bservice\s+paid\s+for\s+other\s+entity\b",
+         r"\bpayroll\s+allocation\b", r"\bemployee\s+contribution\b"
+     ]},
 
     # FEES FOR TECHNICAL SERVICES (office default: S1023)
     # Industrial / technical / automation / PLC
@@ -351,10 +369,22 @@ HIGH_SIGNAL_RULES: List[HighSignalRule] = [
 ]
 
 _S_CODE_RE = re.compile(r"\bS\d{4}\b", re.IGNORECASE)
+_GENERIC_HIT_TOKEN_RE = re.compile(r"^(service|services|fee|fees|charge|charges)$", re.IGNORECASE)
 
 def _explicit_s_code(text: str) -> Optional[str]:
     m = _S_CODE_RE.search(text or "")
     return m.group(0).upper() if m else None
+
+
+def _has_specific_signal(hits: List[str]) -> bool:
+    for hit in hits:
+        tokens = [t for t in re.split(r"[^\w&]+", str(hit or "").lower()) if t]
+        if not tokens:
+            continue
+        if len(tokens) == 1 and _GENERIC_HIT_TOKEN_RE.match(tokens[0]):
+            continue
+        return True
+    return False
 
 def _score_by_rules(norm_text: str) -> Tuple[Dict[str, float], Dict[str, float], List[str]]:
     """
@@ -435,6 +465,58 @@ def classify_remittance(invoice_text: str, extracted: Optional[Dict[str, str]] =
         logger.warning("remittance_classifier_missing_masters purpose=%s nature=%s", bool(purpose_map), bool(nature_map))
         return None
 
+    # 0) Priority 1: Excel Text Column Classifier (Structured Source Data)
+    excel_text = str(extracted.get("_excel_text") or "").strip()
+    if excel_text:
+        text_result = classify_text_field(
+            excel_text, 
+            pdf_text=invoice_text, 
+            vendor=extracted.get("beneficiary_name"),
+            invoice_id=extracted.get("invoice_id"),
+            line_items=extracted.get("line_items")
+        )
+        conf_str = text_result.get("confidence", "LOW")
+        # Map string confidence to float
+        conf_map = {"HIGH": 0.95, "MEDIUM": 0.80, "LOW": 0.40}
+        conf_val = conf_map.get(conf_str, 0.40)
+        
+        pcode = text_result.get("purpose_code")
+        if pcode and pcode in purpose_map and conf_str in ("HIGH", "MEDIUM"):
+            p = purpose_map[pcode]
+            # Infer nature: try same keywords from local rules
+            _, n_scores, _ = _score_by_rules(_norm(excel_text))
+            ncode, _, _ = _pick_best(n_scores)
+            if not ncode or ncode not in nature_map:
+                ncode = "16.6" if "16.6" in nature_map else next(iter(nature_map.keys()))
+            n = nature_map[ncode]
+            
+            if text_result.get("source") in ("rd_rule", "payroll_rule"):
+                logger.info("classification_priority_rule_triggered invoice_id=%s code=%s source=%s", 
+                            extracted.get("invoice_id", ""), pcode, text_result.get("source"))
+                # Override nature label if provided by rule
+                rule_nature = text_result.get("nature_of_remittance")
+                if rule_nature:
+                    n = NatureRecord(code=n.code, label=rule_nature)
+                
+                return Classification(
+                    purpose=p,
+                    nature=n,
+                    confidence=conf_val,
+                    needs_review=False,
+                    evidence=text_result.get("matched_keywords", []) or [f"Rule: {text_result.get('source')}"],
+                    high_signal_hit=True,
+                )
+
+            logger.info("classification_excel_text_priority invoice_id=%s code=%s conf=%s", extracted.get("invoice_id", ""), pcode, conf_str)
+            return Classification(
+                purpose=p,
+                nature=n,
+                confidence=conf_val,
+                needs_review=text_result.get("manual_review", False),
+                evidence=text_result.get("matched_keywords", []) or [f"Excel Text: {excel_text}"],
+                high_signal_hit=conf_val >= 0.95,
+            )
+
     # 2) Explicit S#### wins (if valid), but detect only from base invoice text.
     explicit = _explicit_s_code(base_norm)
     if explicit and explicit in purpose_map:
@@ -446,7 +528,14 @@ def classify_remittance(invoice_text: str, extracted: Optional[Dict[str, str]] =
             ncode = "16.6" if "16.6" in nature_map else next(iter(nature_map.keys()))
         n = nature_map[ncode]
 
-        return Classification(purpose=p, nature=n, confidence=0.95, needs_review=False, evidence=hits[:2] or [explicit])
+        return Classification(
+            purpose=p,
+            nature=n,
+            confidence=0.95,
+            needs_review=False,
+            evidence=hits[:2] or [explicit],
+            high_signal_hit=True,
+        )
 
     # 3) Score on base + safe enrichment (exclude purpose_code/group strings).
     enrich = " ".join(
@@ -479,28 +568,47 @@ def classify_remittance(invoice_text: str, extracted: Optional[Dict[str, str]] =
         # rules dominate; similarity is a backstop
         p_scores[code] = p_scores.get(code, 0.0) + 0.35 * sc
 
+    specific_signal = _has_specific_signal(hits)
+    no_signal = not p_scores and not sim_scores and not hits
+
     best_code, best, second = _pick_best(p_scores)
     if not best_code or best_code not in purpose_map:
         best_code = "S1099" if "S1099" in purpose_map else next(iter(purpose_map.keys()))
-        best, second = 0.1, 0.0
+        best, second = 0.0, 0.0
 
     p = purpose_map[best_code]
 
-    # 6) Nature selection: rule-based if available; else token overlap against labels.
+    # 6) Nature selection: generic fallback when there is no clear nature evidence.
     ncode, _, _ = _pick_best(n_scores)
     if not ncode or ncode not in nature_map:
-        best_n = "16.6" if "16.6" in nature_map else next(iter(nature_map.keys()))
-        best_sc = -1.0
-        for code, nr in nature_map.items():
-            sc = len(set(_tokens(nr.label)).intersection(ev_tokens))
-            if sc > best_sc:
-                best_sc = sc
-                best_n = code
-        ncode = best_n
+        ncode = "16.6" if "16.6" in nature_map else next(iter(nature_map.keys()))
 
     n = nature_map[ncode]
 
     conf = _confidence(best, second, explicit=False)
+    if no_signal:
+        conf = 0.30
+    elif best_code == "S1099" and not specific_signal:
+        conf = min(conf, 0.45)
+
+    # 7. Hybrid fallback: if confidence < 0.7, prefer Gemini's original extraction
+    if conf < 0.70:
+        gem_code = str(extracted.get("purpose_code") or "").strip().upper()
+        if gem_code and gem_code in purpose_map:
+            logger.info("classification_low_confidence_fallback invoice_id=%s conf=%.2f using_gemini=%s", 
+                        extracted.get("invoice_id", ""), conf, gem_code)
+            p = purpose_map[gem_code]
+            # Try to get nature from gemini as well
+            gem_nature = str(extracted.get("nature_of_remittance") or "").strip()
+            # If we can't find exact match for gemini nature, keep current best 'n'
+            return Classification(
+                purpose=p,
+                nature=n,
+                confidence=conf,
+                needs_review=True,
+                evidence=["Low confidence fallback to Gemini"],
+                high_signal_hit=False,
+            )
 
     # review heuristic:
     # - low conf
@@ -516,4 +624,11 @@ def classify_remittance(invoice_text: str, extracted: Optional[Dict[str, str]] =
     if not evidence:
         evidence = [" ".join(list(ev_tokens)[:6])] if ev_tokens else []
 
-    return Classification(purpose=p, nature=n, confidence=conf, needs_review=needs_review, evidence=evidence)
+    return Classification(
+        purpose=p,
+        nature=n,
+        confidence=conf,
+        needs_review=needs_review,
+        evidence=evidence,
+        high_signal_hit=specific_signal,
+    )

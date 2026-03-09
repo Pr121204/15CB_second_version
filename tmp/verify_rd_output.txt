@@ -1,0 +1,4 @@
+﻿Testing R&D Detection Rule...
+Text Classifier Result: S1008, Source: rd_rule, Nature: Fees for Technical Services
+
+Test FAILED: 

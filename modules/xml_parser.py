@@ -44,7 +44,6 @@ TAG_MAP = {
     "FORM15CB:RemittanceDetails/FORM15CB:BsrCode": "BsrCode",
     "FORM15CB:RemittanceDetails/FORM15CB:PropDateRem": "PropDateRem",
     "FORM15CB:RemittanceDetails/FORM15CB:NatureRemCategory": "NatureRemCategory",
-    "FORM15CB:RemittanceDetails/FORM15CB:NatureRemCode": "NatureRemCode",
     "FORM15CB:RemittanceDetails/FORM15CB:RevPurCategory": "RevPurCategory",
     "FORM15CB:RemittanceDetails/FORM15CB:RevPurCode": "RevPurCode",
     "FORM15CB:RemittanceDetails/FORM15CB:TaxPayGrossSecb": "TaxPayGrossSecb",

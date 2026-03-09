@@ -1,0 +1,8 @@
+﻿Testing R&D Detection Rule...
+Text Classifier Result: S1008, Source: rd_rule, Nature: FEES FOR TECHNICAL SERVICES / R&D SERVICES
+Text Classifier Test PASSED!
+
+Testing Nature Normalization Fix...
+Nature Normalization: 'Charging of R&D services based on hours' -> ''
+
+Test FAILED: 
