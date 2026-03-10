@@ -87,10 +87,32 @@ def _strip_zips(s: str) -> str:
     return re.sub(r"\s{2,}", " ", s).strip().rstrip(",").strip()
 
 
+def _is_valid_city_token(token: str) -> bool:
+    """Return False if *token* looks like a department code rather than a city.
+
+    Parenthesised abbreviations — ``(BD)``, ``(IT)``, ``(HR)`` — and bare
+    1-3 letter uppercase codes are never valid city or locality names.
+    """
+    t = str(token or "").strip()
+    if not t:
+        return False
+    # Reject parenthesised abbreviations: "(BD)", "(IT)", "(FIN)"
+    if re.match(r"^\(.*\)$", t):
+        return False
+    # Reject bare 1-3 letter uppercase abbreviations: "BD", "IT"
+    if re.match(r"^[A-Z]{1,3}$", t):
+        return False
+    return True
+
+
 def _repair_address(result: Dict[str, str]) -> Dict[str, str]:
     """
     Three-pass deterministic repair to ensure all three address sub-fields
     are non-blank when source material is available.
+
+    Repair 0 — reject invalid city/area tokens:
+        If TownCityDistrict or AreaLocality is a parenthesised abbreviation
+        like "(BD)" or a bare 1-3 letter code, clear it.
 
     Repair 1 — blank city:
         If TownCityDistrict is empty but FlatDoorBuilding has multiple tokens,
@@ -107,6 +129,12 @@ def _repair_address(result: Dict[str, str]) -> Dict[str, str]:
         reuse TownCityDistrict as AreaLocality.  Duplication is acceptable
         when no distinct locality exists; mandatory XML fields must be filled.
     """
+    # Repair 0: reject department-code tokens masquerading as city/area
+    if not _is_valid_city_token(result["TownCityDistrict"]):
+        result["TownCityDistrict"] = ""
+    if not _is_valid_city_token(result["AreaLocality"]):
+        result["AreaLocality"] = ""
+
     flat = result["FlatDoorBuilding"]
     city = result["TownCityDistrict"]
 
@@ -114,10 +142,12 @@ def _repair_address(result: Dict[str, str]) -> Dict[str, str]:
     if not city and flat:
         tokens = flat.split()
         if len(tokens) >= 2:
-            result["FlatDoorBuilding"] = " ".join(tokens[:-1])
-            result["TownCityDistrict"] = tokens[-1]
-            flat = result["FlatDoorBuilding"]
-            city = result["TownCityDistrict"]
+            candidate = tokens[-1]
+            if _is_valid_city_token(candidate):
+                result["FlatDoorBuilding"] = " ".join(tokens[:-1])
+                result["TownCityDistrict"] = candidate
+                flat = result["FlatDoorBuilding"]
+                city = result["TownCityDistrict"]
 
     # Repair 2: derive locality from street keyword in FlatDoor.
     # Only use the match when text follows the keyword (e.g. "Avenue Michelet",

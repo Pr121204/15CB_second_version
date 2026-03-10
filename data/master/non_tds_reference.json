@@ -1,0 +1,1528 @@
+[
+  {
+    "nature_mentioned_in_invoices": "CI Charges/CI charging",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Telecommunication, computer & Info. Services",
+    "purpose_code": "S0808-Telecommunication\u2026",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Service / Service support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Lead Plant cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Any Testing",
+    "nature_of_remittance_as_per_agreement_document": "Testing charges",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Charging of R&D Services",
+    "nature_of_remittance_as_per_agreement_document": "R&D charges",
+    "category": "other business services",
+    "purpose_code": "S1008- Research & development",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Hardware services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "MCR software services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "FEES FOR TECHNICAL SERVICES",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Fire monitoring system",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "IP Expansion license instrusion panel expansion",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "IP Expansion License Camera/decoder expansion",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "System server software License",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "software maintainance SMA license",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Subscription",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Interest Payment (TATA Hitachi)",
+    "nature_of_remittance_as_per_agreement_document": "Interest Payment",
+    "category": "Short term Loans",
+    "purpose_code": "S0013 - Repayment of short term loans with original",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Social Securitry",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS SOCIAL SECURITY CHARGES IS TREATED AS REIMBURSEMENT BY NR, HENCE NO TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "Free Audio Duration",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Audio Duration",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Video HD Duration",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Project/Service/ Support related cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "FlexRouter II, customized Options",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "MES and installation with basic training",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Charge for sourcing services and other allied services for the month",
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": null,
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "startup charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "COST COMPENSATION - RI DIRECT SALES",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "DIEN",
+    "nature_of_remittance_as_per_agreement_document": "R&D charges",
+    "category": "other business services",
+    "purpose_code": "S1008- Research & development",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "DHS-Cleanalyzer software",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) RELATES TO MATERIAL COST",
+    "category": "Other Business Services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "Remittance is towards DHS Particle analyser system is represents material cost, it is not taxable. Hence no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Emission reduction certificates at a portfolio",
+    "nature_of_remittance_as_per_agreement_document": "OTHER INCOME / OTHER (NOT IN THE NATURE OF INCOME)",
+    "category": "Other Business Services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "Remittance towards Certification Fees represents Business Profits of NR. Hence, no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "C/TEP service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Volume Pricing",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Twrds app tracking charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Twrds Decision Management",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Twrds inspection charges",
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": null,
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Special Service Shipper's Reference:",
+    "nature_of_remittance_as_per_agreement_document": "Freight Charges",
+    "category": "Transport",
+    "purpose_code": "S0203 - Freight on imports \u2013 Shipping companies",
+    "no_tds": "Remittance towards Freight charges is claimed as reimbursement by NR. Hence, no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "TRC - Quovadis",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Entrance Fees",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Foreign Tax Withholding",
+    "nature_of_remittance_as_per_agreement_document": "Royalty",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Project Management Service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Software Development Services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "SAP FICO and ABAP Services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Licence Fee / VM Session/ Fastlane Fee",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Engineering Services charge",
+    "nature_of_remittance_as_per_agreement_document": "Engineering Services",
+    "category": "Other Business Services",
+    "purpose_code": "S1014 - Engineering Services",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Engineering Services",
+    "nature_of_remittance_as_per_agreement_document": "Engineering Services",
+    "category": "Other Business Services",
+    "purpose_code": "S1014 - Engineering Services",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Sales-Support Sub-sahara Africa",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1006 - Business and management consultancy and public relations",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "AMC charges",
+    "nature_of_remittance_as_per_agreement_document": "OTHER INCOME / OTHER (NOT IN THE NATURE OF INCOME)",
+    "category": "Other Business Services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "No TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "Machine-named license for INCA",
+    "nature_of_remittance_as_per_agreement_document": "Software License",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Facebook Platform + Support Ad Accounts or any advertisement",
+    "nature_of_remittance_as_per_agreement_document": "ADVERTISEMENT FEE",
+    "category": "Other Business Services",
+    "purpose_code": "S1007 - Advertising, trade fair service",
+    "no_tds": "It is for advt. fee & exempted u/s 10(50) r/w sec. 164(i) of chapter VIII of Finance Act 2016 & Equilisation Levy paid."
+  },
+  {
+    "nature_mentioned_in_invoices": "SW Effort",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Towards affiliate commission",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Twrds E mailer service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Towards Service fee cross charge",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Towards DNS Charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Integration & Maintenance Services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "GS Charging",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Accounting Services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Leadplant charge",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Service Bill:Certificate of climate protection",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) BUSINESS PROFITS",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "AP function charge",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "AP function cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Twds All Access Pro-User charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Seminar services fee",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Software Licence",
+    "nature_of_remittance_as_per_agreement_document": "Software License",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": "REMITTANCE REPRESENTS PURCHASE OF OFF THE SHELF SOFTWARE. HENCE NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Training",
+    "nature_of_remittance_as_per_agreement_document": "Training",
+    "category": "other business services",
+    "purpose_code": "S1023- Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "INSP.CERTIFICATE",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) BUSINESS PROFITS",
+    "category": "other business services",
+    "purpose_code": "S1006- Business and management consultancy",
+    "no_tds": "REMITTANCE TOWARDS CERTIFICATION fees REPRESENTS BUSINESS PROFITS OF NR ARISING OUTSIDE INDIA. HENCE NO TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "CONSULTING SERVICES",
+    "nature_of_remittance_as_per_agreement_document": "CONSULTING SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Year, 750 Downloads per Month Plus",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Dynamic DNS, Domains,QPS, Resource Records",
+    "nature_of_remittance_as_per_agreement_document": "Royalty",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced originals or prototypes (such as manuscripts and flms), patents, copyrights, trademarks and industrial processes etc.",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Job Wrapping, Jobs Dashboard Manager, Career Pages, Recruitment Ads, Job Slots, Recruiter Seats, Recruiter - Corporate",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Material Cost/ Handling cost",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) RELATES TO MATERIAL COST",
+    "category": "Other Business Services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "Remittance is towards DHS Particle analyser system is represents material cost, it is not taxable. Hence no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Quarterly Service Fee",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Software Intercom",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Cost Charge Forwarding",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "MCR Product Development",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "software license / product key BCI",
+    "nature_of_remittance_as_per_agreement_document": "Software License",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "MES Distribution Update",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "SrS PCB and Distribution Update",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Nexeed MES for ASM SMT",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Digiforce training online",
+    "nature_of_remittance_as_per_agreement_document": "Training",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Disassembly / Assembly of RSS / ESS TB",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Calibration of Injection Analyser",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "ATMO Service Cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Service Cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Support CIT activites",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Prorated Figma design seats",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Syntegon carveout project, Migration, SAP Upgrade, Syntegon Sprint Development",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "EVV Tooling Support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "PMO ENC ESF",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Professional Service",
+    "nature_of_remittance_as_per_agreement_document": "Professional Services",
+    "category": "other business services",
+    "purpose_code": "S1005 - Accounting, auditing, book-keeping services",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "SAP Services, APM Development & rollout",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Space Management Project",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "RBVH Support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Functional Support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Functional Support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "RG Charging",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Assignment Cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Digital commerce Service",
+    "nature_of_remittance_as_per_agreement_document": "Software License",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "At Actual",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "RBEI GMBH"
+  },
+  {
+    "nature_mentioned_in_invoices": "Enterprise Site License",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Pro Annual subscription",
+    "nature_of_remittance_as_per_agreement_document": "SUBSCRIPTION FEES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Annual period GMR",
+    "nature_of_remittance_as_per_agreement_document": "Royalty",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced originals or prototypes (such as manuscripts and flms), patents, copyrights, trademarks and industrial processes etc.",
+    "no_tds": "BB BRAND HOLDINGS LLC."
+  },
+  {
+    "nature_mentioned_in_invoices": "Synthetic",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": "SpeedCurve"
+  },
+  {
+    "nature_mentioned_in_invoices": "Automation Support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "DIEN S20200 ONM (Other Non Mobility)",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "Remittance towards Corporate tax is treated as reimbursement by NR. Hence, no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Service engineer/technician, supervisor, electro engineer",
+    "nature_of_remittance_as_per_agreement_document": "Engineering Services",
+    "category": "Other Business Services",
+    "purpose_code": "S1014 - Engineering Services",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "NhP (AE) MES Silver Service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Infeed Chains commission",
+    "nature_of_remittance_as_per_agreement_document": "commission",
+    "category": "other business services",
+    "purpose_code": "S1002-Trade related service",
+    "no_tds": "Remittance is towards Commission on Sales represent Business Profits of NR. Hence, no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Software Token",
+    "nature_of_remittance_as_per_agreement_document": "Software License",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": "Payments towards software licences not taxable as per supreme court decision."
+  },
+  {
+    "nature_mentioned_in_invoices": "Develops Suppport for AI Shield",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Towards expat charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Allocation PAIV",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "sales support service charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "BUSINESS PROFITS OR OTHER INCOME____ PAYMENT EITHER BUSINESS PROFITS OR OTHER INCOME OF NR WHICH IS NOT TAXABLE AS PER DTAA WITH INDIA AND UAE. HENCE, NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Personnel Cost",
+    "nature_of_remittance_as_per_agreement_document": "REIMBURSEMENT OF EXPENSES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS EMPLOYEE EXPENSES IS CLAIMED AS REIMBURSEMENT BY NR, HENCE NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Infrastructure Service for Devops support Shield",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Offshore Support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Support Beg Project",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Ramup Support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Billing for Sap Services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Label",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": null,
+    "purpose_code": "PURCHASE OF SOFTWARE",
+    "no_tds": "REMITTER OPINES PAYMENT TO PERIMETER X, INC IS NOT TAXABLE IN INDIA PURSUANT TO TREATY BTWN INDIA & USA. HENCE NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Repair",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "TC - QuoVadis Business SSL RSA",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "TRC - QuoVadis SSL RSA",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "SSL WILDCARD",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Dien (korea ltd co.) Sales Support charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "TECH Outsourced Services E-Auction Project Charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "Walmart"
+  },
+  {
+    "nature_mentioned_in_invoices": "Investigation",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "PROFUSION IS-MP7000 MANGOO (MUSICAL RENTING) / Audio Video System",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "FEES FOR TECHNICAL SERVICES files Downloading",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Expenses for Export",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Pension Control",
+    "nature_of_remittance_as_per_agreement_document": "REIMBURSEMENT OF EXPENSES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS EMPLOYEE EXPENSES IS CLAIMED AS REIMBURSEMENT BY NR. HENCE, NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Domain Renewals",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": "Go Daddy"
+  },
+  {
+    "nature_mentioned_in_invoices": "Digital APPLICATION",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Application work",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "REFUND OF EXCESS PAYMENt",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) REFUND OF EXCESS PAYMENT",
+    "category": "OTHERS",
+    "purpose_code": "S1502 - Reversal of wrong entries, refunds of amount remitted for non-Exports",
+    "no_tds": "Payer states that the proposed remittance is towards refund of excess payment by NR. Hence payer opines no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "MOVING/ WAREHOUSE, INSURANCE AND HANDLING CHARGES",
+    "nature_of_remittance_as_per_agreement_document": "REIMBURSEMENT OF EXPENSES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS MOVING, WAREHOUSE, INSURANCE AND HANDLING CHARGES IS CLAIMED AS REIMBURSEMENT BY NR. HENCE, NO TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "Enaterprise service-cloudfare",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "injector",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Product & Services",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "BBM Com Fees",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Transfer price charging",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "TrainM Charging",
+    "nature_of_remittance_as_per_agreement_document": "Training",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "BM",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Daimler CSS C-sample strain",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Cost Charge Forwarding",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Twitter data",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "integration consultancy engagement",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "Other Business Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "CAD and ADM support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Service charge for iop teating",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Service charge for infrastructure",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "OSS project",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Descision mgt",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Aerospike enterprises",
+    "nature_of_remittance_as_per_agreement_document": "Liesense fees",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "DATA MIGRATION",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "GREENHOUSE RECRUITING",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Virtual Data Room - Pages",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Redesign of Sun Mobility DIU",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "Other Business Services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Mechanical engineering serices",
+    "nature_of_remittance_as_per_agreement_document": "Engineering Services",
+    "category": "Other Business Services",
+    "purpose_code": "S1014 - Engineering Services",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "MCAD",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Telecommunication, computer & Info. Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "CP tooling cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Renoclean",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Access contribution",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "software service support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Fatigue software industrial support",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Fatigue license fees",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Compliance Management IRM Operator",
+    "nature_of_remittance_as_per_agreement_document": "Subscription Fees",
+    "category": "other business services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Expat charges",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": "No TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "Cost center charge",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "DIEN MATERIAL",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Data center charge",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Telecommunication, computer & Info. Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "IT service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Telecommunication, computer & Info. Services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Training costs",
+    "nature_of_remittance_as_per_agreement_document": "Training",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Storefront service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Sprinkk Analytics & lnsights Seruices - Soc;al Reporting Service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Overhead cost /Packaging cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Shared service",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "additional efforts",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Development services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "SingleKey ID / Bosch ID - small",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Trust Center - Software Token",
+    "nature_of_remittance_as_per_agreement_document": "Software Licences",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use,",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "TRC - QuoVadis",
+    "nature_of_remittance_as_per_agreement_document": "Business SSL RSA",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Development services",
+    "nature_of_remittance_as_per_agreement_document": "R&D Charges",
+    "category": "Other Business Services",
+    "purpose_code": "S1008 - Research & Development services",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Participant fee: BEG-COM-PTGW12",
+    "nature_of_remittance_as_per_agreement_document": "Training",
+    "category": "Telecommunication, Computer & Information Services",
+    "purpose_code": "S0802 - Software consultancy / implementation",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "linear module",
+    "nature_of_remittance_as_per_agreement_document": "other income",
+    "category": "other business services",
+    "purpose_code": "S1099 - Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "background screening services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "IT act applicable",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "PartnerEdge Program fee",
+    "nature_of_remittance_as_per_agreement_document": "software licenses",
+    "category": null,
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "SHRINKABLE TUBE (Material)",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) BUSINESS PROFITS",
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": "REPRESENTS BUSINESS PROFITS OF PURCHASE OF SHINKABLE TUBE NON RESIDENT ARISING OUTSIDE INDIA, HENCE NOT TAXABLE."
+  },
+  {
+    "nature_mentioned_in_invoices": "Air freight",
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": null,
+    "purpose_code": null,
+    "no_tds": "REMITTANCE TOWARDS AIR FREIGHT CHARGES IS TREATED AS REIMBURSEMENT BY NR, HENCE NO TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "Realocation cost",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS REIMBURSEMENT OF REALOCATION COST , HENCE NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "bookoing fee, daily fee",
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": "`",
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Driving school, houses, no show silver resort, rental cars",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS DRIVING SCHOOL, RENTAL CARS IS TREATED AS REIMBURSEMENT BY NR, HENCE NO TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "event Expenses, Food & Beverage & conf room charges",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income)",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "PAYMENTS TOWARDS FOOD & BEVERAGE & CONF ROOM CHARGES DOES NOT REPRESENTS INCOME OF NR. HENCE, NO TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "FREIGHT FEE (1f INFO SOLUTIONS & SERVICES PVT LTD)",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "Payer represents that the payment is towards reimbursement of freight charges and hence not liable to tax in India."
+  },
+  {
+    "nature_mentioned_in_invoices": null,
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": null,
+    "purpose_code": null,
+    "no_tds": "PAYER REPRESENTS THAT THE PAYMENT IS TOWARDS REIMBURSEMENT OF FREIGHT CHARGES AND HENCE NOT LIABLE TO TAX IN INDIA"
+  },
+  {
+    "nature_mentioned_in_invoices": null,
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": null,
+    "purpose_code": null,
+    "no_tds": "PAYER CONTENDS THAT THE VENDOR WILL SUBMIT TRC&FORM 10F AFTER 3 WEEKS&IF TRC&10F IS NOT RECEIVED,TDS WILL BE DEDUCTED & PAID."
+  },
+  {
+    "nature_mentioned_in_invoices": "Air fare, service fee",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": "Meenakshi 1023",
+    "no_tds": "remiitance towrds air fare is claimed as riembursent by NR, Hence, no tds"
+  },
+  {
+    "nature_mentioned_in_invoices": "INSP.CERTIFICATE",
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": "other business services",
+    "purpose_code": null,
+    "no_tds": "REMITTANCE TOWARDS INSPECTION CERTIFICATE CHARGES REPRESENTS BUSINESS PROFITS OF NR ARISING OUTSIDE INDIA. HENCE NO TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": "assembly charge",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1023- Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "service sales department",
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": null,
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "cost charges",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1023- Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "WARRANTY COST",
+    "nature_of_remittance_as_per_agreement_document": null,
+    "category": null,
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "1) Non tds (labour cost)",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income)",
+    "category": "Other Business Services",
+    "purpose_code": "S1023- Other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS WARRENTY RECOVERY CHARGES IS CLAIMED AS REIMBURSEMENT BY NR. HENCE, NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": null,
+    "nature_of_remittance_as_per_agreement_document": "WARRANTY COST",
+    "category": null,
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "2) tds (parts cost)",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1023- Other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Consulting Services",
+    "nature_of_remittance_as_per_agreement_document": "Consulting Services",
+    "category": null,
+    "purpose_code": "S1023 - Other Technical",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "storage/warehouse rent",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In the nature of income)",
+    "category": "Other Business Services",
+    "purpose_code": "S1023 - Other Technical services including scientific /space servicezs",
+    "no_tds": "No TDS"
+  },
+  {
+    "nature_mentioned_in_invoices": null,
+    "nature_of_remittance_as_per_agreement_document": "WAREHOUSE RENT",
+    "category": null,
+    "purpose_code": null,
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Personnel Cost",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1023 - Other Technical services including scientific /space servicezs",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Legal and Immigration Charges/SRN Payment Request",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "Other Business Services",
+    "purpose_code": "S1023- Other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS MEDICAL INSURANCE OF EXPATS CLAIMED AS REIMBURSEMENT BY NR. HENCE, NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "License certificate delivery",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "on Forest Quarterly plan 2020 applied on line item",
+    "nature_of_remittance_as_per_agreement_document": "Licensing Fee",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "cost recharge",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "other business services",
+    "purpose_code": "S1023 - Other Technical services including scientific /space servicezs",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "certificate Consulting Services",
+    "nature_of_remittance_as_per_agreement_document": "Consulting Services",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "Consulting services covered under article other income as per INDIA & UAE treaty, payer does not have PE in india hence no TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "Frieght charges",
+    "nature_of_remittance_as_per_agreement_document": "Frieght charges",
+    "category": "transport",
+    "purpose_code": "0203- freight on import",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "suscription fee is non tds ( only in the case of dubai if it is germany then it is tds)",
+    "nature_of_remittance_as_per_agreement_document": "software license",
+    "category": "Charges for the use of intellectual property n.i.e",
+    "purpose_code": "S0902 - Payment for use, through licensing arrangements, of produced",
+    "no_tds": "Payments towards software licences not taxable as per supreme court decision."
+  },
+  {
+    "nature_mentioned_in_invoices": "scrap parts",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) SCRAPPING COST",
+    "category": "Other Business Services",
+    "purpose_code": "S1023 - Other Technical Services including scientifc/space services.",
+    "no_tds": "REMITTANCE TOWARDS SCRAP REPRESENTS BUSINESSPROFITS OF NR ARISING OUTSIDE INDIA HENCE NO TDS."
+  },
+  {
+    "nature_mentioned_in_invoices": "IT services",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Telecommunication, computer & Info. Services",
+    "purpose_code": "S0802-Telecommunication\u2026",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "bbm commision",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1023 - Other Technical Services including scientifc/space services.",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "AccP Participation Fee",
+    "nature_of_remittance_as_per_agreement_document": "FEES FOR TECHNICAL SERVICES",
+    "category": "Other Business Services",
+    "purpose_code": "S1023 - Other Technical Services including scientifc/space services.",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "Accomodation",
+    "nature_of_remittance_as_per_agreement_document": "Reimbursement Of Expenses",
+    "category": "other business services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": null
+  },
+  {
+    "nature_mentioned_in_invoices": "AMC Service",
+    "nature_of_remittance_as_per_agreement_document": "Other Income / Other (Not In The Nature Of Income) BUSINESS PROFITS",
+    "category": "Other Business Services",
+    "purpose_code": "S1099- other services not included elsewhere",
+    "no_tds": "REMITTANCE TOWARDS AMC SERVICES REPRESENTS BUSINESSPROFITS OF NR ARISING OUTSIDE INDIA HENCE NO TDS."
+  }
+]

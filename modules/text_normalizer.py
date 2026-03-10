@@ -418,11 +418,37 @@ def normalize_single_line_text(text: str) -> str:
     return normalize_invoice_text(text, keep_newlines=False)
 
 
+
+# Known OCR split-word fixes: OCR engines often insert spurious spaces inside
+# well-known company suffixes and German/European address words.  Applied
+# case-insensitively BEFORE the regex-based camelCase splitter so that the
+# regex does not further fragment these tokens.
+_OCR_SPLIT_FIXES = {
+    "GMB H": "GMBH",
+    "GM BH": "GMBH",
+    "G MBH": "GMBH",
+    "LT D": "LTD",
+    "PV T": "PVT",
+    "IN C": "INC",
+    "LL C": "LLC",
+    "COR P": "CORP",
+    "PL ATZ": "PLATZ",
+    "STR ASSE": "STRASSE",
+    "S TR.": "STR.",
+}
+# Pre-compile a single regex for all patterns (case-insensitive).
+_OCR_SPLIT_RE = re.compile(
+    "|".join(re.escape(k) for k in sorted(_OCR_SPLIT_FIXES, key=len, reverse=True)),
+    flags=re.IGNORECASE,
+)
+
+
 def fix_concatenated_words(text: str) -> str:
     """
     Fixes PDF extraction artifacts where words are joined without spaces.
 
     Handles:
+    - Known OCR split compounds: "GMB H" -> "GMBH", "STR ASSE" -> "STRASSE"
     - lowercase->Uppercase boundary: "HosurRoad" -> "Hosur Road"
     - letter->digit boundary: "Bangalore560030" -> "Bangalore 560030"
     - digit->letter boundary: "560030India" -> "560030 India"
@@ -432,6 +458,13 @@ def fix_concatenated_words(text: str) -> str:
         return text
 
     s = str(text)
+
+    # Pass 1: repair known OCR split compounds (case-insensitive).
+    def _ocr_replace(m: re.Match) -> str:  # noqa: E501
+        return _OCR_SPLIT_FIXES.get(m.group(0).upper(), m.group(0))
+    s = _OCR_SPLIT_RE.sub(_ocr_replace, s)
+
+    # Pass 2: insert spaces at word boundaries.
     s = re.sub(r"([a-z])([A-Z])", r"\1 \2", s)
     s = re.sub(r"([A-Za-z])(\d)", r"\1 \2", s)
     # Do not split ordinal suffixes like 1st/2nd/3rd/4th.

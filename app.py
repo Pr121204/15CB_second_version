@@ -115,6 +115,7 @@ def _ensure_session_state() -> None:
                     "mode": MODE_TDS,
                     "gross_up": False,
                     "it_act_rate": IT_ACT_RATE_DEFAULT,
+                    "non_tds_rate_mode": "dtaa",
                 },
                 "ui_epoch": 0,
                 "zip_context": None,
@@ -279,6 +280,7 @@ def _rebuild_state_from_extracted(inv_id: str, inv: Dict[str, Any]) -> None:
         "is_gross_up": _effective_gross(inv),
         "tds_deduction_date": _get_invoice_dedn_date(inv),  # Posting Date -> DednDateTds
         "it_act_rate": _effective_it_rate(inv),
+        "non_tds_rate_mode": _get_current_state()["global_controls"].get("non_tds_rate_mode", "dtaa"),
     }
 
     state = build_invoice_state(inv_id, inv["file_name"], inv["extracted"], config)
@@ -836,6 +838,7 @@ def render_bulk_invoice_page() -> None:
         prev_mode = state["global_controls"].get("mode", MODE_TDS)
         prev_gross = state["global_controls"].get("gross_up", False)
         prev_it_rate = state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
+        prev_non_tds_rate_mode = state["global_controls"].get("non_tds_rate_mode", "dtaa")
 
         # Build display labels for IT Act Rate selectbox
         _IT_RATE_LABELS = [
@@ -848,7 +851,45 @@ def render_bulk_invoice_page() -> None:
             _IT_RATE_LABELS[0],
         )
 
-        gc1, gc2, gc3 = st.columns([2, 2, 3])
+        # Pill-toggle CSS — matches the rounded maroon/grey pill design
+        st.markdown("""
+        <style>
+        /* ── Pill toggle: track ── */
+        [data-testid="stToggleSwitch"] {
+            width: 56px !important;
+            min-width: 56px !important;
+            height: 30px !important;
+            border-radius: 30px !important;
+            background-color: #9b9b9b !important;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.18) !important;
+            transition: background-color 0.25s ease !important;
+        }
+        [data-testid="stToggleSwitch"][aria-checked="true"] {
+            background-color: #8B3A3A !important;
+        }
+        /* ── Pill toggle: knob (first child div = the moving circle) ── */
+        [data-testid="stToggleSwitch"] > div:first-child {
+            width: 24px !important;
+            height: 24px !important;
+            border-radius: 50% !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.25) !important;
+            top: 3px !important;
+        }
+        /* ── wrapper: align label text with toggle ── */
+        div[data-testid="stToggle"] label {
+            align-items: center !important;
+            gap: 8px !important;
+        }
+        /* ── mute the toggle's inline label — name is shown via st.caption ── */
+        div[data-testid="stToggle"] label > div:last-child {
+            font-size: 0.78rem !important;
+            color: #555 !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        gc1, gc2, gc3, gc4 = st.columns([2, 2, 2, 2])
         with gc1:
             new_mode = st.radio(
                 "Tax Mode",
@@ -872,11 +913,37 @@ def render_bulk_invoice_page() -> None:
                 key="global_it_rate_select",
             )
             new_it_rate = _IT_RATE_MAP.get(new_it_label, IT_ACT_RATE_DEFAULT)
+        with gc4:
+            _toggle_checked = prev_non_tds_rate_mode == "it_act_2080"
+            # Heading label above the toggle
+            st.markdown(
+                "<p style='margin:0 0 2px 0;font-size:0.80rem;color:#555;"
+                "font-weight:600;'>Calculation basis</p>",
+                unsafe_allow_html=True,
+            )
+            # Pill toggle — OFF = DTAA Rate (default), ON = 20.80% IT Act
+            _toggle_on = st.toggle(
+                "20.80% (IT Act)",
+                value=_toggle_checked,
+                key="global_non_tds_rate_toggle",
+                help="OFF → DTAA treaty rate (default)   |   ON → 20.80% IT Act rate",
+            )
+            new_non_tds_rate_mode = "it_act_2080" if _toggle_on else "dtaa"
+            # Name row below toggle (mirrors .name in the design spec)
+            _basis_name = "20.80% (IT Act)" if _toggle_on else "DTAA Rate"
+            st.markdown(
+                f"<p style='margin:2px 0 0 0;font-size:0.78rem;color:#888;'>{_basis_name}</p>",
+                unsafe_allow_html=True,
+            )
+
         # Check for changes and apply reset/recompute if needed
-        if new_mode != prev_mode or new_gross != prev_gross or new_it_rate != prev_it_rate:
+        if (new_mode != prev_mode or new_gross != prev_gross
+                or new_it_rate != prev_it_rate
+                or new_non_tds_rate_mode != prev_non_tds_rate_mode):
             state["global_controls"]["mode"] = new_mode
             state["global_controls"]["gross_up"] = new_gross
             state["global_controls"]["it_act_rate"] = new_it_rate
+            state["global_controls"]["non_tds_rate_mode"] = new_non_tds_rate_mode
             state["ui_epoch"] += 1
             # Reset overrides and recompute existing invoices from extracted data
             _reset_invoice_states()
@@ -1354,6 +1421,7 @@ def render_single_invoice_page() -> None:
     prev_mode = state["global_controls"].get("mode", MODE_TDS)
     prev_gross = state["global_controls"].get("gross_up", False)
     prev_it_rate = state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
+    prev_non_tds_rate_mode = state["global_controls"].get("non_tds_rate_mode", "dtaa")
 
     # Build display labels for IT Act Rate selectbox
     _IT_RATE_LABELS = [
@@ -1365,8 +1433,46 @@ def render_single_invoice_page() -> None:
         (lbl for lbl, val in _IT_RATE_MAP.items() if val == prev_it_rate),
         _IT_RATE_LABELS[0],
     )
-    
-    gc1, gc2, gc3 = st.columns([2, 2, 3])
+
+    # Pill-toggle CSS — matches the rounded maroon/grey pill design
+    st.markdown("""
+    <style>
+    /* ── Pill toggle: track ── */
+    [data-testid="stToggleSwitch"] {
+        width: 56px !important;
+        min-width: 56px !important;
+        height: 30px !important;
+        border-radius: 30px !important;
+        background-color: #9b9b9b !important;
+        box-shadow: inset 0 1px 4px rgba(0,0,0,0.18) !important;
+        transition: background-color 0.25s ease !important;
+    }
+    [data-testid="stToggleSwitch"][aria-checked="true"] {
+        background-color: #8B3A3A !important;
+    }
+    /* ── Pill toggle: knob (first child div = the moving circle) ── */
+    [data-testid="stToggleSwitch"] > div:first-child {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 50% !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.25) !important;
+        top: 3px !important;
+    }
+    /* ── wrapper: align label text with toggle ── */
+    div[data-testid="stToggle"] label {
+        align-items: center !important;
+        gap: 8px !important;
+    }
+    /* ── mute the toggle's inline label — name is shown via st.caption ── */
+    div[data-testid="stToggle"] label > div:last-child {
+        font-size: 0.78rem !important;
+        color: #555 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    gc1, gc2, gc3, gc4 = st.columns([2, 2, 2, 2])
     with gc1:
         new_mode = st.radio(
             "Tax Mode",
@@ -1392,11 +1498,35 @@ def render_single_invoice_page() -> None:
             key="single_it_rate_select",
         )
         new_it_rate = _IT_RATE_MAP.get(new_it_label, IT_ACT_RATE_DEFAULT)
+    with gc4:
+        _toggle_checked = prev_non_tds_rate_mode == "it_act_2080"
+        # Heading label above the toggle
+        st.markdown(
+            "<p style='margin:0 0 2px 0;font-size:0.80rem;color:#555;"
+            "font-weight:600;'>Calculation basis</p>",
+            unsafe_allow_html=True,
+        )
+        # Pill toggle — OFF = DTAA Rate (default), ON = 20.80% IT Act
+        _toggle_on = st.toggle(
+            "20.80% (IT Act)",
+            value=_toggle_checked,
+            key="single_non_tds_rate_toggle",
+            help="OFF → DTAA treaty rate (default)   |   ON → 20.80% IT Act rate",
+        )
+        new_non_tds_rate_mode = "it_act_2080" if _toggle_on else "dtaa"
+        # Name row below toggle (mirrors .name in the design spec)
+        _basis_name = "20.80% (IT Act)" if _toggle_on else "DTAA Rate"
+        st.markdown(
+            f"<p style='margin:2px 0 0 0;font-size:0.78rem;color:#888;'>{_basis_name}</p>",
+            unsafe_allow_html=True,
+        )
     
-    if new_mode != prev_mode or new_gross != prev_gross or new_it_rate != prev_it_rate:
-        field_changed = "mode" if new_mode != prev_mode else ("gross_up" if new_gross != prev_gross else "it_rate")
-        old_val = prev_mode if field_changed == "mode" else (prev_gross if field_changed == "gross_up" else prev_it_rate)
-        new_val = new_mode if field_changed == "mode" else (new_gross if field_changed == "gross_up" else new_it_rate)
+    if (new_mode != prev_mode or new_gross != prev_gross
+            or new_it_rate != prev_it_rate
+            or new_non_tds_rate_mode != prev_non_tds_rate_mode):
+        field_changed = "mode" if new_mode != prev_mode else ("gross_up" if new_gross != prev_gross else ("non_tds_rate_mode" if new_non_tds_rate_mode != prev_non_tds_rate_mode else "it_rate"))
+        old_val = prev_mode if field_changed == "mode" else (prev_gross if field_changed == "gross_up" else (prev_non_tds_rate_mode if field_changed == "non_tds_rate_mode" else prev_it_rate))
+        new_val = new_mode if field_changed == "mode" else (new_gross if field_changed == "gross_up" else (new_non_tds_rate_mode if field_changed == "non_tds_rate_mode" else new_it_rate))
         
         invoices = state.get("invoices", {})
         inv_id = list(invoices.keys())[0] if invoices else None
@@ -1408,6 +1538,7 @@ def render_single_invoice_page() -> None:
         state["global_controls"]["mode"] = new_mode
         state["global_controls"]["gross_up"] = new_gross
         state["global_controls"]["it_act_rate"] = new_it_rate
+        state["global_controls"]["non_tds_rate_mode"] = new_non_tds_rate_mode
         
         if is_processed and inv_id:
             logger.info("ui_control_recompute_start invoice_id=%s field=%s", inv_id, field_changed)
@@ -1416,6 +1547,7 @@ def render_single_invoice_page() -> None:
             inv["state"]["meta"]["mode"] = new_mode
             inv["state"]["meta"]["is_gross_up"] = new_gross
             inv["state"]["meta"]["it_act_rate"] = new_it_rate
+            inv["state"]["meta"]["non_tds_rate_mode"] = new_non_tds_rate_mode
             # Recompute
             inv["state"] = recompute_invoice(inv["state"])
             inv["config_sig"] = _compute_config_sig(inv)
@@ -1640,12 +1772,13 @@ def render_no_excel_invoice_page() -> None:
     prev_mode = state["global_controls"].get("mode", MODE_TDS)
     prev_gross = state["global_controls"].get("gross_up", False)
     prev_it_rate = state["global_controls"].get("it_act_rate", IT_ACT_RATE_DEFAULT)
+    prev_non_tds_rate_mode = state["global_controls"].get("non_tds_rate_mode", "dtaa")
     _prev_label = next(
         (lbl for lbl, val in _IT_RATE_MAP.items() if val == prev_it_rate),
         _IT_RATE_LABELS[0],
     )
 
-    gc1, gc2, gc3 = st.columns([2, 2, 3])
+    gc1, gc2, gc3, gc4 = st.columns([2, 2, 2, 2])
     with gc1:
         new_mode = st.radio(
             "Tax Mode",
@@ -1671,12 +1804,37 @@ def render_no_excel_invoice_page() -> None:
             key=f"nex_it_rate_select_{epoch}",
         )
         new_it_rate = _IT_RATE_MAP.get(new_it_label, IT_ACT_RATE_DEFAULT)
+    with gc4:
+        _toggle_checked = prev_non_tds_rate_mode == "it_act_2080"
+        # Heading label above the toggle
+        st.markdown(
+            "<p style='margin:0 0 2px 0;font-size:0.80rem;color:#555;"
+            "font-weight:600;'>Calculation basis</p>",
+            unsafe_allow_html=True,
+        )
+        # Pill toggle — OFF = DTAA Rate (default), ON = 20.80% IT Act
+        _toggle_on = st.toggle(
+            "20.80% (IT Act)",
+            value=_toggle_checked,
+            key=f"nex_non_tds_rate_toggle_{epoch}",
+            help="OFF → DTAA treaty rate (default)   |   ON → 20.80% IT Act rate",
+        )
+        new_non_tds_rate_mode = "it_act_2080" if _toggle_on else "dtaa"
+        # Name row below toggle (mirrors .name in the design spec)
+        _basis_name = "20.80% (IT Act)" if _toggle_on else "DTAA Rate"
+        st.markdown(
+            f"<p style='margin:2px 0 0 0;font-size:0.78rem;color:#888;'>{_basis_name}</p>",
+            unsafe_allow_html=True,
+        )
 
     # Apply control changes and recompute any already-processed invoice
-    if new_mode != prev_mode or new_gross != prev_gross or new_it_rate != prev_it_rate:
+    if (new_mode != prev_mode or new_gross != prev_gross
+            or new_it_rate != prev_it_rate
+            or new_non_tds_rate_mode != prev_non_tds_rate_mode):
         state["global_controls"]["mode"] = new_mode
         state["global_controls"]["gross_up"] = new_gross
         state["global_controls"]["it_act_rate"] = new_it_rate
+        state["global_controls"]["non_tds_rate_mode"] = new_non_tds_rate_mode
         _existing = state.get("invoices", {})
         if _existing:
             _inv_id = list(_existing.keys())[0]
@@ -1685,6 +1843,7 @@ def render_no_excel_invoice_page() -> None:
                 _inv["state"]["meta"]["mode"] = new_mode
                 _inv["state"]["meta"]["is_gross_up"] = new_gross
                 _inv["state"]["meta"]["it_act_rate"] = new_it_rate
+                _inv["state"]["meta"]["non_tds_rate_mode"] = new_non_tds_rate_mode
                 _inv["state"] = recompute_invoice(_inv["state"])
                 _inv["xml_bytes"] = None
                 _inv["xml_status"] = "none"

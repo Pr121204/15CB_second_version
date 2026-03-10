@@ -428,6 +428,18 @@ You must determine Amount in Foreign Currency (FCY) using the following strict o
 ADDRESS RULES
 Do not merge addresses from different parties. Each party must have its own exact address block.
 
+BENEFICIARY ADDRESS & NAME RULES
+For beneficiary_address:
+- Extract the POSTAL ADDRESS (street name, building number, postal code, city, country).
+- The postal address typically contains a street name, building number, postal code, and city.
+- DO NOT return the company name or division/department name (e.g. "Bosch Digital", "BD", "Finance Dept") as the address.
+- If the invoice shows a "Company address:", "Registered address:", or "Registered office:" label, use that address.
+- If the address contains a department name like "Bosch Digital (BD)", strip it — return only the street/city/country portion.
+- If no postal address is visible, return "".
+For beneficiary_name:
+- Return ONLY the legal company name (e.g. "Robert Bosch GmbH").
+- Do NOT include department or division names (e.g. NOT "Robert Bosch GmbH Bosch Digital").
+
 SERVICE CLASSIFICATION RULES
 Look for keywords in service descriptions, line items, and notes (e.g., software, consulting, cloud, subscription, database, technical support).
 
@@ -508,7 +520,8 @@ This is a business invoice. You MUST find and extract every field that is visibl
 - Supplier/seller company name (top of page, large text or letterhead — this is the beneficiary/foreign party receiving payment)
 - Customer/buyer company name ("Bill to", "Ship to", "Customer", "Client" section — this is the Indian remitter sending payment)
 - Customer address (all address lines under customer name)
-- Supplier address (registered office or company address block)
+- Supplier address (registered office or company address block — extract the POSTAL address with street/number/postal-code/city, NOT the department or division name)
+- Beneficiary name is the legal entity name ONLY, do not include departments or divisions
 - Total invoice amount (FINAL total only, NOT subtotals — check last page for "Invoice amount", "Grand Total", "Net amount", "Total due", "Amount Payable", "Invoice Total")
 - Currency (3-letter ISO code near the amount: EUR, USD, JPY, GBP, SGD, CHF, SEK, NOK etc.)
 - Service description (what was charged — line item descriptions or service title)
@@ -569,7 +582,9 @@ Rules:
 1. Follow the 4-stage amount extraction policy (Invoice Total -> Summary Block -> Inference -> Excel fallback).
 2. Use Excel data ONLY if invoice text fails for amount.
 3. Accurate name/address extraction is mandatory.
-4. Return valid JSON only.
+4. For beneficiary_address: extract POSTAL address only (street, building number, postal code, city). Do NOT return company name or division/department as address. If "Company address:" or "Registered address:" label exists, use it.
+5. For beneficiary_name: legal company name ONLY, no divisions or departments.
+6. Return valid JSON only.
 """
 
 
@@ -845,6 +860,16 @@ def _finalize_extracted_fields(extracted: Dict[str, str], context_text: str = ""
         )
         if nature:
             out["nature_of_remittance"] = nature
+
+    # Validate beneficiary_address: reject values that look like company/division names.
+    raw_addr = str(out.get("beneficiary_address") or "").strip()
+    raw_name = str(out.get("beneficiary_name") or "").strip()
+    if raw_addr and not _is_valid_postal_address(raw_addr, raw_name):
+        logger.warning(
+            "beneficiary_address_rejected reason=looks_like_company_name raw=%r name=%r",
+            raw_addr, raw_name,
+        )
+        out["beneficiary_address"] = ""
 
     return out
 
@@ -1124,6 +1149,52 @@ def recover_country_from_address(address: str) -> str:
             return tokens[-1].strip(".,;").title()
 
     return ""
+
+
+# Patterns that signal the "address" is actually a company name or division header.
+_COMPANY_TAIL_RE = re.compile(
+    r"(?:"
+    r"\(BD\)|\(IT\)|\(HR\)|\(FIN\)|\(RD\)|\(R\s*&\s*D\)|\(MFG\)"
+    r"|DIVISION|DEPARTMENT|DEPT"
+    r"|GMBH|LTD\.?|PVT\.?|INC\.?|LLC|CORP\.?|S\.?R\.?O\.?|S\.?A\.?|AG|AB|B\.?V\.?"
+    r")\s*$",
+    re.IGNORECASE,
+)
+
+
+def _is_valid_postal_address(address: str, beneficiary_name: str = "") -> bool:
+    """Return False if *address* looks like a company/division name rather than a postal address.
+
+    Real street addresses virtually always contain at least one digit
+    (building number, postal code).  Strings that end with legal-entity
+    suffixes (GmbH, Ltd, Inc) or department abbreviations ((BD), (IT))
+    are company names, not addresses.
+    """
+    addr = str(address or "").strip()
+    if not addr:
+        return True  # blank is "valid" — nothing to reject
+
+    addr_upper = addr.upper()
+
+    # Red flag 1: no digit at all → not a street address
+    has_digit = bool(re.search(r"\d", addr_upper))
+
+    # Red flag 2: ends with a company/division suffix
+    ends_corporate = bool(_COMPANY_TAIL_RE.search(addr_upper))
+
+    # Red flag 3: address is essentially a subset of the beneficiary name
+    name_upper = " ".join(str(beneficiary_name or "").upper().split())
+    addr_norm = " ".join(addr_upper.split())
+    is_name_subset = bool(name_upper and addr_norm and (
+        addr_norm in name_upper or name_upper in addr_norm
+    ))
+
+    if (not has_digit and ends_corporate) or is_name_subset:
+        return False
+    # If ONLY one red flag, still accept (some addresses legitimately lack
+    # digits, e.g. "One Microsoft Way", or have a trailing corporate suffix
+    # because the address genuinely starts with the company name).
+    return True
 
 
 def _normalize_extracted_address(value: str) -> str:

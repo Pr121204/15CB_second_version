@@ -51,6 +51,9 @@ def normalize_numeric_value(value: str, preserve_decimals: bool = False) -> str:
 def validate_required_fields(fields: Dict[str, str], mode: str = MODE_TDS) -> None:
     required = ["SWVersionNo", "FormName", "AssessmentYear", "RemitterPAN", "NameRemitter", "CurrencySecbCode"]
     missing = [k for k in required if not str(fields.get(k, "")).strip()]
+    if str(mode or MODE_TDS) == MODE_NON_TDS:
+        non_tds_required = ["RelArtDetlDDtaa", "NatureRemDtaa"]
+        missing.extend([k for k in non_tds_required if not str(fields.get(k, "")).strip()])
     if str(mode or MODE_TDS) == MODE_TDS:
         # Core fields required for any TDS reporting
         tds_required = [

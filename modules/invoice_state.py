@@ -478,6 +478,8 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     # Seed user-selectable IT Act rate (from config override or default)
     it_rate_cfg = config.get("it_act_rate")
     form["ItActRateSelected"] = str(it_rate_cfg) if it_rate_cfg else str(IT_ACT_RATE_DEFAULT)
+    # Seed Non-TDS calculation rate mode from global config
+    form["NonTdsBasisRateMode"] = str(config.get("non_tds_rate_mode") or "dtaa")
     # CHANGE: populate DednDateTds from configuration if provided.  The Excel
     # lookup passes ``tds_deduction_date`` through ``config``.  If the
     # configuration contains a non-empty string, use it; otherwise fall
@@ -698,6 +700,11 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
     # Final fallback for area/locality from zip text if available.
     if not form.get("RemitteeAreaLocality") and extracted.get("beneficiary_zip_text"):
         form["RemitteeAreaLocality"] = str(extracted.get("beneficiary_zip_text") or "")
+
+    # Redistribute any address fields that exceed 50 chars across adjacent fields
+    # so the form itself is already split before UI renders (no truncation warnings).
+    from modules.invoice_calculator import _redistribute_address_overflow
+    _redistribute_address_overflow(form)
 
     if extracted.get("beneficiary_country_text") and str(form.get("RemitteeCountryCode") or "") in {"", "9999"}:
         inferred_by_text = infer_country_from_beneficiary_name(
@@ -922,6 +929,29 @@ def build_invoice_state(invoice_id: str, file_name: str, extracted: Dict[str, st
                 "classification_mismatch invoice_id=%s classifier_nature_code=%r xml_nature_code=%r msg='Classifier nature overridden'",
                 invoice_id, cls.nature.code, final_nature
             )
+
+    # For Non-TDS invoices, pre-populate DTAA documentation fields from reference JSON.
+    if mode == MODE_NON_TDS:
+        from modules.non_tds_lookup import lookup_non_tds
+        _nature_query = str(extracted.get("nature_of_remittance") or extracted.get("description") or "")
+        _purpose_query = str(extracted.get("purpose_code") or "")
+        _ref = lookup_non_tds(_nature_query, _purpose_query)
+        form.setdefault("NatureRemDtaa", _ref["NatureRemDtaa"])
+        form.setdefault("RelArtDetlDDtaa", _ref["RelArtDetlDDtaa"])
+        logger.info(
+            "non_tds_lookup invoice_id=%s query=%r purpose=%r NatureRemDtaa=%r RelArtDetlDDtaa=%r",
+            invoice_id, _nature_query, _purpose_query,
+            form.get("NatureRemDtaa", ""), form.get("RelArtDetlDDtaa", ""),
+        )
+    # Default purpose code/group/nature to S1023 / Other Business Services /
+    # Fees for Technical Services when classifier left them empty (both modes).
+    if not form.get("RevPurCode"):
+        form.setdefault("RevPurCategory", "RB-10.1")
+        form.setdefault("RevPurCode", "RB-10.1-S1023")
+        logger.info("purpose_default invoice_id=%s mode=%s RevPurCode=RB-10.1-S1023", invoice_id, mode)
+    if not form.get("NatureRemCategory") or form.get("NatureRemCategory") == "-1":
+        form["NatureRemCategory"] = "16.21"   # FEES FOR TECHNICAL SERVICES/ FEES FOR INCLUDED SERVICES
+        logger.info("nature_default invoice_id=%s mode=%s NatureRemCategory=16.21", invoice_id, mode)
 
     # state = recompute_invoice(state) -> Removed redundant call; already done in worker.
     logger.info(

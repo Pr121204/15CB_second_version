@@ -7,7 +7,8 @@
       "Bash(python -c \"import json; data=json.load\\(open\\(''data/master/Purpose_code_List.json''\\)\\); gr_nos=set\\(r[''gr_no''] for r in data if ''gr_no'' in r\\); print\\(sorted\\(gr_nos\\)\\)\")",
       "Bash(python -c \":*)",
       "Bash(python3 -c \":*)",
-      "Bash(python -:*)"
+      "Bash(python -:*)",
+      "Bash(python3 -c \"import json; data=json.load\\(open\\(''/c/Users/HP/Desktop/form15cb_final/data/master/non_tds_reference.json''\\)\\); print\\(''Total entries:'', len\\(data\\)\\); print\\(''Sample entry:'', json.dumps\\(data[0], indent=2\\)\\); print\\(''Sample with no_tds populated:'', json.dumps\\([e for e in data if e.get\\(''no_tds''\\) and e[''no_tds''] != ''null''][0], indent=2\\)\\)\")"
     ]
   }
 }

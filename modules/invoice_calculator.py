@@ -352,7 +352,42 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
             tax_liable_it,
         )
     elif mode == MODE_NON_TDS:
-        form["RemittanceCharIndia"] = "N"
+        # IT Act liability is computed for documentation purposes even though no TDS is withheld.
+        # Rate used depends on user toggle: DTAA rate (default) or 20.80% (IT Act).
+        non_tds_rate_mode = str(form.get("NonTdsBasisRateMode") or "dtaa")
+        if non_tds_rate_mode == "it_act_2080":
+            use_rate_dec = Decimal("20.80")
+            basis_text = IT_ACT_BASIS.get(
+                20.80,
+                "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+                "AND TAX LIABILITY IS CALCULATED AT 20.80 PERCENTAGE OF ABOVE.",
+            )
+        else:
+            # DTAA mode: use resolved DTAA rate if available, else fall back to 20.80%
+            _doc_dtaa_rate = dtaa_rate_percent
+            if _doc_dtaa_rate is not None and _doc_dtaa_rate > 0:
+                use_rate_dec = Decimal(str(_doc_dtaa_rate))
+                basis_text = (
+                    f"GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+                    f"AND TAX LIABILITY IS CALCULATED AT {_fmt_num(float(use_rate_dec))} "
+                    f"PERCENTAGE OF ABOVE AS PER APPLICABLE DTAA."
+                )
+            else:
+                # No DTAA rate available — fall back to 20.80%
+                use_rate_dec = Decimal("20.80")
+                basis_text = IT_ACT_BASIS.get(
+                    20.80,
+                    "GROSS AMOUNT OF REMITTANCE IS CONSIDERED AS TAXABLE INCOME "
+                    "AND TAX LIABILITY IS CALCULATED AT 20.80 PERCENTAGE OF ABOVE.",
+                )
+                logger.info("non_tds_dtaa_rate_unavailable invoice_id=%s fallback=20.80", invoice_id)
+
+        it_liab = invoice_inr * (use_rate_dec / Decimal("100"))
+        form["AmtIncChrgIt"] = _fmt_num(_round_to_int(float(invoice_inr)))
+        form["TaxLiablIt"] = _fmt_num(_round_to_int(float(it_liab)))
+        form["BasisDeterTax"] = basis_text
+        # DTAA exemption applies — no TDS deducted
+        form["RemittanceCharIndia"] = "Y"
         form["AmtPayForgnTds"] = "0"
         form["AmtPayIndianTds"] = "0"
         form["ActlAmtTdsForgn"] = _fmt_num(fcy)
@@ -360,7 +395,21 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
         form["RateTdsSecbFlg"] = ""
         form["RateTdsSecB"] = ""
         form["DednDateTds"] = ""
-        logger.info("recompute_non_tds_done invoice_id=%s", invoice_id)
+        # DTAA tax fields must be absent in non-TDS XML
+        form["TaxIncDtaa"] = ""
+        form["TaxLiablDtaa"] = ""
+        form["RateTdsADtaa"] = ""
+        # Ensure DTAA comment fields are never blank — regenerate from nature if cleared.
+        if not str(form.get("NatureRemDtaa") or "").strip():
+            form["NatureRemDtaa"] = "FEES FOR TECHNICAL SERVICES"
+        if not str(form.get("RelArtDetlDDtaa") or "").strip():
+            from modules.non_tds_lookup import _comment_for_nature
+            form["RelArtDetlDDtaa"] = _comment_for_nature(form["NatureRemDtaa"])
+            logger.info("recompute_non_tds_comment_regenerated invoice_id=%s nature=%r", invoice_id, form["NatureRemDtaa"])
+        logger.info(
+            "recompute_non_tds_done invoice_id=%s AmtIncChrgIt=%s TaxLiablIt=%s",
+            invoice_id, form["AmtIncChrgIt"], form["TaxLiablIt"],
+        )
     elif mode == MODE_TDS:
         country_code = str(form.get("CountryRemMadeSecb") or "").strip()
         skip_reason = "country_blank" if not country_code else "country_selected_rate_missing"
@@ -372,6 +421,49 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
             str(form.get("RemitterPAN") or ""),
         )
     return state
+
+
+def _split_at_boundary(text: str, max_len: int) -> tuple:
+    """Split text at the last word boundary at or before max_len.
+    Returns (first_part, remainder). If no space exists before max_len, splits hard."""
+    if len(text) <= max_len:
+        return text, ""
+    split_pos = text.rfind(" ", 0, max_len)
+    if split_pos == -1:
+        split_pos = max_len  # no word boundary found — hard split
+    return text[:split_pos].strip(), text[split_pos:].strip()
+
+
+def _redistribute_address_overflow(out: Dict[str, str], max_len: int = 50) -> Dict[str, str]:
+    """Redistribute address overflow across adjacent fields instead of truncating.
+
+    If RemitteeAreaLocality exceeds max_len, the excess spills into RemitteeRoadStreet,
+    then into RemitteeFlatDoorBuilding, then into RemitteePremisesBuildingVillage.
+    Each field is split at a word boundary. Any overflow beyond the last field is
+    handled by _enforce_field_limits (hard truncation as a last resort).
+    """
+    overflow_order = [
+        "RemitteeAreaLocality",
+        "RemitteeRoadStreet",
+        "RemitteeFlatDoorBuilding",
+        "RemitteePremisesBuildingVillage",
+    ]
+    for i, field in enumerate(overflow_order):
+        val = str(out.get(field) or "").strip()
+        if len(val) <= max_len:
+            continue
+        first, remainder = _split_at_boundary(val, max_len)
+        out[field] = first
+        if remainder and i + 1 < len(overflow_order):
+            next_field = overflow_order[i + 1]
+            existing = str(out.get(next_field) or "").strip()
+            # Prepend overflow so existing content stays at the end
+            out[next_field] = (remainder + (" " + existing if existing else "")).strip()
+            logger.info(
+                "address_overflow_redistributed from=%s to=%s overflow_len=%s",
+                field, next_field, len(remainder),
+            )
+    return out
 
 
 def _enforce_field_limits(out: Dict[str, str]) -> Dict[str, str]:
@@ -464,7 +556,7 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
         "RevPurCategory": str(form.get("RevPurCategory") or ""),
         "RevPurCode": str(form.get("RevPurCode") or ""),
         "TaxPayGrossSecb": str(form.get("TaxPayGrossSecb") or "N"),
-        "RemittanceCharIndia": str(form.get("RemittanceCharIndia") or ("Y" if mode == MODE_TDS else "N")),
+        "RemittanceCharIndia": str(form.get("RemittanceCharIndia") or "Y"),
         "ReasonNot": str(form.get("ReasonNot") or ""),
         "SecRemCovered": str(form.get("SecRemCovered") or SEC_REM_COVERED_DEFAULT),
         "AmtIncChrgIt": str(form.get("AmtIncChrgIt") or ""),
@@ -500,18 +592,24 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
     is_gross_up_xml = bool(meta.get("is_gross_up"))
     out["TaxPayGrossSecb"] = "Y" if is_gross_up_xml else "N"
     # For gross-up, AmtIncChrgIt is the grossed-up INR already set by recompute_invoice.
-    # Only override with AmtPayIndRem for the non-gross-up path.
+    # For non-gross-up, trust what recompute_invoice computed (same value is shown in UI).
+    # Only fall back to AmtPayIndRem if recompute did not populate AmtIncChrgIt (e.g. mode
+    # branch not reached).  This prevents a silent discrepancy between what the user sees
+    # on screen and what ends up in the XML.
     if not is_gross_up_xml:
-        out["AmtIncChrgIt"] = str(out.get("AmtPayIndRem") or "")
+        if not str(out.get("AmtIncChrgIt") or "").strip():
+            out["AmtIncChrgIt"] = str(out.get("AmtPayIndRem") or "")
 
     gross_fcy = _to_float(out.get("AmtPayForgnRem", ""))
     tds_fcy = _to_float(out.get("AmtPayForgnTds", ""))
     # For gross-up, ActlAmtTdsForgn is already set correctly by recompute_invoice
     # (= gross_fcy - tds_fcy = original net). Do not recalculate here or it becomes
     # AmtPayForgnRem(net) - tds_fcy which gives the wrong (too-low) value.
+    # For non-gross-up TDS, similarly trust recompute_invoice; only derive when blank.
     if mode == MODE_TDS and not is_gross_up_xml and gross_fcy is not None and tds_fcy is not None:
-        net_fcy = max(gross_fcy - tds_fcy, 0.0)
-        out["ActlAmtTdsForgn"] = _fmt_num(net_fcy)
+        if not str(out.get("ActlAmtTdsForgn") or "").strip():
+            net_fcy = max(gross_fcy - tds_fcy, 0.0)
+            out["ActlAmtTdsForgn"] = _fmt_num(net_fcy)
 
     tax_resid_cert = str(out.get("TaxResidCert") or "N").strip().upper()
     other_rem_dtaa = str(out.get("OtherRemDtaa") or ("N" if mode == MODE_TDS else "Y")).strip().upper()
@@ -538,4 +636,5 @@ def invoice_state_to_xml_fields(state: Dict[str, object]) -> Dict[str, str]:
 
     out["OtherRemDtaa"] = other_rem_dtaa
 
+    out = _redistribute_address_overflow(out)
     return _enforce_field_limits(out)

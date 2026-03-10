@@ -104,10 +104,25 @@ def _apply_remitter_match(state: Dict[str, object], remitter_name: str) -> None:
         logger.warning("ui_remitter_not_matched invoice_id=%s remitter_name=%s", invoice_id, remitter_name)
 
 
+_AUTO_SPLIT_ADDRESS_FIELDS = {
+    "RemitteePremisesBuildingVillage",
+    "RemitteeFlatDoorBuilding",
+    "RemitteeAreaLocality",
+    "RemitteeRoadStreet",
+    "RemitteeTownCityDistrict",
+}
+
+
 def check_field_length_warnings(form: Dict[str, str]) -> List[str]:
-    """Identify fields that exceed their maximum allowed length."""
+    """Identify user-editable fields that exceed their maximum allowed length.
+
+    Address fields are excluded because they are automatically redistributed
+    across adjacent fields by _redistribute_address_overflow.
+    """
     warnings = []
     for field, max_len in FIELD_MAX_LENGTH.items():
+        if field in _AUTO_SPLIT_ADDRESS_FIELDS:
+            continue  # handled silently by address redistribution
         val = str(form.get(field) or "")
         if len(val) > max_len:
             warnings.append(
@@ -336,8 +351,9 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
             key=f"{invoice_id}_fcy_amt",
             value=str(form.get("AmtPayForgnRem") or ""),
         )
-        # Allow INR amount to be editable so CA can correct computed conversion
-        st.text_input(
+        # Allow INR amount to be editable so CA can correct computed conversion.
+        # Write result back to form so the user-corrected value flows into the XML.
+        form["AmtPayIndRem"] = st.text_input(
             "Amount in Indian ₹",
             key=f"{invoice_id}_inr_amt",
             value=str(form.get("AmtPayIndRem") or ""),
@@ -493,7 +509,7 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
         # In single mode, the value comes from the global control at the top,
         # which is already synced into form["TaxPayGrossSecb"] by app.py
         pass
-    form["RemittanceCharIndia"] = "Y" if mode_is_tds else "N"
+    form["RemittanceCharIndia"] = "Y"  # Remittance is chargeable in India per IT Act in both modes
     form["ReasonNot"] = st.text_input("Reason if not chargeable", key=f"{invoice_id}_reason_not", value=str(form.get("ReasonNot") or ""), disabled=mode_is_tds)
     form["RateTdsSecbFlg"] = "2" if mode_is_tds else ""
     form["RemForRoyFlg"] = "Y" if mode_is_tds else "N"
@@ -574,7 +590,31 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
                 key=dedn_key,
             ).isoformat()
     else:
-        st.caption("Non-TDS mode - TDS fields are shown but disabled and will output as zero.")
+        _active_rate_mode = str(form.get("NonTdsBasisRateMode") or "dtaa")
+        _dtaa_rate_info = str(state.get("resolved", {}).get("dtaa_rate_percent") or "").strip()
+        if _active_rate_mode == "it_act_2080":
+            _rate_info = "20.80% (IT Act)"
+        elif _dtaa_rate_info:
+            _rate_info = f"DTAA Rate ({_dtaa_rate_info}%)"
+        else:
+            _rate_info = "DTAA Rate (fallback 20.80% — no treaty rate found)"
+        st.caption(f"Non-TDS mode — documentation rate: **{_rate_info}**. No TDS deducted under DTAA.")
+
+        form["NatureRemDtaa"] = st.text_input(
+            "Nature of Remittance (as per agreement / DTAA)",
+            value=str(form.get("NatureRemDtaa") or ""),
+            key=f"{invoice_id}_nature_rem_dtaa",
+            help="Describes the remittance type (e.g. 'SOFTWARE LICENSE'). Goes into NatureRemDtaa XML field.",
+        )
+        form["RelArtDetlDDtaa"] = st.text_area(
+            "DTAA Exemption Comment",
+            value=str(form.get("RelArtDetlDDtaa") or ""),
+            key=f"{invoice_id}_rel_art_detl_dtaa",
+            help="Explains why no TDS is deducted under the tax treaty. Goes into RelArtDetlDDtaa XML field.",
+            height=100,
+        )
+        if not str(form.get("RelArtDetlDDtaa") or "").strip():
+            st.warning("DTAA Exemption Comment is required for Non-TDS mode. It will be auto-filled on save.")
 
     state = recompute_invoice(state)
     logger.info(
@@ -588,6 +628,12 @@ def render_invoice_tab(state: Dict[str, object], *, show_header: bool = True, is
             "AmtPayForgnTds": form.get("AmtPayForgnTds", ""),
         },
     )
+    if not mode_is_tds:
+        # Sync computed IT Act values for non-TDS mode (calculated for documentation)
+        st.session_state[f"{invoice_id}_amt_inc_chrg_it"] = str(form.get("AmtIncChrgIt") or "")
+        st.session_state[f"{invoice_id}_tax_liab_it"] = str(form.get("TaxLiablIt") or "")
+        st.session_state[f"{invoice_id}_nature_rem_dtaa"] = str(form.get("NatureRemDtaa") or "")
+        st.session_state[f"{invoice_id}_rel_art_detl_dtaa"] = str(form.get("RelArtDetlDDtaa") or "")
     if mode_is_tds:
         # Sync computed values to session_state so display widgets read current values, not stale cache
         st.session_state[f"{invoice_id}_amt_inc_chrg_it"] = str(form.get("AmtIncChrgIt") or "")
