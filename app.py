@@ -92,6 +92,10 @@ from modules.amount_extractor import extract_amount_candidate_from_pages
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 # Maximum number of pages from a PDF to OCR when text extraction fails
 MAX_SCANNED_PDF_PAGES = max(1, int(os.getenv("MAX_SCANNED_PDF_PAGES", "6")))
+# DPI for PDF-to-image rendering (200 is sufficient for Gemini vision)
+IMAGE_EXTRACTION_DPI = int(os.getenv("IMAGE_EXTRACTION_DPI", "200"))
+# JPEG quality when encoding pages for Gemini (70 is visually equivalent for text)
+IMAGE_EXTRACTION_JPEG_QUALITY = int(os.getenv("IMAGE_EXTRACTION_JPEG_QUALITY", "70"))
 # Application version and last updated timestamp
 VERSION = "4.0"
 LAST_UPDATED = "March 2026"
@@ -542,43 +546,57 @@ def _process_invoice_worker(inv: dict, inv_id: str, file_bytes: bytes, file_name
             else:
                 # Attempt consolidated multi-page Gemini extraction
                 try:
-                    images = convert_from_bytes(file_bytes, dpi=300)
+                    images = convert_from_bytes(file_bytes, dpi=IMAGE_EXTRACTION_DPI)
                 except Exception as exc:
                     logger.exception("pdf_to_image_failed file=%s", file_name)
                     images = []
 
                 if images:
                     selected_pages = images[:MAX_SCANNED_PDF_PAGES]
-                    page_image_bytes_list: List[bytes] = []
-                    page_ocr_texts: List[str] = []
-                    
-                    for page_img in selected_pages:
+
+                    # Parallel JPEG encoding of all selected pages
+                    from concurrent.futures import ThreadPoolExecutor
+
+                    def _encode_page_jpeg(page_img):
                         buf = io.BytesIO()
-                        page_img.save(buf, format="JPEG", quality=90)
-                        img_bytes = buf.getvalue()
-                        page_image_bytes_list.append(img_bytes)
-                        
-                        # Background OCR for fallback text
-                        try:
-                            page_ocr = extract_text_from_image_file(img_bytes) or ""
-                            page_ocr_texts.append(page_ocr)
-                        except Exception:
-                            logger.exception("image_ocr_fallback_failed file=%s", file_name)
-                    
+                        page_img.save(buf, format="JPEG", quality=IMAGE_EXTRACTION_JPEG_QUALITY)
+                        return buf.getvalue()
+
+                    with ThreadPoolExecutor() as pool:
+                        page_image_bytes_list: List[bytes] = list(pool.map(_encode_page_jpeg, selected_pages))
+
                     from modules.invoice_gemini_extractor import extract_invoice_core_fields_from_multi_images
                     extracted = extract_invoice_core_fields_from_multi_images(
                         page_image_bytes_list, 
                         invoice_id=inv_id, 
                         excel_data=inv.get("excel", {})
                     )
-                    
+
+                    # Deferred OCR: only run when Gemini extraction failed.
+                    # When Gemini succeeds, its amount is reliable so the
+                    # deterministic amount override can safely receive empty
+                    # page texts (it simply won't find a candidate).
+                    page_ocr_texts: List[str] = []
+                    gemini_failed = extracted.get("_extraction_quality") == "failed"
+
+                    if gemini_failed:
+                        def _ocr_page(img_bytes):
+                            try:
+                                return extract_text_from_image_file(img_bytes) or ""
+                            except Exception:
+                                logger.exception("image_ocr_fallback_failed file=%s", file_name)
+                                return ""
+
+                        with ThreadPoolExecutor() as pool:
+                            page_ocr_texts = list(pool.map(_ocr_page, page_image_bytes_list))
+
                     # Combine OCR text from all pages
                     raw_text = "\n".join(t for t in page_ocr_texts if t.strip())
                     extracted["_raw_invoice_text"] = raw_text
 
                     # OCR-text fallback: if vision returned nothing but OCR produced text,
                     # run the standard text-based Gemini extractor on the OCR output.
-                    if extracted.get("_extraction_quality") == "failed" and len(raw_text.strip()) >= TEXT_EXTRACTION_MIN_THRESHOLD:
+                    if gemini_failed and len(raw_text.strip()) >= TEXT_EXTRACTION_MIN_THRESHOLD:
                         logger.info(
                             "ocr_text_fallback_start invoice_id=%s ocr_text_len=%s",
                             inv_id, len(raw_text.strip()),
@@ -1548,6 +1566,8 @@ def render_single_invoice_page() -> None:
             inv["state"]["meta"]["is_gross_up"] = new_gross
             inv["state"]["meta"]["it_act_rate"] = new_it_rate
             inv["state"]["meta"]["non_tds_rate_mode"] = new_non_tds_rate_mode
+            # Propagate to form so recompute_invoice picks it up
+            inv["state"]["form"]["NonTdsBasisRateMode"] = new_non_tds_rate_mode
             # Recompute
             inv["state"] = recompute_invoice(inv["state"])
             inv["config_sig"] = _compute_config_sig(inv)
@@ -1844,6 +1864,8 @@ def render_no_excel_invoice_page() -> None:
                 _inv["state"]["meta"]["is_gross_up"] = new_gross
                 _inv["state"]["meta"]["it_act_rate"] = new_it_rate
                 _inv["state"]["meta"]["non_tds_rate_mode"] = new_non_tds_rate_mode
+                # Propagate to form so recompute_invoice picks it up
+                _inv["state"]["form"]["NonTdsBasisRateMode"] = new_non_tds_rate_mode
                 _inv["state"] = recompute_invoice(_inv["state"])
                 _inv["xml_bytes"] = None
                 _inv["xml_status"] = "none"

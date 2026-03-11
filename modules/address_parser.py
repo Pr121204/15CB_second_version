@@ -61,10 +61,10 @@ _MULTI_WORD_CITIES = sorted(
 # Alphanumeric (UK-style) postcode: EC1M 5UX, SW1A 1AA
 _ZIP_UK_RE = re.compile(r"\b[A-Z]{1,2}\d[0-9A-Z]?\s*\d[A-Z]{2}\b")
 
-# Numeric postal codes: Czech "NNN NN" and standard 4-6 digit codes.
-# The Czech pattern comes first so it is preferred over matching just the
-# first three digits of a code like "370 04".
-_ZIP_NUM_RE = re.compile(r"\b\d{3}\s\d{2}\b|\b\d{4,6}\b")
+# Numeric postal codes: Portuguese/European "DDDD-DDD", Czech "NNN NN",
+# and standard 4-6 digit codes.  The dash-separated pattern is tried first
+# so "1800-220" is consumed whole rather than just "1800".
+_ZIP_NUM_RE = re.compile(r"\b\d{4}-\d{3}\b|\b\d{3}\s\d{2}\b|\b\d{4,6}\b")
 
 # Street-phrase keywords — when AreaLocality is blank these help derive a
 # locality from the FlatDoorBuilding string.  Only match when the keyword is
@@ -203,6 +203,10 @@ def parse_beneficiary_address(address_str: str) -> Dict[str, str]:
         return result
 
     work = str(address_str).strip()
+
+    # Normalize pipe characters used by some AI models as field separators.
+    work = work.replace("|", ",")
+    work = re.sub(r",\s*,", ",", work).strip().strip(",").strip()
 
     # --- Fix 1: Strip trailing ISO 2-letter country code (last token only) ---
     tokens = work.split()

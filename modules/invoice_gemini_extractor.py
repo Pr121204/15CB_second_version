@@ -127,6 +127,23 @@ def _gemini_backend() -> str:
     return ""
 
 
+# Module-level singleton for the google-genai Client to avoid
+# re-creating connection overhead on every Gemini call.
+_cached_google_genai_client = None
+_cached_google_genai_api_key: Optional[str] = None
+
+
+def _get_google_genai_client():
+    """Return a cached google-genai Client, creating one if needed."""
+    global _cached_google_genai_client, _cached_google_genai_api_key
+    GEMINI_API_KEY, _ = _get_gemini_config()
+    if _cached_google_genai_client is not None and _cached_google_genai_api_key == GEMINI_API_KEY:
+        return _cached_google_genai_client
+    _cached_google_genai_client = google_genai.Client(api_key=GEMINI_API_KEY)
+    _cached_google_genai_api_key = GEMINI_API_KEY
+    return _cached_google_genai_client
+
+
 def _format_finish_reason(value: object) -> str:
     if value is None:
         return ""
@@ -182,7 +199,7 @@ def _generate_with_gemini_text(prompt: str, max_output_tokens: int = 2048) -> Tu
         return str(getattr(response, "text", "") or ""), finish_reason
 
     # google-genai SDK path
-    client = google_genai.Client(api_key=GEMINI_API_KEY)
+    client = _get_google_genai_client()
     response = client.models.generate_content(
         model=GEMINI_MODEL_NAME,
         contents=prompt,
@@ -233,7 +250,7 @@ def _generate_with_gemini_image(prompt: str, image_path_or_bytes: Union[str, byt
         with open(str(image_path_or_bytes), "rb") as f:
             image_bytes = f.read()
 
-    client = google_genai.Client(api_key=GEMINI_API_KEY)
+    client = _get_google_genai_client()
     image_part = google_genai_types.Part.from_bytes(data=image_bytes, mime_type=mime_type)
     response = client.models.generate_content(
         model=GEMINI_MODEL_NAME,
@@ -275,7 +292,7 @@ def _generate_with_gemini_multi_images(prompt: str, images_list: List[Union[str,
         return str(getattr(response, "text", "") or "")
 
     # google-genai SDK path
-    client = google_genai.Client(api_key=GEMINI_API_KEY)
+    client = _get_google_genai_client()
     contents = [prompt]
     for img_source in images_list:
         if isinstance(img_source, (bytes, bytearray)):

@@ -194,6 +194,15 @@ def recompute_invoice(state: Dict[str, object]) -> Dict[str, object]:
         selected_it_rate = raw_rate
     form["ItActRateSelected"] = str(selected_it_rate)
 
+    # ── Calculation basis override: "20.80% (IT Act)" toggle ──────────────
+    # When user selects 20.80% IT Act as calculation basis in TDS mode,
+    # bypass DTAA and compute TDS at 20.80% instead.
+    non_tds_basis = str(form.get("NonTdsBasisRateMode") or "dtaa")
+    if mode == MODE_TDS and non_tds_basis == "it_act_2080":
+        selected_it_rate = 20.80
+        form["ItActRateSelected"] = "20.8"
+        form["dtaa_mode"] = "it_act"
+
     # --- PRIORITY 1: GROSS-UP FLOW ---
     if mode == MODE_TDS and is_gross_up:
         it_factor, basis_text = get_effective_it_rate(selected_it_rate)
